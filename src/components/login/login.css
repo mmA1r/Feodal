@@ -1,0 +1,67 @@
+:root {
+    --gray: #9b9b9b;
+    --pink: rgb(205, 174, 255)
+}
+
+.auth-window {
+    position: absolute;
+    left: 40%;
+    top: 40%;
+}
+
+.auth-input {
+    width: 200px;
+    margin: 20px 0;
+    background: transparent;
+
+    border: 0;
+    border-bottom: 2px solid var(--gray);
+
+    font-size: 1em;
+    color: white;
+
+    outline: none;
+    transition: 0.4s;
+}
+
+.auth-input:focus {
+    border-image: linear-gradient(to right, var(--pink), rgb(129, 110, 158));
+    border-image-slice: 1;
+}
+
+.auth-input::placeholder {
+    color: transparent;
+}
+
+.input-label {
+    position: absolute;
+    padding: 20px 0;
+    left: 0;
+    cursor: text;
+    transition: 0.4s;
+    color: var(--gray);
+}
+
+.login-input:focus ~ .login-label {
+    transform: translateY(-25px);
+    font-size: 0.9em;
+    color: var(--pink);
+    user-select: none;
+}
+
+.login-input:valid ~ .login-label {
+    transform: translateY(-25px);
+    font-size: 0.9em;
+}
+
+.password-input:focus ~ .password-label {
+    transform: translateY(-25px);
+    font-size: 0.9em;
+    color: var(--pink);
+    user-select: none;
+}
+
+.password-input:valid ~ .password-label {
+    transform: translateY(-25px);
+    font-size: 0.9em;
+}
