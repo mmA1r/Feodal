@@ -1,0 +1,147 @@
+@import '../../../const.scss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
+
+
+.auth-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -60%);
+
+    width: $auth-window-width;
+    height: 450px;
+}
+
+.button-box {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login-game-button {
+    position: relative;
+    margin-top: 40px;
+    width: 250px;
+    height: 30px;
+
+    background-color: transparent;
+    
+    border: none;
+    border-left: 1px solid $login-input;
+    border-right: 1px solid $login-input;
+
+    font-size: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    color: $login-important-text;
+
+    transition: 500ms cubic-bezier(0.75, 0, 0.175, 1);
+
+    cursor: pointer;
+    user-select: none;
+
+    &:after, &:before {
+        content: '';
+        top: 0;
+        width: 0;
+        height: 100%;
+        position: absolute;	
+        transition: inherit;
+        z-index: -1;
+    }
+    &:after {
+        left: 0;
+    }
+    &:before {
+        right: 0;
+	    border: 1px solid $login-input;
+	    border-left: 0;
+	    border-right: 0;
+    }
+    &:hover {
+        color: $login-input-start-grad;
+        border: none;
+	    transition-delay: 0.5s;
+    }
+    &:hover:after {
+        right: 0;
+        border: 1px solid $login-input-start-grad;
+        border-left: 0;
+        border-right: 0;
+        transition-delay: .35s;
+    }
+    &:hover:before {
+        transition-delay: 0s;
+    }
+    &:hover:before, &:hover:after {
+        width: 100%;
+    }
+    &:active {
+        &::after, &::before {
+            width: 0;
+        }
+        color: white;
+    }
+}
+
+.sign-up-button {
+    position: relative;
+    margin-top: 70px;
+    width: 70px;
+
+    background-color: transparent;
+    border: none;
+    border-bottom: 0.5px solid $login-input;
+
+    color: $login-input;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+
+    transition: 0s;
+
+    cursor: pointer;
+    user-select: none;
+
+    &::after, &::before {
+        content: '';
+        top: 0;
+        width: 0;
+        height: 100%;
+        position: absolute;	
+        transition: inherit;
+        z-index: -1;
+    }
+
+    &::after {
+        left: 0;
+        border-bottom: 1px solid $login-input-start-grad;
+    }
+    &::before {
+        right: 0;
+	    border-bottom: 1px solid $login-input-start-grad;
+    }
+    &:hover {
+        border: none;
+        color: $login-input-start-grad;
+    }
+    &:hover::after {
+        right: 0;
+        border: none;
+        border-bottom: 1px solid $login-input-start-grad;
+        transition-delay: 0s;
+    }
+    &:hover:before {
+        transition-delay: 0s;
+    }
+    &:hover:before, &:hover::after {
+        width: 100%;
+    }
+    &:hover:before, &:hover::after, &:hover {
+        transition: 200ms cubic-bezier(0.75, 0, 0.175, 1);
+    }
+    &:active {
+        border-bottom: 0.5px solid rgb(255, 255, 255);
+        color: rgb(255, 255, 255);
+    }
+}

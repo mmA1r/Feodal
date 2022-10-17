@@ -1,0 +1,92 @@
+@import '../../../const.scss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap');
+
+@keyframes loginGradient {
+    100% {
+        border-image: linear-gradient(to right, $login-input-end-grad, $login-input-start-grad);
+        border-image-slice: 1
+    }
+}
+
+@keyframes registrationGradient {
+    100% {
+        border-image: linear-gradient(to left, $registration-start-grad, $registration-end-grad);
+        border-image-slice: 1
+    }
+}
+
+.login, .password, .name {
+    margin: 40px 0 25px 0;
+}
+
+.auth-input {
+    box-sizing: border-box;
+    width: $auth-window-width;
+    height: 30px;
+    background: transparent;
+
+    border: none;
+    border-bottom: 1px solid $login-input;
+    padding: 7px 0 0 5px;
+
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    color: $login-input;
+
+    outline: none;
+    cursor: text;
+    transition: 0.4s;
+}
+
+.login-style {
+    &::placeholder { color: transparent; user-select: none; }
+    &:focus {
+        border-image: linear-gradient(to right, $login-input-start-grad, $login-input-end-grad);
+        border-image-slice: 1;
+        animation: loginGradient 2s infinite alternate;
+    }
+    &:focus ~ .input-label {
+        transform: translateY(-15px);
+        font-size: 13px;
+        color: $login-input-end-grad;
+        user-select: none;
+    }
+    &:valid ~ .input-label {
+        transform: translateY(-15px);
+        font-size: 13px;
+    }
+}
+
+.registration-style {
+    &::placeholder { color: transparent; user-select: none; }
+    &:focus {
+        border-image: linear-gradient(to right, $registration-start-grad, $registration-end-grad);
+        border-image-slice: 1;
+        animation: registrationGradient 2s infinite alternate;
+    }
+    &:focus ~ .input-label {
+        transform: translateY(-15px);
+        font-size: 13px;
+        color: $registration-start-grad;
+        user-select: none;
+    }
+    &:valid ~ .input-label {
+        transform: translateY(-15px);
+        font-size: 13px;
+    }
+}
+
+.input-label {
+    position: absolute;
+    left: 0;
+    padding: 7px 0 0 5px;
+
+    color: $login-input;
+    font-size: 16px;
+    text-transform: capitalize;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
+    letter-spacing: 0.7px;
+    transition: 0.4s;
+}
