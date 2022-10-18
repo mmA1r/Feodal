@@ -24,39 +24,53 @@ export default class Server {
                 this.token = data.token;
                 delete data.token;
                 return data;
+            } else {
+                return null;
             }
         }
     }
 
     async logout() {
-        const data = await this.send({ method: 'logout'});
+        await this.send({ method: 'logout'});
+        if(this.token) {
+            this.token = null;
+            return true;
+        }
+
     }
 
     async registration() {
+        // eslint-disable-next-line
         const data = await this.send({ method: 'registration'});
     }
 
     async sendMessageAll() {
+        // eslint-disable-next-line
         const data = await this.send({ method: 'sendMessageAll'});
     }
 
     async sendMessageTo() {
+        // eslint-disable-next-line
         const data = await this.send({ method: 'sendMessageTo'});
     }
 
     async getMessage() {
+        // eslint-disable-next-line
         const data = await this.send({ method: 'getMessage'});
     }
 
     async getScene() {
+        // eslint-disable-next-line
         const data = await this.send({ method: 'getScene'});
     }
 
     async getCastle() {
+        // eslint-disable-next-line
         const data = await this.send({ method: 'getCastle'});
     }
 
     async command() {
+        // eslint-disable-next-line
         const data = await this.send({ method: 'command'});
     }
 }

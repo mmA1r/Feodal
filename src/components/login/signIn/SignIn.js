@@ -29,9 +29,9 @@ export default class SignIn extends React.Component {
     async signIn() {
         const login = this.login.current.value;
         const password = this.password.current.value;
-        await this.server.login(login, password);
+        const data = await this.server.login(login, password);
 
-        if(true) {
+        if(data) {
             return this.navigate(this.routes.Game.path);
         }
     }

@@ -2,7 +2,7 @@ import React from "react";
 
 import Server from "../../server/Server";
 
-import './logout.css'
+import './logout.scss'
 
 export default class Logout extends React.Component {
     constructor(props) {
@@ -14,16 +14,17 @@ export default class Logout extends React.Component {
     }
 
     async killUser() {
-        await this.server.logout();
+        return await this.server.logout();
     }
 
     logout() {
-        this.killUser();
-        return this.navigate(this.routes.Login.path);
+        const isKill = this.killUser();
+        if(isKill) {
+            return this.navigate(this.routes.Login.path);
+        }
     }
 
     render() {
-        console.log(this.props)
         return(
             <div className="logout-box">
                 <button 
