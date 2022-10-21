@@ -1,8 +1,6 @@
 <?php
-//--!!!--
+
 header("Access-Control-Allow-Origin: *");
-//--!!!--
-error_reporting(-1);
 
 require('application/Application.php');
 
@@ -11,15 +9,18 @@ function router($params) {
         if($method) {
         $app = new Application();
         switch($method) {
+            //auth
             case 'login' : return $app->login($params);
-            case 'logout' : return $app->logout();
-            case 'registration' : return $app->registration();
-            case 'sendMessageAll' : return $app->sendMessageAll();
-            case 'sendMessageTo' : return $app->sendMessageTo();
-            case 'getMessage' : return $app->getMessage();
-            case 'getScene' : return $app->getScene();
-            case 'getCastle' : return $app->getCastle();
-            case 'command' : return $app->command();
+            case 'logout' : return $app->logout($params);
+            case 'registration' : return $app->registration($params);
+            //chat
+            case 'sendMessageAll' : return $app->sendMessageAll($params);
+            case 'sendMessageTo' : return $app->sendMessageTo($params);
+            case 'getMessage' : return $app->getMessage($params);
+            //game
+            case 'getScene' : return $app->getScene($params);
+            case 'getCastle' : return $app->getCastle($params);
+            case 'command' : return $app->command($params);
         }
     }
     return false;

@@ -3,18 +3,19 @@
 class DB {
     function __construct() {
         $host = 'localhost';
-        $port = '';
-        $name = 'feodal_db';
+        $port = '3306';
+        $name = 'feodal';
         $user = 'root';
         $password = '';
-
         try {
-            this->db = new PDO(
-                'mysql:host='.$host.';port='.$port.';dbname='.$name, $user, $password
+            $this->db = new PDO(
+                'mysql:host=' . $host . ';port=' . $port . ';dbname=' . $name, 
+                $user, 
+                $password
             );
         } catch(Exception $e) {
             print_r($e->getMessage());
-		    die();
+		    die;
         }
     }
 
@@ -23,17 +24,27 @@ class DB {
     }
 
     public function getUser($login){
-        $query = 'SELECT * FROM users WHERE login="'.$login.'"';
+        $query = 'SELECT * FROM users WHERE login="' . $login . '"';
         return $this->db->query($query)->fetchObject();
     }
 
-    public function getToken($token){
-        $query = 'SELECT * FROM users WHERE token="'.$token.'"';
-        return $this->db->quety($query)->fetchObject();
+    public function getUserByToken($token){
+        $query = 'SELECT * FROM users WHERE token="' . $token . '"';
+        return $this->db->query($query)->fetchObject();
     }
 
-    public function updateToken($id,$token){
-        $query = 'UPDATE users SET token="'.$token.'" WHERE id='.$id;
+    public function addUser($name, $login, $password) {
+        $query = 'INSERT INTO users (name, login, password) VALUES(
+            "' . $name . '",
+            "' . $login . '",
+            "' . $password . '"
+        )';
+        $this->db->query($query);
+        return true;
+    }
+
+    public function updateToken($id, $token){
+        $query = 'UPDATE users SET token="' . $token . '" WHERE id=' . $id;
         $this->db->query($query);
         return true;
     }

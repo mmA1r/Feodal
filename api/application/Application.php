@@ -18,35 +18,47 @@ class Application {
         }
     }
 
-    function logout() {
+    function logout($params) {
+        if($params['token']) {
+            $user = $this->user->getUser($params['token']);
+            if($user) {
+                return $this->user->logout($user->id);
+            }
+        }
+    }
+
+    function registration($params) {
+        [
+            'name' => $name,
+            'login' => $login,
+            'password' => $password
+        ] = $params;
+        if($name && $login && $password) {
+            return $this->user->registration($name, $login, $password);
+        }
+    }
+
+    function sendMessageAll($params) {
         
     }
 
-    function registration() {
+    function sendMessageTo($params) {
         
     }
 
-    function sendMessageAll() {
+    function getMessage($params) {
         
     }
 
-    function sendMessageTo() {
+    function getScene($params) {
         
     }
 
-    function getMessage() {
+    function getCastle($params) {
         
     }
 
-    function getScene() {
-        
-    }
-
-    function getCastle() {
-        
-    }
-
-    function command() {
+    function command($params) {
 
     }
 }

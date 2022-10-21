@@ -6,19 +6,29 @@ class User {
     }
 
     function login($login, $password) {
-        if($login === 'maks' && $password === '123') {
+        $user = $this->db->getUser($login);
+        if($login && $password === $user->password) {
             $token = md5(rand());
+            $this->db->updateToken($user->id, $token);
             return array(
-                'name' => 'maks',
+                'name' => $user->name,
                 'token' => $token
             );
         }
     }
 
-    function logout($token) {
+    function logout($id) {
+        return $this->db->updateToken($id, null);
+    }
+
+    function registration($name, $login, $password) {
+        $user = $this->db->getUser($login);
+        if(!$user) {
+            return $this->db->addUser($name, $login, $password);
+        }
     }
 
     function getUser($token) {
-        return !!$token;
+        return $this->db->getUserByToken($token);
     }
 }
