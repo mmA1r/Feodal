@@ -1,0 +1,27 @@
+.avail-users-box {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    bottom: 21px;
+    left: 0;
+    width: 120px;
+    max-width: 120px;
+    max-height: 200px;
+
+    border: 1px solid white;
+
+    overflow-y: auto;
+    list-style-type: none;
+
+    & li:hover {
+        color: black;
+        background-color: white;
+    }
+}
+
+.user-name {
+    margin: 5px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid black;
+}

@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import Server from '../../../services/server/Server';
 
-const server = new Server();
+const localToken = window.localStorage.getItem('token') || null;
+
+const server = new Server(localToken);
 
 export const storeServer = createSlice({
     name: 'server',

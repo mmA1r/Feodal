@@ -1,6 +1,6 @@
 export default class Server {
-    constructor() {
-        this.token = null;
+    constructor(token) {
+        this.token = token || null;
     }
 
     async send(params = {}) {
@@ -17,9 +17,13 @@ export default class Server {
         
     async login(login, password) {
         if(login && password) {
-            const data = await this.send({ method: 'login', login, password });
+            const data = await this.send({ 
+                method: 'login', 
+                login, password 
+            });
             if(data?.token) {
                 this.token = data.token;
+                window.localStorage.setItem('token', this.token);
                 delete data.token;
                 return data;
             } else {
@@ -29,35 +33,60 @@ export default class Server {
     }
 
     async logout() {
-        await this.send(
-            { 
-                method: 'logout', 
-                token : this.token 
-            }
-        );
+        await this.send({ 
+            method: 'logout', 
+            token : this.token 
+        });
         if(this.token) {
+            window.localStorage.removeItem('token');
             this.token = null;
             return true;
         }
     }
 
     async registration(name, login, password) {
-        return await this.send({ method: 'registration', name, login, password });
+        return await this.send({ 
+            method: 'registration', 
+            name, 
+            login, 
+            password 
+        });
     }
 
-    async sendMessageAll() {
-        // eslint-disable-next-line
-        const data = await this.send({ method: 'sendMessageAll' });
+    async getLoggedUsers() {
+        const data = await this.send({ 
+            method: 'getLoggedUsers',
+            token: this.token
+        });
+        const dataNames = data.map(user => {
+            return user.name;
+        })
+        return dataNames;
     }
 
-    async sendMessageTo() {
-        // eslint-disable-next-line
-        const data = await this.send({ method: 'sendMessageTo' });
+    async sendMessageAll(message) {
+        await this.send({ 
+            method: 'sendMessageAll', 
+            token: this.token,
+            message 
+        });
+    }
+
+    async sendMessageTo(message, messageTo) {
+        return await this.send({ 
+            method: 'sendMessageTo', 
+            token : this.token,
+            message, 
+            messageTo 
+        });
     }
 
     async getMessage() {
-        // eslint-disable-next-line
-        const data = await this.send({ method: 'getMessage' });
+        const data = await this.send({ 
+            method: 'getMessage',
+            token: this.token 
+        });
+        return data;
     }
 
     async getScene() {

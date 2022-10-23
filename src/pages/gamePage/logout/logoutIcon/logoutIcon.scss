@@ -1,0 +1,96 @@
+$icon-inside-color: white;
+$icon-inside-active-color: #24233D;
+$icon-border-color: #C17400;
+$icon-background-color: #7c4227;
+$jewerly-border-color: #FFB546;
+$jewerly-color: #1FFFF1;
+$jewerly-active-color: #EB72FF;
+$jewerly-background-color: #00C4B8;
+$jewerly-background-active-color: #CA3DBC;
+
+
+.logout-icon {
+    width: 51px;
+    height: 51px;
+}
+
+#exit-svg {
+    & > .icon-inside {
+        fill: $icon-inside-color;
+    }
+    & > .icon-background {
+        fill: $icon-background-color;
+    }
+    & > .icon-border {
+        stroke-width: 3;
+        stroke: $icon-border-color;
+    }
+    & > .jewerly-border {
+        fill: $jewerly-border-color;
+    }
+    & > .jewerly {
+        fill: $jewerly-color;
+    } 
+    & > .jewerly-background {
+        fill: $jewerly-background-color;
+    }
+    & > .light {
+        fill: none;
+    }
+    & > .open-door {
+        fill: none;
+    }
+
+    &:hover {
+        .icon-inside {
+            fill: $icon-inside-active-color;
+        }
+        .jewerly {
+            fill: $jewerly-active-color;
+        }
+        .jewerly-background {
+            fill: $jewerly-background-active-color;
+        }
+        .icon-background {
+            fill: url(#background-gradient);
+        }
+        .icon-border {
+            stroke: url(#border-gradient);
+        }
+        .light {
+            fill: url(#light);
+        }
+    }
+
+    &:hover > .icon-inside, 
+    &:hover > .jewerly, 
+    &:hover > .jewerly-background, 
+    &:hover > .icon-background, 
+    &:hover > .icon-border, 
+    &:hover > .light,
+    & > .icon-inside, 
+    & > .icon-background, 
+    & > .icon-border, 
+    & > .jewerly-border, 
+    & > .jewerly, 
+    & > .jewerly-background, 
+    & > .light, 
+    & > .open-door {
+        transition: 0.15s;
+    }
+
+    &:active {
+        .open-door {
+            transition: 0.2s;
+            fill: url(#open-door-light);
+        }
+        .icon-door {
+            transition: 0.2s;
+            fill: none;
+        }
+        .light {
+            transition: 0.2s;
+            fill: none;
+        }
+    }
+}

@@ -28,6 +28,11 @@ class DB {
         return $this->db->query($query)->fetchObject();
     }
 
+    public function getLoggedUsers() {
+        $query = 'SELECT * FROM users WHERE token!="" AND token IS NOT NULL';
+        return $this->getArray($query);
+    }
+
     public function getUserByToken($token){
         $query = 'SELECT * FROM users WHERE token="' . $token . '"';
         return $this->db->query($query)->fetchObject();
@@ -38,6 +43,27 @@ class DB {
             "' . $name . '",
             "' . $login . '",
             "' . $password . '"
+        )';
+        $this->db->query($query);
+        return true;
+    }
+
+    public function getMessage($name) {
+        $query = 'SELECT * FROM chat WHERE
+            message!="" AND 
+            message IS NOT NULL AND 
+            name="' . $name . '" OR
+            message_to="' . $name . '" OR 
+            message_to=""';
+        return $this->getArray($query);
+    }
+
+    public function sendMessage($userID, $name, $message, $messageTo = '') {
+        $query = 'INSERT INTO chat (user_id, name, message, message_to) VALUES (
+            "' . $userID . '", 
+            "' . $name . '", 
+            "' . $message . '",
+            "' . $messageTo . '"
         )';
         $this->db->query($query);
         return true;

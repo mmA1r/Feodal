@@ -14,6 +14,7 @@ function router($params) {
             case 'logout' : return $app->logout($params);
             case 'registration' : return $app->registration($params);
             //chat
+            case 'getLoggedUsers' : return $app->getLoggedUsers($params);
             case 'sendMessageAll' : return $app->sendMessageAll($params);
             case 'sendMessageTo' : return $app->sendMessageTo($params);
             case 'getMessage' : return $app->getMessage($params);

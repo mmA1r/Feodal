@@ -1,74 +1,18 @@
 @import '../../../const.scss';
-@import url('https://fonts.googleapis.com/css2?family=Jomolhari&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 
 .logout-box {
     position: absolute;
-    top: 5%;
-    right: 7%;
+    top: 2%;
+    right: 3%;
 }
 
 .logout-button {
-    width: 50px;
-    height: 50px;
+    width: 51px;
+    height: 51px;
+    padding: 0;
+    background: transparent;
     border-radius: 50%;
+    border: 0;
 }
 
-@keyframes showShade {
-    100% {
-        opacity: 0.5;
-    }
-}
-
-@keyframes hideShade {
-    0% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-.shade-block {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-    width: 100vw;
-    height: 100vh;
-
-    background-color: black;
-    opacity: 0;
-    animation: showShade 0.5s;
-    animation-fill-mode: forwards;
-
-    &.disappearing {
-        animation: hideShade 0.5s;
-    }
-}
-
-.confirm-logout-window {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-
-    width: 400px;
-    height: 150px;
-    border: 1px solid white;
-}
-
-.agree-button, .disagree-button{
-    width: 100px;
-    margin: 20px 50px;
-}
-
-
-.text-confirm-widnow {
-    color: white;
-    margin: 30px 0 10px 0;
-    text-align: center;
-    font-size: 20px;
-    font-family: 'Inter', sans-serif;
-}
