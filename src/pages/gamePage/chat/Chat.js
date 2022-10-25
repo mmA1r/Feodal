@@ -1,6 +1,14 @@
 import React from "react";
+
 import store from "../../../store/store";
+
 import AvailUsers from "./availUsers/AvailUsers";
+import SendMessageButton from "./sendMessage/sendMessageButton/SendMessageButton";
+import SendMessageInputLeft from "./sendMessage/sendMessageInput/SendMessageInputLeft";
+import SendMessageInputRight from "./sendMessage/sendMessageInput/SendMessageInputRight";
+import SendMessageInputTop from "./sendMessage/sendMessageInput/SendMessageInputTop";
+import SendMessageInputDown from "./sendMessage/sendMessageInput/SendMessageInputDown";
+
 
 import './chat.scss';
 
@@ -17,7 +25,8 @@ export default class Chat extends React.Component {
 
         this.state = {
             showUsers: false,
-            messages: []
+            messages: [],
+            isOpenChat: false
         }
     }
 
@@ -44,6 +53,15 @@ export default class Chat extends React.Component {
 
     async getLoggedUsers() {
         return this.loggedUsers = await this.server.getLoggedUsers();
+    }
+
+    onFocus() {
+        this.setState({ isOpenChat: true })
+        return this.getLoggedUsers();
+    }
+
+    onBlur() {
+        return this.setState({ isOpenChat: false });
     }
 
     //----------Послать сообщение
@@ -87,13 +105,14 @@ export default class Chat extends React.Component {
     getUserToInput(name) {
         this.setState({ showUsers: false });
         this.message.current.value = '';
+        this.message.current.focus();
         return this.message.current.value = '@' + name + ' ';
     }
 
     render() {
         return(
-            <div className="chat-box">
-                <div className="message-block">
+            <div className={`chat-box`}>
+                <div className={`message-block ${ this.state.isOpenChat ? 'showChat' : 'hideChat' }`}>
                     {/* ------------------------------Уф.....Ну тут кароче чота происходит....... Вам не обязательно знать......---------------------------- */}
                     { 
                         this.state.showUsers ? 
@@ -124,21 +143,26 @@ export default class Chat extends React.Component {
                     }
                 </div>
                 <form className="send-message-block">
+                    <SendMessageInputLeft/>
+                    <SendMessageInputRight/>
+                    <SendMessageInputDown/>
+                    <SendMessageInputTop/>
                     <input 
                         className="message-input"
                         type={'text'} 
                         ref={this.message}
-                        onFocus={() => this.getLoggedUsers()}
-                        onBlur={() => {}}
+                        onFocus={() => this.onFocus()}
+                        onBlur={() => this.onBlur()}
                         onInput={() => this.showAvailableUsers()}
                         onKeyDown={(e) => this.closeList(e)}
                     />
-                    <input 
+                    <button 
                         className="send-message-button"
                         type={'submit'}
-                        value={'Send'}
                         onClick={(e) => this.sendMessage(e)}
-                    />
+                    >
+                        <SendMessageButton/>
+                    </button>
                 </form>
             </div>
         );

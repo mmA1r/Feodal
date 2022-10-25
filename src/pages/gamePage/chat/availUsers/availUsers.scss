@@ -1,27 +1,35 @@
+@import '../../gameConst.scss';
+
 .avail-users-box {
     position: absolute;
+    bottom: 23px;
+    left: 0;
+
     margin: 0;
     padding: 0;
-    bottom: 21px;
-    left: 0;
+    border: 2px solid $icon-border-color;
+    border-bottom: 0;
+
     width: 120px;
     max-width: 120px;
     max-height: 200px;
 
-    border: 1px solid white;
+    background-color: $icon-background-darker-color-active;
 
     overflow-y: auto;
     list-style-type: none;
 
     & li:hover {
-        color: black;
-        background-color: white;
+        color: $jewerly-border-color;
+        border-right: 1px solid $jewerly-border-color;
+        border-left: 1px solid $jewerly-border-color;
+        cursor: pointer;
     }
 }
 
 .user-name {
     margin: 5px;
+    padding-left: 3px;
     color: white;
     font-family: 'Inter', sans-serif;
-    border: 1px solid black;
 }

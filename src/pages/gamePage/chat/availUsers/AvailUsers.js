@@ -17,7 +17,7 @@ export default class AvailUsers extends React.Component {
                     return (
                         <li 
                             onClick={() => this.placeUser(user)}
-                            className="user-name" 
+                            className="user-name"
                             key={user}
                         >{`${user}`}</li>
                     );

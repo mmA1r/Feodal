@@ -1,13 +1,4 @@
-$icon-inside-color: white;
-$icon-inside-active-color: #24233D;
-$icon-border-color: #C17400;
-$icon-background-color: #7c4227;
-$jewerly-border-color: #FFB546;
-$jewerly-color: #1FFFF1;
-$jewerly-active-color: #EB72FF;
-$jewerly-background-color: #00C4B8;
-$jewerly-background-active-color: #CA3DBC;
-
+@import '../../gameConst.scss';
 
 .logout-icon {
     width: 51px;
@@ -15,6 +6,7 @@ $jewerly-background-active-color: #CA3DBC;
 }
 
 #exit-svg {
+    cursor: pointer;
     & > .icon-inside {
         fill: $icon-inside-color;
     }
@@ -76,7 +68,7 @@ $jewerly-background-active-color: #CA3DBC;
     & > .jewerly-background, 
     & > .light, 
     & > .open-door {
-        transition: 0.15s;
+        transition: 0.2s;
     }
 
     &:active {

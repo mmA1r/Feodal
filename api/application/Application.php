@@ -61,7 +61,6 @@ class Application {
     function sendMessageTo($params) {
         if($params['token'] && $params['message']) {
             $user = $this->user->getUser($params['token']);
-            print_r($user);
             if($user) {
                 return $this->chat->sendMessageTo($user->id, $user->name, $params['message'], $params['messageTo']);
             }

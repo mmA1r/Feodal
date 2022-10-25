@@ -1,0 +1,63 @@
+@import '../../../gameConst.scss';
+
+.send-message-button-beauty-version {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    width: 100%;
+    fill: none;
+
+    &:hover > .background-send-button {
+        fill: $icon-background-darker-color-active;
+    }
+    &:hover > .scroll {
+        transform: translate(0, -100%);
+        opacity: 0;
+    }
+    &:hover > .scroll-active {
+        opacity: 1;
+    }
+    &:active > .scroll-circle {
+        fill: $jewerly-background-active-color;
+    }
+}
+
+
+.background-send-button {
+    width: 46px;
+    height: 23px;
+    fill: $icon-background-color;
+}
+
+.border-send-button {
+    width: 44px;
+    height: 21px;
+    stroke: $icon-border-color;
+    stroke-width: 2px;
+}
+
+.scroll {
+    fill: $icon-inside-color;
+}
+
+.scroll-active {
+    fill: $icon-inside-color;
+    opacity: 0;
+}
+
+.scroll-circle {
+    fill: red;
+    stroke: $icon-background-darker-color-active;
+}
+
+.background-send-button,
+.scroll,
+.scroll-active,
+.scroll-circle,
+.background-send-button:hover,
+.scroll:hover,
+.scroll-active:hover,
+.scroll-circle:hover {
+    transition: 0.2s;
+}

@@ -1,14 +1,16 @@
+@import '../gameConst.scss';
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 
 .chat-box {
-    display: flex;
-    flex-direction: column;
     position: absolute;
+    display: flex;
     bottom: 0;
     left: 0;
+    flex-direction: column;
     width: 450px;
     height: 500px;
-    border: 1px solid white;
+    border: 0;
 }
 
 .message-block {
@@ -17,32 +19,78 @@
     overflow-y: auto;
     width: 100%;
     height: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+
+    background: linear-gradient(to top, #aa05298c, transparent 15% , transparent);
+
+    &.showChat {
+        transition: 0.3s;
+        opacity: 1;
+    }
+    &.hideChat {
+        transition: 0.3s;
+        opacity: 0;
+    }
+
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: $icon-border-color;
+    }
 }
 
 .send-message-block {
     width: 100%;
+    border: 0;
     display: flex;
 }
 
 .send-message-button {
-    width: 70px;
+    position: relative;
+    min-width: 46px;
+    padding: 0;
+    background: transparent;
+    border: 0;
     outline: none;
     user-select: none;
+    cursor: pointer;
 }
 
 .message-input {
+    box-sizing: border-box;
     width: 100%;
-    outline: none;
+    height: 23px;
+
+    border: 0;
+    border-top: 2px solid $icon-border-color;
+    border-bottom: 2px solid $icon-border-color;
     color: white;
-    background-color: transparent;
-    border: 1px solid white;
-    padding: 0;
+    background-color: $icon-background-color;
+    padding: 0 0 2px 7px;
+    font-size: 15px;
     font-family: 'Inter', sans-serif;
+
+    outline: none;
+
+    &:focus {
+        background-color: $icon-background-darker-color-active;
+    }
+}
+
+.personal-message-line, .message-line {
+    background-color: #361b1b77;
+    border-left: 1px solid $icon-border-color;
+    padding: 4px 0;
 }
 
 .personal-message-line {
     .message-sender, .message {
-        color: plum;
+        color: rgb(230, 129, 230);
     }
 }
 
@@ -50,4 +98,8 @@
     .message-sender, .message {
         color: white;
     }
+}
+
+.message-sender, .message {
+    padding: 0 0 0 7px ;
 }

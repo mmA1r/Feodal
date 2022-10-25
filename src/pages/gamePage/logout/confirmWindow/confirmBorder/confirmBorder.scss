@@ -1,0 +1,20 @@
+@import '../../../gameConst.scss';
+
+.beauty-confirm-border {
+    position: absolute;
+    &.left-side {
+        left: 0;
+        top: 0;
+    }
+    &.right-side {
+        right: 0;
+        top: 0;
+    }
+
+    .border-back {
+        fill: $icon-border-color;
+    }
+    .border-front {
+        fill: $jewerly-border-color;
+    }
+}
