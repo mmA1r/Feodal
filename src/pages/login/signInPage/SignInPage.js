@@ -25,7 +25,8 @@ export default class SignInPage extends React.Component {
         }
 
         this.state = {
-            hide: 'effect-hide'
+            hide: 'effect-hide',
+            invalidMessage: false
         }
 
         this.style = 'login-style';
@@ -43,7 +44,16 @@ export default class SignInPage extends React.Component {
             setTimeout(() => {
                 return this.navigate(this.routes.Game.path);
             }, 1500);
+        } else {
+            return this.showInvalidMessage();
         }
+    }
+
+    showInvalidMessage() {
+        this.setState({ invalidMessage: true });
+        setTimeout(() => {
+            this.setState({ invalidMessage: false });
+        }, 2000);
     }
     
     //-----------------Перемещает На страницу регистрации
@@ -72,6 +82,7 @@ export default class SignInPage extends React.Component {
                             />
                         );
                     })}
+                    <div className={`invalid-message ${this.state.invalidMessage ? 'invalid-show' : 'invalid-hide'}`}>*invalid login or password</div>
                     <div className="button-box">
                         <LoginButton
                             onClick={() => this.signIn()}

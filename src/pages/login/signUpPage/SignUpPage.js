@@ -21,7 +21,8 @@ export default class SignUpPage extends React.Component {
         this.name = React.createRef();
 
         this.state = {
-            hide: 'effect-hide'
+            hide: 'effect-hide',
+            invalidMessage: false
         }
 
         this.inputs = {
@@ -45,7 +46,16 @@ export default class SignUpPage extends React.Component {
             setTimeout(() => {
                 return this.routeToSignIn();
             }, 1500);
+        } else {
+            return this.showInvalidMessage();
         }
+    }
+
+    showInvalidMessage() {
+        this.setState({ invalidMessage: true });
+        setTimeout(() => {
+            this.setState({ invalidMessage: false });
+        }, 2500);
     }
 
     //-----------------Перемещает На страницу логина
@@ -74,6 +84,7 @@ export default class SignUpPage extends React.Component {
                             />
                         );
                     })}
+                    <div className={`invalid-message ${this.state.invalidMessage ? 'invalid-show' : 'invalid-hide'}`}>this name or login is already used</div>
                     <div className="button-box">
                         <LoginButton
                             onClick={() => this.signUp()}

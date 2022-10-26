@@ -32,6 +32,22 @@ $helmet-logo-effects: url(../../../assets/logo/logo-helmet2.2.png);
     }
 }
 
+.invalid-message {
+    &.invalid-show {
+        opacity: 1;
+        transition: 0.1s;
+    }
+    &.invalid-hide {
+        opacity: 0;
+        transition: 0.1s;
+    }
+
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: red;
+}
+
 .button-box {
     display: flex;
     align-items: center;

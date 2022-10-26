@@ -1,7 +1,10 @@
 import React from "react";
-import Chat from "./chat/Chat";
 
 import Logout from './logout/Logout';
+import Chat from "./chat/Chat";
+import Game from "./game/Game";
+
+import './gamePage.scss'
 
 export default class GamePage extends React.Component {
     constructor(props) {
@@ -15,6 +18,7 @@ export default class GamePage extends React.Component {
             <div className="game">
                 <Logout navigate={this.navigate}></Logout>
                 <Chat/>
+                <Game/>
             </div>
         );
     }
