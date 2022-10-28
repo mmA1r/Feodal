@@ -3,12 +3,14 @@
 require('user/User.php');
 require('db/DB.php');
 require('chat/Chat.php');
+require('game/Game.php');
 
 class Application {
     function __construct() {
         $db = new DB();
         $this->user = new User($db);
         $this->chat = new Chat($db);
+        $this->game = new Game($db);
     }
 
     function login($params) {
@@ -53,7 +55,11 @@ class Application {
         if($params['token'] && $params['message']) {
             $user = $this->user->getUser($params['token']);
             if($user) {
-                return $this->chat->sendMessageAll($user->id, $user->name, $params['message']);
+                return $this->chat->sendMessageAll(
+                    $user->id, 
+                    $user->name, 
+                    $params['message']
+                );
             }
         }
     }
@@ -62,23 +68,33 @@ class Application {
         if($params['token'] && $params['message']) {
             $user = $this->user->getUser($params['token']);
             if($user) {
-                return $this->chat->sendMessageTo($user->id, $user->name, $params['message'], $params['messageTo']);
+                return $this->chat->sendMessageTo(
+                    $user->id, 
+                    $user->name, 
+                    $params['message'], 
+                    $params['messageTo']
+                );
             }
         }
     }
 
-    function getMessage($params) {
-        if($params['token']) {
+    function getMessages($params) {
+        if($params['token'] && $params['hash']) {
             $user = $this->user->getUser($params['token']);
-            $message = $this->chat->getMessage($user->name);
-            if($message) {
-                return $message;
-            }
+            return $this->chat->getMessages($params['hash'], $user->id);
         }
     }
 
     function getScene($params) {
         
+    }
+
+    function getMap($params) {
+        if($params['token']) {
+            if ($this->user->getUser($params['token'])) {
+                return $this->game->getMap()['map'];
+            }
+        }
     }
 
     function getCastle($params) {

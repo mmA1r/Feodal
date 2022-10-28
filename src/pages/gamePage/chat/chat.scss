@@ -82,6 +82,9 @@
     &:focus {
         background-color: $icon-background-darker-color-active;
     }
+    &.show-input-failure {
+        color: rgb(247, 90, 90);
+    }
 }
 
 .personal-message-line, .message-line {

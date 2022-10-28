@@ -10,18 +10,19 @@ function router($params) {
         $app = new Application();
         switch($method) {
             //auth
-            case 'login' : return $app->login($params);
-            case 'logout' : return $app->logout($params);
-            case 'registration' : return $app->registration($params);
+            case 'login': return $app->login($params);
+            case 'logout': return $app->logout($params);
+            case 'registration': return $app->registration($params);
             //chat
-            case 'getLoggedUsers' : return $app->getLoggedUsers($params);
-            case 'sendMessageAll' : return $app->sendMessageAll($params);
-            case 'sendMessageTo' : return $app->sendMessageTo($params);
-            case 'getMessage' : return $app->getMessage($params);
+            case 'getLoggedUsers': return $app->getLoggedUsers($params);
+            case 'sendMessageAll': return $app->sendMessageAll($params);
+            case 'sendMessageTo': return $app->sendMessageTo($params);
+            case 'getMessages': return $app->getMessages($params);
             //game
-            case 'getScene' : return $app->getScene($params);
-            case 'getCastle' : return $app->getCastle($params);
-            case 'command' : return $app->command($params);
+            case 'getScene': return $app->getScene($params);
+            case 'getCastle': return $app->getCastle($params);
+            case 'command': return $app->command($params);
+            case 'getMap': return $app->getMap($params);
         }
     }
     return false;

@@ -9,15 +9,27 @@ class Chat {
         return $this->db->getLoggedUsers();
     }
 
-    function sendMessageAll($userID, $name, $message) {
-        return $this->db->sendMessage($userID, $name, $message);
+    function sendMessageAll($userId, $name, $message) {
+        $this->db->sendMessageAll($userId, $name, $message);
+        $hash = md5(rand());
+        $this->db->setChatHash($hash);
+        return array('hash' => $hash);
     }
 
-    function sendMessageTo($userID, $name, $message, $messageTo) {
-        return $this->db->sendMessage($userID, $name, $message, $messageTo);
+    function sendMessageTo($userId, $name, $message, $messageTo) {
+        $this->db->sendMessageTo($userId, $name, $message, $messageTo);
+        $hash = md5(rand());
+        $this->db->setChatHash($hash);
+        return array('hash' => $hash);
     }
 
-    function getMessage($name) {
-        return $this->db->getMessage($name);
+    function getMessages($hash, $userId = null) {
+        $dbHash = $this->db->getChatHash();
+        if ($hash != $dbHash) {
+            return array(
+                'messages' => $this->db->getMessages($userId),
+                'hash' => $dbHash
+            );
+        }
     }
 }

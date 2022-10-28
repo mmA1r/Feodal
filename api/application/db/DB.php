@@ -23,8 +23,20 @@ class DB {
         $this->db = null;
     }
 
+    private function getArray($query){
+        $stmt = $this->db->query($query);
+        $result = array();
+        while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+            $result[] = $row;
+        }
+        return $result;
+    }
+
+    /***************/
+    /* about users */
+    /***************/
     public function getUser($login){
-        $query = 'SELECT * FROM users WHERE login="' . $login . '"';
+        $query = 'SELECT * FROM users WHERE login="'.$login.'"';
         return $this->db->query($query)->fetchObject();
     }
 
@@ -34,53 +46,77 @@ class DB {
     }
 
     public function getUserByToken($token){
-        $query = 'SELECT * FROM users WHERE token="' . $token . '"';
+        $query = 'SELECT * FROM users WHERE token="'.$token.'"';
         return $this->db->query($query)->fetchObject();
     }
 
     public function addUser($name, $login, $password) {
         $query = 'INSERT INTO users (name, login, password) VALUES(
-            "' . $name . '",
-            "' . $login . '",
-            "' . $password . '"
-        )';
-        $this->db->query($query);
-        return true;
-    }
-
-    public function getMessage($name) {
-        $query = 'SELECT * FROM chat WHERE
-            message!="" AND 
-            message IS NOT NULL AND 
-            name="' . $name . '" OR
-            message_to="' . $name . '" OR 
-            message_to=""';
-        return $this->getArray($query);
-    }
-
-    public function sendMessage($userID, $name, $message, $messageTo = '') {
-        $query = 'INSERT INTO chat (user_id, name, message, message_to) VALUES (
-            "' . $userID . '", 
-            "' . $name . '", 
-            "' . $message . '",
-            "' . $messageTo . '"
+            "'.$name.'",
+            "'.$login.'",
+            "'.$password.'"
         )';
         $this->db->query($query);
         return true;
     }
 
     public function updateToken($id, $token){
-        $query = 'UPDATE users SET token="' . $token . '" WHERE id=' . $id;
+        $query = 'UPDATE users SET token="'.$token.'" WHERE id='.$id;
         $this->db->query($query);
         return true;
     }
 
-    private function getArray($query){
-        $stmt = $this->db->query($query);
-        $result = array();
-        while($row = $stmt->fetch(PDO::FETCH_OBJ)){
-            $result[] = $row;
+    /***************/
+    /* about chat */
+    /***************/
+    public function getMessages($userId) {
+        if($userId) {
+            $query = 'SELECT * FROM messages WHERE message!="" AND message IS NOT NULL AND messageTo="" OR  userId='.$userId.' OR messageTo='.$userId; 
+        } else {
+            $query = 'SELECT * FROM messages WHERE message!="" AND message IS NOT NULL AND messageTo="" AND userId='.$userId;
         }
-        return $result;
+        return $this->getArray($query);
+    }
+
+    public function sendMessageAll($userId, $name, $message) {
+        $query = 'INSERT INTO messages (userId, name, message, messageTo) VALUES (
+            "'.$userId.'", 
+            "'.$name.'", 
+            "'.$message.'",
+            ""
+            )';
+        $this->db->query($query);
+        return true;
+    }
+
+    public function sendMessageTo($userId, $name, $message, $messageTo) {
+        print_r($messageTo);
+        $query = 'INSERT INTO messages (userId, name, message, messageTo) VALUES (
+            '.$userId.', 
+            "'.$name.'",
+            "'.$message.'", 
+            "'.$messageTo.'"
+        )';
+        $this->db->query($query);
+        return true;
+    }
+
+    public function getChatHash() {
+        $query = 'SELECT * FROM statuses';
+        return $this->db->query($query)->fetchObject()->chatHash;
+    }
+
+    public function setChatHash($hash) {
+        $query = 'UPDATE statuses SET chatHash="'.$hash.'"';
+        $this->db->query($query);
+        return true;
+    }  
+    
+    /***************/
+    /* about game */
+    /***************/
+    public function getMap() {
+        $query = 'SELECT * FROM map';
+        return $this->db->query($query)->fetchObject()->tiles;
     }
 }

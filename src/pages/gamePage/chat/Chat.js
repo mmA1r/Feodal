@@ -25,6 +25,7 @@ export default class Chat extends React.Component {
 
         this.state = {
             showUsers: false,
+            showInputFailure: false,
             messages: [],
             isOpenChat: false
         }
@@ -32,8 +33,8 @@ export default class Chat extends React.Component {
 
     componentDidMount() {
         setInterval(() => {
-            this.getMessage();
-        }, 300);
+            this.getMessages();
+        }, 500);
     }
 
     async sendMessageTo(message, messageTo) {
@@ -44,8 +45,8 @@ export default class Chat extends React.Component {
         return await this.server.sendMessageAll(message);
     }
     
-    async getMessage() {
-        const message = await this.server.getMessage();
+    async getMessages() {
+        const message = await this.server.getMessages();
         if(this.state.messages.length !== message.length) {
             return this.setState({ messages: message.reverse() });
         }
@@ -70,14 +71,50 @@ export default class Chat extends React.Component {
         const text = this.message.current.value;
         this.message.current.value = '';
         if(text) {
-            const messageAll = text.split('@');
-            if(!messageAll[1]) {
-                return this.sendMessageAll(messageAll[0]);
+            const arrOfSymbols = text.split('');
+            if (
+                arrOfSymbols[0] === '@' && 
+                arrOfSymbols.includes('#')
+            ) {
+                return this.sendMessageById(text);
+            } else if (
+                arrOfSymbols[0] === '@' && 
+                !arrOfSymbols.includes('#')
+            ) {
+                return this.sendMessageWithoutId(text);
+            } else if(arrOfSymbols[0] !== '@') {
+                this.sendMessageAll(text);
             }
-            const messageArr = text.split(/[@\s]+/).slice(1);
-            const messageTo = messageArr[0];
-            const message = messageArr.slice(1).join(' ');
-            return this.sendMessageTo(message, messageTo);
+        }
+    }
+
+    sendMessageById(message) {
+        const splttedText = message.split('#').slice(1).join(' ').split(' ');
+        const userId = splttedText[0];
+        const userMessage = splttedText.slice(1).join(' ');
+        return this.sendMessageTo(userMessage, userId);
+    }
+
+    sendMessageWithoutId(message) {
+        const splttedText = message.split('@').slice(1).join(' ').split(' ');
+        const userName = splttedText[0];
+        const userMessage = splttedText.slice(1).join(' ');
+        const userArr = [];
+        this.loggedUsers.forEach(user => {
+            if(user.name === userName) {
+                return userArr.push(user);
+            }
+        });
+        if(userArr.length > 1) {
+            const length = userArr[0].name.split('').length;
+            this.message.current.value = `@${userArr[0].name}#  ${userMessage}`;
+            this.setState({ showInputFailure: true });
+            setTimeout(() => {
+                return this.setState({ showInputFailure: false });
+            }, 300);
+            return this.message.current.selectionStart = this.message.current.selectionEnd = length + 2;
+        } else {
+            this.sendMessageTo(userMessage, userArr[0].id);
         }
     }
 
@@ -102,11 +139,12 @@ export default class Chat extends React.Component {
     }
     
     // Кладет выбранного юзера в инпут
-    getUserToInput(name) {
+    getUserToInput(name, id) {
         this.setState({ showUsers: false });
+        this.userAddresseeId = id;
         this.message.current.value = '';
         this.message.current.focus();
-        return this.message.current.value = '@' + name + ' ';
+        return this.message.current.value = '@' + name + '#' + id + ' ';
     }
 
     render() {
@@ -118,13 +156,13 @@ export default class Chat extends React.Component {
                         this.state.showUsers ? 
                             <AvailUsers 
                                 users={this.loggedUsers}
-                                placeUser={(name) => this.getUserToInput(name)}
+                                placeUser={(name, id) => this.getUserToInput(name, id)}
                             />
                         : ''
                     }
                     {
                         this.state.messages.map(message => {
-                            return message.message_to !== '' ? 
+                            return message.messageTo !== '' ? 
                                 <div
                                     className="personal-message-line" 
                                     key={message.id}
@@ -148,7 +186,7 @@ export default class Chat extends React.Component {
                     <SendMessageInputDown/>
                     <SendMessageInputTop/>
                     <input 
-                        className="message-input"
+                        className={`message-input ${this.state.showInputFailure ? 'show-input-failure' : ''}`}
                         type={'text'} 
                         ref={this.message}
                         onFocus={() => this.onFocus()}

@@ -1,6 +1,7 @@
 export default class Server {
     constructor(token) {
         this.token = token || null;
+        this.hash = null;
     }
 
     async send(params = {}) {
@@ -58,10 +59,7 @@ export default class Server {
             method: 'getLoggedUsers',
             token: this.token
         });
-        const dataNames = data.map(user => {
-            return user.name;
-        })
-        return dataNames;
+        return data;
     }
 
     async sendMessageAll(message) {
@@ -81,12 +79,13 @@ export default class Server {
         });
     }
 
-    async getMessage() {
+    async getMessages() {
         const data = await this.send({ 
-            method: 'getMessage',
-            token: this.token 
+            method: 'getMessages',
+            token: this.token,
+            hash: this.hash
         });
-        return data;
+        return data.messages;
     }
 
     async getScene() {
@@ -102,5 +101,10 @@ export default class Server {
     async command() {
         // eslint-disable-next-line
         const data = await this.send({ method: 'command' });
+    }
+
+    async getMap() {
+        const data = await this.send({ method: 'getMap' });
+        return data;
     }
 }

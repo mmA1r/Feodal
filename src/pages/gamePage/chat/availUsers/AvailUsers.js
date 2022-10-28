@@ -16,10 +16,10 @@ export default class AvailUsers extends React.Component {
                 {this.users.map(user => {
                     return (
                         <li 
-                            onClick={() => this.placeUser(user)}
+                            onClick={() => this.placeUser(user.name, user.id)}
                             className="user-name"
-                            key={user}
-                        >{`${user}`}</li>
+                            key={user.id}
+                        >{`${user.name}#${user.id}`}</li>
                     );
                 })}
             </ul>
