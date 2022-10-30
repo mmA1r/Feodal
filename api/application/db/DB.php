@@ -117,6 +117,6 @@ class DB {
     /***************/
     public function getMap() {
         $query = 'SELECT * FROM map';
-        return $this->db->query($query)->fetchObject()->tiles;
+        return $this->getArray($query);
     }
 }
