@@ -21,6 +21,7 @@ function router($params) {
             //game
             case 'getScene': return $app->getScene($params);
             case 'getCastle': return $app->getCastle($params);
+            case 'castleLevelUp': return $app->castleLevelUp($params);
             case 'command': return $app->command($params);
             case 'getMap': return $app->getMap($params);
         }
