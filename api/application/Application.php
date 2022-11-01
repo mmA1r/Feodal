@@ -97,8 +97,18 @@ class Application {
         }
     }
 
-    function getCastle($params) {
-        
+    public function getCastle($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->game->getCastle($user);
+        }
+    }
+
+    public function castleLevelUp($params){
+        $user = $this->user->getUser($params['token']);
+        if ($user){
+            return $this->game->castleLevelUp($user);
+        }
     }
 
     function command($params) {
