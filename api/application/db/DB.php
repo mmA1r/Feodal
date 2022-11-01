@@ -119,4 +119,28 @@ class DB {
         $query = 'SELECT * FROM map';
         return $this->getArray($query);
     }
+
+    public function getCastle($user) {
+        $query = 'SELECT * FROM castles WHERE idOwner=' . $user;
+        return $this->db->query($query)->fetchObject();
+    }
+
+    public function castleLevelUp($id){
+
+        $query = 'UPDATE castles SET level= level + 1  WHERE id=' . $id ;
+        $this->db->query($query);
+        return true;
+    }
+
+    public function getGold($user){
+        $query = 'SELECT gold FROM castles WHERE idOwner=' . $user;
+        return $this->db->query($query)->fetchObject();
+    }
+
+    public function updateGold($id,$gold){
+        $query = 'UPDATE castles SET gold=gold +'. $gold . '   WHERE id=' . $id ;
+        $this->db->query($query);
+        return true;
+
+    }
 }
