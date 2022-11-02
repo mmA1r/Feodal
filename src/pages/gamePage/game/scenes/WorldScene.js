@@ -46,6 +46,12 @@ var WorldScene = new Phaser.Class({
 
     update: function() {
         const camera = this.cameras.main;
+        this.keys = this.input.keyboard.addKeys({
+            a:  Phaser.Input.Keyboard.KeyCodes.A,
+            s:  Phaser.Input.Keyboard.KeyCodes.S,
+            d:  Phaser.Input.Keyboard.KeyCodes.D,
+            w:  Phaser.Input.Keyboard.KeyCodes.W
+        });
         if(this.keys.a.isDown && camera.x < this.cameraBounds.left) {
             camera.x += 7;
         } else if(this.keys.d.isDown && camera.x - camera.scaleManager.parent.offsetParent.clientWidth > -camera.width) {

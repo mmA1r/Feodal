@@ -1,107 +1,127 @@
 <?php
 
-require('user/User.php');
-require('db/DB.php');
-require('chat/Chat.php');
-require('game/Game.php');
+require("user/User.php");
+require("db/DB.php");
+require("chat/Chat.php");
+require("game/Game.php");
 
 class Application {
-    function __construct() {
-        $db = new DB();
+    function __construct(){
+        $config = json_decode(file_get_contents('./config/config.json'),true);
+        $db = new DB($config["DataBase"]);
         $this->user = new User($db);
         $this->chat = new Chat($db);
         $this->game = new Game($db);
     }
 
-    function login($params) {
-        if($params['login'] && $params['password']) {
-            return $this->user->login(
-                $params['login'],
-                $params['password']
-            );
+    //функция проверки полученных значений в запросе
+    function validQuery($value,$type) {
+    }
+
+
+    ////////////////////////////////////////
+    //////////////forUser///////////////////
+    ////////////////////////////////////////
+
+    public function login($params) {
+        if ($params['login'] && $params['password']) {
+        return $this->user->login($params['login'],$params['password']);
         }
     }
 
-    function logout($params) {
-        if($params['token']) {
-            $user = $this->user->getUser($params['token']);
-            if($user) {
-                return $this->user->logout($user->id);
-            }
-        }
-    }
-
-    function registration($params) {
+    public function registration($params) {
         [
-            'name' => $name,
-            'login' => $login,
-            'password' => $password
+        'login' => $login,
+        'password' => $password,
+        'name' => $name
         ] = $params;
-        if($name && $login && $password) {
-            return $this->user->registration($name, $login, $password);
+        if ($login && $password && $name) {
+            return $this->user->registration($login,$password,$name);
         }
     }
 
-    function getLoggedUsers($params) {
-        if($params['token']) {
-            $users = $this->chat->getLoggedUsers();
-            if($users) {
-                return $users;
+    public function logout($params) {
+            $user=$this->user->getUser($params['token']);
+            if ($user){
+                return $this->user->logout($user);
             }
+    }
+
+
+    ////////////////////////////////////////
+    //////////////forChat///////////////////
+    ////////////////////////////////////////
+    
+    public function sendMessage($params) {
+        ['token'=>$token,
+        'message'=>$message,
+        'messageTo'=>$messageTo
+        ] = $params;
+        $user = $this->user->getUser($token);
+        if ($user && $message) {
+            return $this->chat->sendMessage($user, $message, $messageTo);
+        }
+    }
+    
+    public function getMessages($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->chat->getMessages($params['hash'], $user);
         }
     }
 
-    function sendMessageAll($params) {
-        if($params['token'] && $params['message']) {
-            $user = $this->user->getUser($params['token']);
-            if($user) {
-                return $this->chat->sendMessageAll(
-                    $user->id, 
-                    $user->name, 
-                    $params['message']
-                );
-            }
+    public function getLoggedUsers($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->chat->getLoggedUsers();
         }
     }
 
-    function sendMessageTo($params) {
-        if($params['token'] && $params['message']) {
-            $user = $this->user->getUser($params['token']);
-            if($user) {
-                return $this->chat->sendMessageTo(
-                    $user->id, 
-                    $user->name, 
-                    $params['message'], 
-                    $params['messageTo']
-                );
-            }
+    ////////////////////////////////////////
+    //////////////forGame///////////////////
+    ////////////////////////////////////////
+
+
+    public function getMap($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->game->getMap();
         }
     }
 
-    function getMessages($params) {
-        if($params['token'] && $params['hash']) {
-            $user = $this->user->getUser($params['token']);
-            return $this->chat->getMessages($params['hash'], $user->id);
+    public function getCastle($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->game->getCastle($user);
         }
     }
 
-    function getScene($params) {
-        
-    }
-
-    function getMap($params) {
-        if($params['token']) {
-            if ($this->user->getUser($params['token'])) {
-                return $this->game->getMap()['map'];
-            }
+    public function createCastle($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user && $params['posX'] && $params['posY']) {
+            return $this->game->createCastle($user, $params['posX'],$params['posY']);
         }
     }
 
-    function getCastle($params) {
-        
+    public function upgradeCastle($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->game->upgradeCastle($user);
+        }
     }
 
-    function command($params) {
-
+    public function getScene($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->game->getScene($params['unitsHash'], $params['castlesHash']);
+        }
     }
+
+    public function buyUnit($params) {
+        $user = $this->user->getUser($params['token']);
+        if ($user) {
+            return $this->game->buyUnit($user, $params['unitType']);
+        } 
+    }
+
 }

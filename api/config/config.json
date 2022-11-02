@@ -1,0 +1,9 @@
+{
+"DataBase":{
+	"host": "localhost",
+	"port": "3306",
+	"name": "feodal2",
+	"user": "root",
+	"password":""
+	}
+}

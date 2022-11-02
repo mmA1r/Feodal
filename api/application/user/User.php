@@ -1,34 +1,37 @@
 <?php
+    class User {
+        function __construct($db) {
+            $this->db = $db;
+        }
 
-class User {
-    function __construct($db) {
-        $this->db = $db;
-    }
+        public function login($login,$password) {
+            $user = $this->db->getUser($login);
+            if ($user && $password === $user->password) {
+                $token = md5(rand());
+                $this->db->updateToken($user->id,$token);
+                return array(
+                    'name' => $user->name,
+                    'token' => $token
+                );
+            }
+            }
 
-    function login($login, $password) {
-        $user = $this->db->getUser($login);
-        if($login && $password === $user->password) {
-            $token = md5(rand());
-            $this->db->updateToken($user->id, $token);
-            return array(
-                'name' => $user->name,
-                'token' => $token
-            );
+        public function registration($login, $password, $name) {
+            $user = $this->db->getUser($login);
+            if (!$user) {
+                $this->db->addUser($login, $password, $name);
+                return true;
+            }
+        }
+
+        public function logout($user) {
+            $this->db->updateToken($user,'');
+            return true;
+        }
+
+        function getUser($token) {
+            if ($token) {
+                return $this->db->getUserByToken($token);
+            }
         }
     }
-
-    function logout($id) {
-        return $this->db->updateToken($id, null);
-    }
-
-    function registration($name, $login, $password) {
-        $user = $this->db->getUser($login);
-        if(!$user) {
-            return $this->db->addUser($name, $login, $password);
-        }
-    }
-
-    function getUser($token) {
-        return $this->db->getUserByToken($token);
-    }
-}

@@ -54,7 +54,7 @@ export default class LogoutIcon extends React.Component {
                             <stop offset="1" stopColor="#E16885"/>
                         </linearGradient>
                         <linearGradient id="border-gradient" x1="25.5" y1="0" x2="25.5" y2="51" gradientUnits="userSpaceOnUse">
-                            <stop stopColor="#333152"/>
+                            <stop stopColor="#1b174e"/>
                             <stop offset="1" stopColor="#DC2466"/>
                         </linearGradient>
                         <radialGradient id="open-door-light" cx="0" cy="0" r="0.9" gradientUnits="userSpaceOnUse" gradientTransform="translate(18.8418 43.1434) rotate(90) scale(33.2282 33.4438)">

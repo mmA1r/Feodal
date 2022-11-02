@@ -5,3 +5,55 @@
     position: relative;
     overflow: hidden;
 }
+
+.mini-map-window {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    box-sizing: border-box;
+
+    // background: #361b1b77;
+}
+
+.castle-manage-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 51px;
+    height: 51px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+    user-select: none;
+
+    z-index: 2;
+}
+
+.castle-interface {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 725px;
+    height: 200px;
+    margin-right: -50%;
+    transform: translate(-50%, 0);
+
+    border: 1px white solid;
+
+    &.show-castle-UI {
+        display: flex;
+        transform: translate(-50%, 0);
+        transition-duration: 0.4s;
+        transition-timing-function: ease-out;
+    }
+    &.hide-castle-UI {
+        transform: translate(-50%, 100%);
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in;
+    }
+}

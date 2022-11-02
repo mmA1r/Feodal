@@ -61,10 +61,6 @@ export default class Chat extends React.Component {
         return this.getLoggedUsers();
     }
 
-    onBlur() {
-        return this.setState({ isOpenChat: false });
-    }
-
     //----------Послать сообщение
     sendMessage(e) {
         e.preventDefault()
@@ -119,7 +115,7 @@ export default class Chat extends React.Component {
     }
 
     //--------Показывает залогининых юзеров
-    showAvailableUsers() {
+    showAvailableUsers(e) {
         const text = this.message.current.value;
         if(text) {
             const message = text.split();
@@ -147,9 +143,18 @@ export default class Chat extends React.Component {
         return this.message.current.value = '@' + name + '#' + id + ' ';
     }
 
+    blur() {
+        let chatBlock = document.querySelector('.chat-box');
+        document.addEventListener('click', (e) => {
+            if(!chatBlock.contains(e.target)) {
+                return this.setState({ isOpenChat: false });
+            }
+        });
+    }
+
     render() {
         return(
-            <div className={`chat-box`}>
+            <div className={`chat-box`} onClick={() => this.blur()}>
                 <div className={`message-block ${ this.state.isOpenChat ? 'showChat' : 'hideChat' }`}>
                     {/* ------------------------------Уф.....Ну тут кароче чота происходит....... Вам не обязательно знать......---------------------------- */}
                     { 
@@ -162,18 +167,18 @@ export default class Chat extends React.Component {
                     }
                     {
                         this.state.messages.map(message => {
-                            return message.messageTo !== '' ? 
+                            return message.messageTo !== null ? 
                                 <div
                                     className="personal-message-line" 
-                                    key={message.id}
+                                    key={message.message}
                                 >
                                     <span className="message-sender">{message.name}: </span>
                                     <span className="message">{message.message}</span>    
                                 </div>
                             : <div
                                 className="message-line" 
-                                key={message.id}
-                                >
+                                key={message.message}
+                            >
                                 <span className="message-sender">{message.name}: </span>
                                 <span className="message">{message.message}</span>    
                             </div>
@@ -190,8 +195,7 @@ export default class Chat extends React.Component {
                         type={'text'} 
                         ref={this.message}
                         onFocus={() => this.onFocus()}
-                        onBlur={() => this.onBlur()}
-                        onInput={() => this.showAvailableUsers()}
+                        onInput={(e) => this.showAvailableUsers(e)}
                         onKeyDown={(e) => this.closeList(e)}
                     />
                     <button 

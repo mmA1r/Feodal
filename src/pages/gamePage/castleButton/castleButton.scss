@@ -1,0 +1,95 @@
+@import '../gameConst.scss';
+
+.beauty-castle-manage-button {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 51px;
+    height: 51px;
+    fill: none;
+
+    cursor: pointer;
+    transition: 0.2s;
+
+    & > .castle-manage-button-back {
+        fill: $icon-background-color;
+        stroke: $icon-border-color;
+    }
+    & > .purple-light-door {
+        opacity: 0;
+        fill: url(#paint-door-diamond);  
+    }
+    & > .purple-light-window {
+        opacity: 0;
+        fill: url(#paint-window-diamond);  
+    }
+    & > .castle-manage-button-below {
+        fill: $icon-border-color;
+    }
+    & > .beauty-castle-manage-button-castle, > .castle-manage-button-door-brick {
+        fill: $icon-inside-color;
+    }
+    & > .beauty-castle-manage-button-door {
+        fill: $icon-background-color;
+        stroke: $icon-inside-color;
+    }
+    & > .castle-manage-button-window, > .castle-manage-button-bricks {
+        fill: $icon-background-color;
+    }
+    & > .castle-manage-button-jewel {
+        fill: $jewerly-color;
+        stroke: $jewerly-border-color;
+    }
+
+    &:hover {
+        & > .castle-manage-button-back {
+            fill: url(#paint-manage-button-back);
+            stroke: url(#paint-manage-button-border);
+        }
+        & > .castle-manage-button-below {
+            fill: $jewerly-background-active-color;
+        }
+        & > .beauty-castle-manage-button-castle {
+            fill: $icon-inside-active-color;
+        }
+        & > .beauty-castle-manage-button-door {
+            fill: $jewerly-active-color;
+            stroke: $icon-inside-active-color;
+        }
+        & > .castle-manage-button-door-brick {
+            fill: $icon-inside-active-color;
+        }
+        & > .castle-manage-button-window {
+            fill: $jewerly-active-color;
+        }
+        & > .castle-manage-button-jewel {
+            fill: $icon-inside-color;
+        }
+    }
+
+    &:active {
+        & > .purple-light-door, > .purple-light-window{
+            opacity: 1;
+        }
+    }
+}
+
+.castle-manage-button-back,
+.castle-manage-button-below,
+.beauty-castle-manage-button-castle,
+.beauty-castle-manage-button-door,
+.castle-manage-button-door-brick,
+.castle-manage-button-window,
+.castle-manage-button-jewel {
+    transition: 0.2s;
+}
+
+.castle-manage-button-back:hover,
+.castle-manage-button-below:hover,
+.beauty-castle-manage-button-castle:hover,
+.beauty-castle-manage-button-door:hover,
+.castle-manage-button-door-brick:hover,
+.castle-manage-button-window:hover,
+.castle-manage-button-jewel:hover {
+    transition: 0.2s;
+}

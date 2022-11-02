@@ -1,0 +1,28 @@
+@import '../gameConst.scss';
+
+.mini-map-frame {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 0;
+    left: 0;
+    fill: none;
+    z-index: 0;
+}
+
+.mini-map-frame-back {
+    fill: $icon-background-color;
+    stroke: $icon-border-color;
+}
+
+.mini-map-frame-jewel {
+    fill: $jewerly-color;
+}
+
+.mini-map-frame-border-1 {
+    stroke: $icon-border-color;
+}
+
+.mini-map-frame-border-2 {
+    fill: $icon-border-color;
+}

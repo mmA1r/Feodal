@@ -2,6 +2,8 @@ import React from "react";
 
 import Logout from './logout/Logout';
 import Chat from "./chat/Chat";
+import MiniMapFrame from "./miniMapFrame/MiniMapFrame";
+import CastleButton from "./castleButton/CastleButton";
 import Game from "./game/Game";
 
 import './gamePage.scss'
@@ -11,11 +13,27 @@ export default class GamePage extends React.Component {
         super(props);
         const { navigate } = props;
         this.navigate = navigate;
+
+        this.state = {
+            castleInterface: false,
+        }
     }
     
     render() {
         return(
             <div className="game">
+                <div className="mini-map-window">
+                    <button
+                        className="castle-manage-button"
+                        onClick={() => {this.setState({ castleInterface: !this.state.castleInterface })}} 
+                    >
+                        <CastleButton></CastleButton>
+                    </button>
+                    <MiniMapFrame></MiniMapFrame>
+                </div>
+                <div className={`castle-interface ${this.state.castleInterface ? 'show-castle-UI' : 'hide-castle-UI'}`}>
+                    
+                </div>
                 <Logout navigate={this.navigate}></Logout>
                 <Chat/>
                 <Game/>

@@ -40,10 +40,7 @@ export default class Game extends React.Component {
 
     render() {
         return (
-            <div
-                onClick={() => document.querySelector('.message-input').blur()}
-                id="game"
-            ></div>
+            <div id="game"></div>
         );
     }
 }
