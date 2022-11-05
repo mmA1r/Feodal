@@ -1,0 +1,48 @@
+$castle_1: url('../../../../assets/UI/CastleUI/castleMiniFrame.png');
+// $castle_2: url('../../../../assets/UI/CastleUI/CastleUI2.png');
+// $castle_3: url('../../../../assets/UI/CastleUI/CastleUI3.png');
+// $castle_4: url('../../../../assets/UI/CastleUI/CastleUI4.png');
+// $castle_5: url('../../../../assets/UI/CastleUI/CastleUI5.png');
+
+.castle-mini-frame {
+    box-sizing: border-box;
+    width: 200px;
+    height: 220px;
+    background-image: $castle_1 ;
+    background-position: center;
+    background-size: cover;
+    &.castle-level-1 {
+        background-image: $castle_1 ;
+        background-position: center;
+        background-size: cover;
+    }
+    &.castle-level-2 {
+        background-image: $castle_1 ;
+        background-position: center;
+        background-size: cover;
+    }
+    &.castle-level-3 {
+        background-image: $castle_1 ;
+        background-position: center;
+        background-size: cover;
+    }
+    &.castle-level-4 {
+        background-image: $castle_1 ;
+        background-position: center;
+        background-size: cover;
+    }
+    &.castle-level-5 {
+        background-image: $castle_1 ;
+        background-position: center;
+        background-size: cover;
+    }
+}
+
+.castle-mini-picture {
+    box-sizing: border-box;
+    position: relative;
+    top: 20px;
+    left: 20px;
+    height: 160px;
+    width: 160px;
+}

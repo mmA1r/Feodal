@@ -29,12 +29,18 @@ export default class Chat extends React.Component {
             messages: [],
             isOpenChat: false
         }
+
+        this.interval = null;
     }
 
     componentDidMount() {
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.getMessages();
         }, 500);
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     async sendMessageTo(message, messageTo) {
@@ -170,14 +176,14 @@ export default class Chat extends React.Component {
                             return message.messageTo !== null ? 
                                 <div
                                     className="personal-message-line" 
-                                    key={message.message}
+                                    key={message.id}
                                 >
                                     <span className="message-sender">{message.name}: </span>
                                     <span className="message">{message.message}</span>    
                                 </div>
                             : <div
                                 className="message-line" 
-                                key={message.message}
+                                key={message.id}
                             >
                                 <span className="message-sender">{message.name}: </span>
                                 <span className="message">{message.message}</span>    

@@ -25,10 +25,11 @@
     height: 51px;
 
     border: none;
-    border-radius: 50%;
 
-    background: transparent;
+    background: none;
     user-select: none;
+    outline: none;
+    padding: 0;
 
     z-index: 2;
 }
@@ -38,15 +39,12 @@
     position: absolute;
     bottom: 0;
     left: 50%;
-    width: 725px;
-    height: 200px;
-    margin-right: -50%;
-    transform: translate(-50%, 0);
-
-    border: 1px white solid;
+    width: 950px;
+    height: 250px;
+    
+    z-index: 2;
 
     &.show-castle-UI {
-        display: flex;
         transform: translate(-50%, 0);
         transition-duration: 0.4s;
         transition-timing-function: ease-out;

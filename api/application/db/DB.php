@@ -77,7 +77,7 @@
         }
 
         public function getMessages($user) {
-            $query = 'SELECT u.name as name ,m.message as message ,m.messageTo FROM messages as m JOIN users AS u ON u.id=m.userId WHERE (userId=' . $user . ' or messageTo is NULL or messageTo=' . $user . ') ORDER BY m.id';
+            $query = 'SELECT u.name as name, m.message as message, m.messageTo, m.id FROM messages as m JOIN users AS u ON u.id=m.userId WHERE (userId=' . $user . ' or messageTo is NULL or messageTo=' . $user . ') ORDER BY m.id';
             return $this->getArray($query);
         }
 

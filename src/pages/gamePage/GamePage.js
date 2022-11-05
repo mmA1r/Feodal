@@ -7,6 +7,7 @@ import CastleButton from "./castleButton/CastleButton";
 import Game from "./game/Game";
 
 import './gamePage.scss'
+import CastleUI from "./castleUI/CastleUI";
 
 export default class GamePage extends React.Component {
     constructor(props) {
@@ -17,6 +18,10 @@ export default class GamePage extends React.Component {
         this.state = {
             castleInterface: false,
         }
+    }
+
+    componentDidMount() {
+        this.setState({ castleInterface: true });
     }
     
     render() {
@@ -32,7 +37,7 @@ export default class GamePage extends React.Component {
                     <MiniMapFrame></MiniMapFrame>
                 </div>
                 <div className={`castle-interface ${this.state.castleInterface ? 'show-castle-UI' : 'hide-castle-UI'}`}>
-                    
+                    <CastleUI/>
                 </div>
                 <Logout navigate={this.navigate}></Logout>
                 <Chat/>

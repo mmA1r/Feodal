@@ -1,0 +1,42 @@
+@import '../../../../gameConst.scss';
+
+.warrior-buy {
+    width: 56px;
+    height: 56px;
+    fill: none;
+
+    &:hover {
+        .warrior-buy-icon-frame {
+            fill: $jewerly-border-color;
+        }
+        .warrior-buy-icon-frame2 {
+            stroke: $jewerly-border-color;
+        }
+        .warrior-buy-icon-back {
+            fill: #300000;
+        }
+    }
+    &:active {
+        .warrior-buy-icon, .warrior-buy-icon2 {
+            transform: scale(0.95);
+            transform-origin: 15px;
+        }
+    }
+}
+
+.warrior-buy-icon-back {
+    fill: #460000;
+}
+.warrior-buy-icon {
+    fill:  $icon-inside-color;
+}
+.warrior-buy-icon2 {
+    stroke:  $icon-inside-color;
+    fill: #460000;
+}
+.warrior-buy-icon-frame {
+    fill: $icon-border-color;
+}
+.warrior-buy-icon-frame2 {
+    stroke: $icon-border-color;
+}
