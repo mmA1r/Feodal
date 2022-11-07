@@ -152,15 +152,18 @@ export default class Chat extends React.Component {
     blur() {
         let chatBlock = document.querySelector('.chat-box');
         document.addEventListener('click', (e) => {
-            if(!chatBlock.contains(e.target)) {
-                return this.setState({ isOpenChat: false });
+            if(chatBlock) {
+                if(!chatBlock.contains(e.target)) {
+                    document.getElementsByClassName('message-input')[0].blur();
+                    return this.setState({ isOpenChat: false });
+                }
             }
         });
     }
 
     render() {
         return(
-            <div className={`chat-box`} onClick={() => this.blur()}>
+            <div className={`chat-box ${ this.state.isOpenChat ? 'show-chat-box' : 'hide-chat-box' }`} onClick={() => this.blur()}>
                 <div className={`message-block ${ this.state.isOpenChat ? 'showChat' : 'hideChat' }`}>
                     {/* ------------------------------Уф.....Ну тут кароче чота происходит....... Вам не обязательно знать......---------------------------- */}
                     { 

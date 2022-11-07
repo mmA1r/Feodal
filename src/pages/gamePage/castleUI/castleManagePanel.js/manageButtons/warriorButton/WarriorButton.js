@@ -10,7 +10,7 @@ export default class WarriorButton extends React.Component {
     render() {
         return (
             <svg className="warrior-buy" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_1_2)">
+                <g clipPath="url(#clip0_1_2)">
                     <rect className="warrior-buy-icon-back" width="56" height="56" fill="#460000"/>
                     <rect width="56" height="56" fill="url(#paint0_linear_1_2)"/>
                     <path className="warrior-buy-icon2" d="M20.7787 45.0065L23.89 46.5885L21.8566 48.6218L20.2747 45.5105L20.172 45.3085L19.9609 45.3909L18.9832 45.7727L17.6066 42.3385L21.0408 43.7151L20.6591 44.6927L20.5767 44.9038L20.7787 45.0065ZM11.3298 35.5576L11.4325 35.7596L11.6436 35.6772L12.6212 35.2955L13.9978 38.7297L10.5636 37.3531L10.9454 36.3754L11.0278 36.1643L10.8258 36.0616L7.71447 34.4797L9.74785 32.4463L11.3298 35.5576Z" stroke="white" strokeWidth="0.5"/>

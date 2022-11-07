@@ -6,6 +6,19 @@
     overflow: hidden;
 }
 
+#game {
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.game-container {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
 .mini-map-window {
     position: absolute;
     bottom: 0;
@@ -13,6 +26,8 @@
     width: 300px;
     height: 300px;
     box-sizing: border-box;
+
+    z-index: 2;
 
     // background: #361b1b77;
 }

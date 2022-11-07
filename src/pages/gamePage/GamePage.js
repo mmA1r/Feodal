@@ -4,7 +4,8 @@ import Logout from './logout/Logout';
 import Chat from "./chat/Chat";
 import MiniMapFrame from "./miniMapFrame/MiniMapFrame";
 import CastleButton from "./castleButton/CastleButton";
-import Game from "./game/Game";
+
+import Game from './game/Game';
 
 import './gamePage.scss'
 import CastleUI from "./castleUI/CastleUI";
@@ -23,7 +24,10 @@ export default class GamePage extends React.Component {
     componentDidMount() {
         this.setState({ castleInterface: true });
     }
-    
+
+    componentWillUnmount() {
+    }
+
     render() {
         return(
             <div className="game">

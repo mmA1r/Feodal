@@ -11,6 +11,15 @@
     width: 450px;
     height: 500px;
     border: 0;
+
+    &.hide-chat-box {
+        height: 23px;
+    }
+    &.show-chat-box {
+        height: 500px;
+    }
+
+    z-index: 2;
 }
 
 .message-block {
@@ -25,12 +34,10 @@
     background: linear-gradient(to top, #aa05298c, transparent 15% , transparent);
 
     &.showChat {
-        transition: 0.3s;
-        opacity: 1;
+        display: flex;
     }
     &.hideChat {
-        transition: 0.3s;
-        opacity: 0;
+        display: none;
     }
 
     &::-webkit-scrollbar {

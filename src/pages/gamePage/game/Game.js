@@ -2,17 +2,13 @@ import React from "react";
 import Phaser from "phaser";
 
 import store from "../../../store/store";
-import tileMapSheet from '../../../assets/sprite.png';
-import tileMap from "./tileMap/tileMap";
 
 import WorldScene from "./scenes/WorldScene";
 
-import './game.scss';
-
 export default class Game extends React.Component {
-
     constructor() {
         super();
+
         this.server = store.getState().server.value;
     }
 
@@ -22,6 +18,11 @@ export default class Game extends React.Component {
             width: '100%',
             height: '100%',
             parent: 'game',
+            fps: {
+                target: 60,
+                forceSetTimeOut: true
+            },
+            pixelArt: true,
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -32,16 +33,16 @@ export default class Game extends React.Component {
                 WorldScene,
             ]
         };
-
-        // eslint-disable-next-line
         const game = new Phaser.Game(config);
     }
 
 
     render() {
-        return (
-            <div id="game"></div>
+        return(
+            <div id="game"/>
         );
     }
 }
+
+
 
