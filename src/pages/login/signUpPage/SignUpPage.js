@@ -57,6 +57,9 @@ export default class SignUpPage extends React.Component {
     }
 
     showInvalidData() {
+        this.login.current.value = '';
+        this.password.current.value = '';
+        this.name.current.value = '';
         this.setState({ invalidData: true });
         setTimeout(() => {
             this.setState({ invalidData: false });
@@ -64,6 +67,7 @@ export default class SignUpPage extends React.Component {
     }
 
     showInvalidLogin() {
+        this.login.current.value = '';
         this.setState({ invalidLogin: true });
         setTimeout(() => {
             this.setState({ invalidLogin: false });

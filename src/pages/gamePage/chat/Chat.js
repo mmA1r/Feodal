@@ -36,7 +36,7 @@ export default class Chat extends React.Component {
     componentDidMount() {
         this.interval = setInterval(() => {
             this.getMessages();
-        }, 500);
+        }, 1500);
     }
     
     componentWillUnmount() {
@@ -53,8 +53,10 @@ export default class Chat extends React.Component {
     
     async getMessages() {
         const message = await this.server.getMessages();
-        if(this.state.messages.length !== message.length) {
-            return this.setState({ messages: message.reverse() });
+        if(message) {
+            if(this.state.messages.length !== message.length) {
+                return this.setState({ messages: message.reverse() });
+            }
         }
     }
 

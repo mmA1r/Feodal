@@ -13,7 +13,7 @@ export default class Server {
         const query = Object.keys(params).map(key =>
             `${key}=${params[key]}`
         ).join("&");
-        const responce = await fetch(`http://localhost/feodal/api/?${query}`);
+        const responce = await fetch(`http://feodal/api/?${query}`);
         const answer = await responce.json();
         return answer?.result === 'ok' ? answer?.data : null;
     }
@@ -93,7 +93,12 @@ export default class Server {
             token: this.token,
             hash: this.hash
         });
-        return data.messages;
+        if(data?.hash) {
+            this.hash = data.hash;
+        }
+        if(data) {
+            return data.messages;            
+        }
     }
 
     /*****************/

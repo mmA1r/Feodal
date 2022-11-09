@@ -16,9 +16,9 @@ export default class GamerMoney extends React.Component {
     }
 
     componentDidMount() {
-        this.interval = setInterval(() => {
-            this.getMoney();
-        }, 1000);
+        // this.interval = setInterval(() => {
+        //     this.getMoney();
+        // }, 1000);
     }
 
     componentWillUnmount() {

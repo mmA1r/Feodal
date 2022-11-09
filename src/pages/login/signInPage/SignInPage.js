@@ -51,6 +51,8 @@ export default class SignInPage extends React.Component {
 
     showInvalidMessage() {
         this.setState({ invalidMessage: true });
+        this.login.current.value = '';
+        this.password.current.value = ''; 
         setTimeout(() => {
             this.setState({ invalidMessage: false });
         }, 2000);
