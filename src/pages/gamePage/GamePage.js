@@ -4,11 +4,12 @@ import Logout from './logout/Logout';
 import Chat from "./chat/Chat";
 import MiniMapFrame from "./miniMapFrame/MiniMapFrame";
 import CastleButton from "./castleButton/CastleButton";
+import CastleUI from "./castleUI/CastleUI";
+import GamerMoney from "./gamerMoney/GamerMoney";
 
 import Game from './game/Game';
 
-import './gamePage.scss'
-import CastleUI from "./castleUI/CastleUI";
+import './gamePage.scss';
 
 export default class GamePage extends React.Component {
     constructor(props) {
@@ -44,6 +45,7 @@ export default class GamePage extends React.Component {
                     <CastleUI/>
                 </div>
                 <Logout navigate={this.navigate}></Logout>
+                <GamerMoney/>
                 <Chat/>
                 <Game/>
             </div>

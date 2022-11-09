@@ -43,3 +43,26 @@ $manage-panel: url('../../../../assets/UI/CastleUI/castleManagePanel.png');
     bottom: 11px;
     right: 12px;
 }
+
+.price {
+    position: absolute;
+    top: 10px;
+    left: 55px;
+
+    width: 140px;
+
+    &.show-price {
+        opacity: 1;
+    }
+
+    &.hide-price {
+        opacity: 0;
+    }
+
+    z-index: 1;
+}
+
+.price-num {
+    color: white;
+    padding-left: 40px;
+}

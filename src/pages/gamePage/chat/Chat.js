@@ -121,7 +121,7 @@ export default class Chat extends React.Component {
     }
 
     //--------Показывает залогининых юзеров
-    showAvailableUsers(e) {
+    showAvailableUsers() {
         const text = this.message.current.value;
         if(text) {
             const message = text.split();
@@ -145,16 +145,19 @@ export default class Chat extends React.Component {
         this.setState({ showUsers: false });
         this.userAddresseeId = id;
         this.message.current.value = '';
-        this.message.current.focus();
+        setTimeout(() => {
+            this.message.current.focus();
+            this.message.current.selectionStart = this.message.current.selectionEnd = this.message.current.value.length;
+        }, 100);
         return this.message.current.value = '@' + name + '#' + id + ' ';
     }
 
-    blur() {
+    blurChat() {
         let chatBlock = document.querySelector('.chat-box');
         document.addEventListener('click', (e) => {
             if(chatBlock) {
                 if(!chatBlock.contains(e.target)) {
-                    document.getElementsByClassName('message-input')[0].blur();
+                    this.message.current?.blur();
                     return this.setState({ isOpenChat: false });
                 }
             }
@@ -163,7 +166,7 @@ export default class Chat extends React.Component {
 
     render() {
         return(
-            <div className={`chat-box ${ this.state.isOpenChat ? 'show-chat-box' : 'hide-chat-box' }`} onClick={() => this.blur()}>
+            <div className={`chat-box ${ this.state.isOpenChat ? 'show-chat-box' : 'hide-chat-box' }`} onClick={() => this.blurChat()}>
                 <div className={`message-block ${ this.state.isOpenChat ? 'showChat' : 'hideChat' }`}>
                     {/* ------------------------------Уф.....Ну тут кароче чота происходит....... Вам не обязательно знать......---------------------------- */}
                     { 

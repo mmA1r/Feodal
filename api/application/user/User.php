@@ -25,7 +25,7 @@
         }
 
         public function logout($user) {
-            $this->db->updateToken($user,'');
+            $this->db->updateToken($user,'NULL');
             return true;
         }
 

@@ -1,6 +1,10 @@
 import Phaser from "phaser";
 
-import tileMapSheet from '../../../../assets/spriteMap.png';
+import store from '../../../../store/store';
+
+import tileMapSheet from '../../../../assets/gameSprites/spriteMap.png';
+import castleSprite from '../../../../assets/gameSprites/castle.png';
+import villageSprite from '../../../../assets/gameSprites/village.png'
 import tileMap from "../tileMap/tileMap";
 
 
@@ -11,6 +15,8 @@ export default class WorldScene extends Phaser.Scene {
 
     preload() {
         this.load.image('spriteMap', tileMapSheet);
+        this.load.image('castleFirstLevel', castleSprite);
+        this.load.image('village', villageSprite);
         try {
             this.load.tilemapTiledJSON('tilemap', tileMap);
         } catch (e) {
@@ -18,10 +24,10 @@ export default class WorldScene extends Phaser.Scene {
         }
     }
 
-    create() {
+    async create() {
         /***************/
         /***** Map *****/
-        /***************/ 
+        /***************/
         const map = this.make.tilemap({ key: 'tilemap' });
         const tiles = map.addTilesetImage('spriteTileSet', 'spriteMap');
         // eslint-disable-next-line
@@ -30,28 +36,122 @@ export default class WorldScene extends Phaser.Scene {
         const bushes = map.createLayer('bushes', tiles, 0, 0);
         // eslint-disable-next-line
         const trees = map.createLayer('trees', tiles, 0, 0);
+        const physics = this.physics;
+        physics.world.bounds.width = map.widthInPixels;
+        physics.world.bounds.height = map.heightInPixels;
 
-        this.physics.world.bounds.width = map.widthInPixels;
-        this.physics.world.bounds.height = map.heightInPixels;
+        const server = store.getState().server.value;
+        const data = await server.getScene();
+        const castles = data.castles;
+        const villages = data.villages;
+        const units = data.unit;
+
+        const userData = await server.getCastle();
+        const userCastle = userData.castle;
+
+        /********************/
+        /****** Castle ******/
+        /********************/
+
+        castles.forEach(castle => {
+            if(userCastle.id !== castle.id) {
+                if(castle.castleLevel === '1') {
+                    castle = physics.add.image(castle.posX-0, castle.posY-0, 'castleFirstLevel');
+                    castle.setInteractive();
+                    castle.setState('alive');
+                    const castleUntits = [];
+                    let castleHP = 0;
+                    units.forEach(unit => {
+                        if(unit.userId === castle.userId) {
+                            castleHP += unit.hp;
+                            return castleUntits.push(unit);
+                        }
+                    });
+                    castle.setData({
+                        hp: castleHP,
+                        level: castle.castleLevel-0,
+                        units: castleUntits,
+                    });
+                    castle.addListener('pointerover', () => {
+                        castle.setTint(185274);
+                    });
+                    castle.addListener('pointerout', () => {
+                        castle.setTint();
+                    });
+                }
+            }
+        });
+
+        const castle = physics.add.image(userCastle.castleX-0, userCastle.castleY-0, 'castleFirstLevel');
+        castle.setInteractive();
+        const castleUntits = [];
+        let castleHp = 0
+        units.forEach(unit => {
+            if(unit.userId === userCastle.id) {
+                castleHp += unit.hp
+                return castleUntits.push(unit);
+            }
+        });
+        castle.setData({
+            hp: castleHp,
+            money: userCastle.money-0,
+            level: userCastle.castleLevel-0,
+            units: castleUntits,
+        });
+        
+        castle.addListener('pointerover', () => {
+            castle.setTint(185274);
+        });
+        castle.addListener('pointerout', () => {
+            castle.setTint();
+        });
+        castle.addListener('pointerdown', () => {
+            document.getElementsByClassName('castle-manage-button')[0].click();
+        });
+
+        /*********************/
+        /****** Village ******/
+        /*********************/
+
+        villages.forEach(village => {
+            village = physics.add.image(village.posX-0, village.posY-0, 'village');
+            village.setInteractive();
+            village.setData({
+                level: village.level,
+                money: village.money,
+                population: village.population
+            });
+            village.addListener('pointerover', () => {
+                village.setTint(185274);
+            });
+            village.addListener('pointerout', () => {
+                village.setTint();
+            });
+        });
+
 
         /******************/
         /***** Camera *****/
         /******************/ 
         const camera = this.cameras.main;
 
+        const winWidth = window.innerWidth;
+        const winHeight = window.innerHeight;
+
         camera.useBounds = true;
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        camera.setViewport(0, 0, window.innerWidth, window.innerHeight);
-        camera.centerToBounds();
+        camera.setViewport(0, 0, winWidth, winHeight);
+        camera.centerOn(userCastle.castleX, userCastle.castleY);
 
         /**** CameraMove  ****/
+
         const pageCenter = { 
-            x: window.innerWidth/2, 
-            y: window.innerHeight/2 
+            x: winWidth/2, 
+            y: winHeight/2 
         }
         const cameraMovesTo = {
-            x: camera.getBounds().centerX-window.innerWidth/2,
-            y: camera.getBounds().centerY-window.innerHeight/2,
+            x: userCastle.castleX - winWidth/2,
+            y: userCastle.castleY - winHeight/2,
             move: false
         }
         const mouseVector = {
@@ -92,15 +192,20 @@ export default class WorldScene extends Phaser.Scene {
 
         function isMoveCamera(e) {
             if (
-                e.event.clientX >= window.innerWidth - 150 || 
-                e.event.clientX < 150 || 
-                e.event.clientY >= window.innerHeight - 150 || 
-                e.event.clientY < 150
+                (
+                    e.event.clientX >= winWidth - winWidth/5 || 
+                    e.event.clientX < winWidth/5 || 
+                    e.event.clientY >= winHeight - winHeight/5 || 
+                    e.event.clientY < winHeight/5
+                ) 
             ) {
                 cameraMovesTo.move = true;
             } else {
                 cameraMovesTo.move = false;
             }
+            document.getElementsByTagName('canvas')[0].onmouseleave = () => {
+                cameraMovesTo.move = false;
+            };
             mouseVector.x = e.event.clientX - pageCenter.x;
             mouseVector.y = e.event.clientY - pageCenter.y;
         }
@@ -124,7 +229,6 @@ export default class WorldScene extends Phaser.Scene {
                     camera.zoomTo(zoomDelta, 200, 'Linear', true);
                 }
             }
-            console.log(zoomDelta)
         }
     }
 

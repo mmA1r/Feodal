@@ -1,0 +1,95 @@
+{
+  "id": "a7b70953-3fd2-4c36-85e5-4286c06c1a9f",
+  "version": "2.0",
+  "name": "feodal",
+  "url": "http://feodal/",
+  "tests": [{
+    "id": "e0bbeda0-35fe-4461-8cf9-b0aba3f07c89",
+    "name": "Login user",
+    "commands": [{
+      "id": "a307adad-cf55-4e0d-8470-e4473295464f",
+      "comment": "",
+      "command": "open",
+      "target": "http://feodal/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "faed2524-377c-4dd0-9ffa-b704e44adc9e",
+      "comment": "",
+      "command": "executeScript",
+      "target": "document.getElementById(\"login\").value=\"vasya\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "bd879365-3fe7-41ee-b417-e293b5a850e8",
+      "comment": "",
+      "command": "executeScript",
+      "target": "document.getElementById(\"password\").value=\"1111\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "03428893-9e08-4a13-a8cc-39f2f0ea1107",
+      "comment": "",
+      "command": "click",
+      "target": "buttonLogin",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "77181be6-fd95-443a-92cb-963aea61b7ef",
+    "name": "logout user",
+    "commands": [{
+      "id": "32594766-a636-4c28-8ac8-08c52623f51c",
+      "comment": "",
+      "command": "open",
+      "target": "http://feodal/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5cc75ba0-23a5-4561-8ca8-2fd6a51be0b6",
+      "comment": "",
+      "command": "executeScript",
+      "target": "document.getElementById(\"login\").value=\"vasya\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "549d8495-a6b5-4b62-88cb-f41c16831cef",
+      "comment": "",
+      "command": "executeScript",
+      "target": "document.getElementById(\"password\").value=\"1111\"",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ffa3a8a7-cd54-4a43-8ad7-4a35ba5451a8",
+      "comment": "",
+      "command": "click",
+      "target": "buttonLogin",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "dc83a1ca-675a-4c9d-a2bf-c006f8ecb60b",
+      "comment": "",
+      "command": "waitForElementPresent",
+      "target": "buttonLogout",
+      "targets": [],
+      "value": "2000"
+    }, {
+      "id": "c2779682-f03a-4067-82ad-1948a932014a",
+      "comment": "",
+      "command": "click",
+      "target": "buttonLogout",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "42994c4e-d93e-4de7-8216-41cc2e958b45",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["e0bbeda0-35fe-4461-8cf9-b0aba3f07c89", "77181be6-fd95-443a-92cb-963aea61b7ef"]
+  }],
+  "urls": ["http://feodal/"],
+  "plugins": []
+}

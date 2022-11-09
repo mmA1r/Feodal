@@ -2,6 +2,8 @@ export default class Server {
     constructor(token) {
         this.token = token || null;
         this.hash = null;
+        this.mapHash = null;
+        this.unitsHash = null;
     }
 
     async send(params = {}) {
@@ -15,7 +17,10 @@ export default class Server {
         const answer = await responce.json();
         return answer?.result === 'ok' ? answer?.data : null;
     }
-        
+
+    /*****************/
+    /***** User ******/
+    /*****************/     
     async login(login, password) {
         if(login && password) {
             const data = await this.send({ 
@@ -62,6 +67,9 @@ export default class Server {
         return data;
     }
 
+    /*****************/
+    /***** Chat ******/
+    /*****************/
     async sendMessageAll(message) {
         await this.send({ 
             method: 'sendMessageAll', 
@@ -88,23 +96,51 @@ export default class Server {
         return data.messages;
     }
 
+    /*****************/
+    /***** Game ******/
+    /*****************/
     async getScene() {
-        // eslint-disable-next-line
-        const data = await this.send({ method: 'getScene' });
-    }
-
-    async getCastle() {
-        // eslint-disable-next-line
-        const data = await this.send({ method: 'getCastle' });
-    }
-
-    async command() {
-        // eslint-disable-next-line
-        const data = await this.send({ method: 'command' });
+        const data = await this.send({ 
+            method: 'getScene',
+            mapHash: this.mapHash,
+            unitsHash: this.unitsHash,
+            token: this.token
+        });
+        if(data?.mapHash) {
+            this.mapHash = data.mapHash;
+            delete data.mapHash;
+        }
+        if(data?.unitsHash) {
+            this.unitsHash = data.unitsHash;
+            delete data.unitsHash;
+        }
+        return data;
     }
 
     async getMap() {
-        const data = await this.send({ method: 'getMap' });
+        const data = await this.send({ 
+            method: 'getMap',
+            token: this.token
+        });
+        return data.map;
+    }
+
+    async getUnitsTypes() {
+        const data = await this.send({
+            method: 'getUnitsTypes',
+            token: this.token
+        });
         return data;
+    }
+
+    /******************/
+    /***** Gamer ******/
+    /******************/
+    async getCastle() {
+        const data = await this.send({ 
+            method: 'getCastle',
+            token: this.token
+        });
+        return data
     }
 }

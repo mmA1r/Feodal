@@ -1,7 +1,6 @@
 import store from "../../../../store/store";
 
 const server = store.getState().server.value;
-// eslint-disable-next-line
 const data = server.getMap();
 
 const tileMap = { "compressionlevel":-1,

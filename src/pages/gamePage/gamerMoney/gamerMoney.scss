@@ -1,0 +1,28 @@
+$bookshelf: url('../../../assets/UI/bookshelf.png');
+
+.gamer-money {
+    box-sizing: border-box;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 300px;
+    height: 40px;
+
+    background-image: $bookshelf ;
+    background-position: center;
+    background-size: cover;
+
+    z-index: 2;
+}
+
+.gamer-money-icon {
+    position: relative;
+    top: 12px;
+    left: 10px;
+}
+
+.gamer-money-num {
+    color: white;
+    position: relative;
+    padding-left: 20px;
+}

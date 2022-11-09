@@ -9,14 +9,14 @@
     left: 0;
     flex-direction: column;
     width: 450px;
-    height: 500px;
+    height: 300px;
     border: 0;
 
     &.hide-chat-box {
-        height: 23px;
+        height: 30px;
     }
     &.show-chat-box {
-        height: 500px;
+        height: 300px;
     }
 
     z-index: 2;
@@ -34,10 +34,12 @@
     background: linear-gradient(to top, #aa05298c, transparent 15% , transparent);
 
     &.showChat {
-        display: flex;
+        opacity: 1;
+        transition: 0.3s;
     }
     &.hideChat {
-        display: none;
+        opacity: 0;
+        transition: 0.3s;
     }
 
     &::-webkit-scrollbar {

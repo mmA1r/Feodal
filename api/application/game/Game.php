@@ -4,73 +4,78 @@
             $this->db = $db;
         }
 
-        public function buyUnit($user, $unitType) {
-            $castle = $this->db->getCastle($user);
-            if ($castle) {
-                $gold = $this->db->getGold($user);
-                $cost = $this->db->getUnitCost($unitType);
-                if ($gold>=$cost) {
-                    $this->db->addUnit($user, $unitType);
-                    $this->db->updateGold($user, -$cost);
-                    $hash = md5(rand());
-                    $this->db->setUnitsHash($hash);
-                    return array ('gold'=>$this->db->getGold($user));
+        public function updateMap() {
+            $timeDB = $this->db->getMapTimeStamp();
+            $time = time();
+            if ($time>=$timeDB) {
+                $this->db->setMapTimeStamp($time+300);
+                $this->db->updateVillagePopulations();
+                $this->db->updateVillagesMoney();
+                if (count($this->db->getVillages())<10){
+                    $this->addVillage();
                 }
+                $this->db->updateVillagesLevel();
+                $hash = md5(rand());
+                $this->db->setMapHash($hash);
             }
+        }
+
+        public function addVillage(){
+            $posX = rand(0,160000) / 1000;
+            $posY = rand(0,160000) / 1000;
+            switch (rand(1,4)) {
+                case 1: $subname="Верхние ";
+                break;
+                case 2: $subname="Нижние ";
+                break;
+                case 3: $subname="Болотистые ";
+                break;
+                case 4: $subname="Далёкие ";
+                break;
+            }
+            switch (rand(1,4)) {
+                case 1: $name="Потёмки";
+                break;
+                case 2: $name="Свистульки";
+                break;
+                case 3: $name="Разгромки";
+                break;
+                case 4: $name="Удалёнки";
+                break;
+            }
+            $this->db->createVillage($subname . $name, $posX, $posY);
         }
 
         public function getMap() {
             return array (
-                'map' => $this->db->getMap(1),
-                'unitsType' => $this->db->getUnitsTypes(),
-                'castlesLevel' => $this->db->getCastlesLevels()
+                'map' => $this->db->getMap()
             );
         }
 
-        public function getScene($unitsHash, $castlesHash) {
+        public function getUnitsTypes() {
+            return $this->db->getUnitsTypes();
+        }
+
+        public function getScene($updates, $unitsHash, $mapHash) {
             $unitsHashDB = $this->db->getUnitsHash();
             if ($unitsHash != $unitsHashDB) {
                 $units = $this->db->getUnits();
             }
-            $castlesHashDB = $this->db->getCastlesHash();
-            if ($unitsHash != $unitsHashDB) {
+            $mapHashDB = $this->db->getMapHash();
+            if ($mapHash != $mapHashDB) { 
                 $castles = $this->db->getCastles();
+                $villages = $this->db->getVillages();                   
             }
             return array (
                 'unitsHash' => $unitsHashDB,
-                'castlesHash' => $castlesHashDB,
-                'castles' => $castles,
+                'mapHash' => $mapHashDB,
+                'castles' => $castles, 
+                'villages' => $villages,
                 'unit' => $units
             );
         }
 
-        public function getCastle($user) {
-            return $this->db->getCastle($user);
+        public function getVillage($villageId) {
+            return $this->db->getVillage($villageId);
         }
-
-        public function createCastle($user, $posX, $posY) {
-            $castle = $this->db->getCastle($user);
-            if (!$castle) {
-                $this->db->addCastle($user, $posX, $posY);
-                $hash = md5(rand());
-                $this->db->setCastlesHash($hash);
-            }
-            return $this->db->getCastle($user);
-        }
-
-        public function upgradeCastle($user) {
-            $castle = $this->db->getCastle($user);
-            if ($castle && $castle->lvl<5) {
-                $gold = $this->db->getGold($user);
-                $cost = $this->db->getUpgradeCastleCost($castle->lvl+1);
-                if ($gold>=$cost) {
-                    $this->db->castleLevelUp($castle->id);
-                    $this->db->updateGold($user, -$cost);
-                    $hash = md5(rand());
-                    $this->db->setCastlesHash($hash);
-                    return array ('gold'=>$this->db->getGold($user));
-                }
-            }
-        }
-
     }

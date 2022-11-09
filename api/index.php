@@ -7,33 +7,38 @@ function router($params) {
     $method = $params['method'];
     if ($method) {
         $app = new Application();
+        $app->updateMap();
         switch ($method) {
             case 'check' : return true;
-            ////////
-            //USER//
-            ////////
+            //////////
+            // USER //
+            //////////
             case 'login': return $app->login($params);
             case 'logout': return $app->logout($params);
             case 'registration': return $app->registration($params);
-            ////////
-            //CHAT//
-            ////////
+            //////////
+            // CHAT //
+            //////////
             case 'getLoggedUsers': return $app->getLoggedUsers($params);
-            case 'sendMessageAll': {
-                $params['messageTo'] = "NULL";
-                return $app->sendMessage($params);
-            }
-            case 'sendMessageTo': return $app->sendMessage($params);
+            case 'sendMessageAll': return $app->sendMessage($params, "all");
+            case 'sendMessageTo': return $app->sendMessage($params, "private");
             case 'getMessages': return $app->getMessages($params);
-            ////////
-            //GAME//
-            ////////
-            case 'buyUnit': return $app->buyUnit($params);
+            ///////////
+            // GAMER //
+            ///////////
             case 'getCastle': return $app->getCastle($params);
-            case 'createCastle': return $app->createCastle($params);
             case 'upgradeCastle': return $app->upgradeCastle($params);
+            case 'buyUnit': return $app->buyUnit($params);
+            case 'robVillage': return $app->robVillage($params);
+            case 'destroyVillage': return $app->destroyVillage($params);
+            case 'destroyCastle': return $app->destroyCastle($params);
+            ///////////
+            // GAME //
+            //////////
             case 'getMap': return $app->getMap($params);
             case 'getScene': return $app->getScene($params);
+            case 'getUnitsTypes': return $app->getUnitsTypes($params);
+            //case 'updateUnits': return $app->updateUnits($params);
         }
     }
     return false;

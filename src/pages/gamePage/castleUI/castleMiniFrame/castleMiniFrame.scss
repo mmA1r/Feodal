@@ -1,48 +1,58 @@
-$castle_1: url('../../../../assets/UI/CastleUI/castleMiniFrame.png');
-// $castle_2: url('../../../../assets/UI/CastleUI/CastleUI2.png');
-// $castle_3: url('../../../../assets/UI/CastleUI/CastleUI3.png');
-// $castle_4: url('../../../../assets/UI/CastleUI/CastleUI4.png');
-// $castle_5: url('../../../../assets/UI/CastleUI/CastleUI5.png');
+$castle_frame_1: url('../../../../assets/UI/CastleUI/castleMiniFrameLvl1.png');
+$castle_frame_2: url('../../../../assets/UI/CastleUI//castleMiniFrameLvl2.png');
+$castle_frame_3: url('../../../../assets/UI/CastleUI/castleMiniFrameLvl3.png');
+$castle_frame_4: url('../../../../assets/UI/CastleUI/castleMiniFrameLvl4.png');
+$castle_frame_5: url('../../../../assets/UI/CastleUI/castleMiniFrameLvl5.png');
+
+$castle_mini_1: url('../../../../assets/UI/CastleUI/castleMiniPic1.png');
+
 
 .castle-mini-frame {
+    position: relative;
     box-sizing: border-box;
     width: 200px;
     height: 220px;
-    background-image: $castle_1 ;
+    background-image: $castle_frame_1 ;
     background-position: center;
     background-size: cover;
     &.castle-level-1 {
-        background-image: $castle_1 ;
+        background-image: $castle_frame_1 ;
         background-position: center;
         background-size: cover;
     }
     &.castle-level-2 {
-        background-image: $castle_1 ;
+        background-image: $castle_frame_2 ;
         background-position: center;
         background-size: cover;
     }
     &.castle-level-3 {
-        background-image: $castle_1 ;
+        background-image: $castle_frame_3 ;
         background-position: center;
         background-size: cover;
     }
     &.castle-level-4 {
-        background-image: $castle_1 ;
+        background-image: $castle_frame_4 ;
         background-position: center;
         background-size: cover;
     }
     &.castle-level-5 {
-        background-image: $castle_1 ;
+        background-image: $castle_frame_5 ;
         background-position: center;
         background-size: cover;
     }
+    z-index: 3;
 }
 
 .castle-mini-picture {
     box-sizing: border-box;
-    position: relative;
-    top: 20px;
-    left: 20px;
-    height: 160px;
-    width: 160px;
+    position: absolute;
+    top: 55px;
+    left: 25px;
+    height: 155px;
+    width: 150px;
+
+    background-image: $castle_mini_1;
+    background-position: center;
+    background-size: cover;
+    z-index: 2;
 }

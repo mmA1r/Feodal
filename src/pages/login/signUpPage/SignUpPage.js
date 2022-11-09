@@ -22,7 +22,8 @@ export default class SignUpPage extends React.Component {
 
         this.state = {
             hide: 'effect-hide',
-            invalidMessage: false
+            invalidData: false,
+            invalidLogin: false,
         }
 
         this.inputs = {
@@ -40,21 +41,32 @@ export default class SignUpPage extends React.Component {
         const name = this.name.current.value
         const login = this.login.current.value;
         const password = this.password.current.value;
-        const data = await this.server.registration(name, login, password);
-        if(data) {
-            this.setState({ hide: 'effect-shows' });
-            setTimeout(() => {
-                return this.routeToSignIn();
-            }, 1500);
+        if(name.indexOf(' ') === -1 && login.indexOf(' ') === -1 && password.indexOf(' ') === -1) {
+            const data = await this.server.registration(name, login, password);
+            if(data) {
+                this.setState({ hide: 'effect-shows' });
+                setTimeout(() => {
+                    return this.routeToSignIn();
+                }, 1500);
+            } else {
+                return this.showInvalidLogin();
+            }   
         } else {
-            return this.showInvalidMessage();
+            return this.showInvalidData();
         }
     }
 
-    showInvalidMessage() {
-        this.setState({ invalidMessage: true });
+    showInvalidData() {
+        this.setState({ invalidData: true });
         setTimeout(() => {
-            this.setState({ invalidMessage: false });
+            this.setState({ invalidData: false });
+        }, 2500);
+    }
+
+    showInvalidLogin() {
+        this.setState({ invalidLogin: true });
+        setTimeout(() => {
+            this.setState({ invalidLogin: false });
         }, 2500);
     }
 
@@ -84,7 +96,8 @@ export default class SignUpPage extends React.Component {
                             />
                         );
                     })}
-                    <div className={`invalid-message ${this.state.invalidMessage ? 'invalid-show' : 'invalid-hide'}`}>this name or login is already used</div>
+                    <div className={`invalid-message ${this.state.invalidLogin ? 'invalid-show' : 'invalid-hide'}`}>this login is already used</div>
+                    <div className={`invalid-message ${this.state.invalidData ? 'invalid-show' : 'invalid-hide'}`}>invalid username login or password</div>
                     <div className="button-box">
                         <LoginButton
                             onClick={() => this.signUp()}
