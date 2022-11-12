@@ -69,6 +69,8 @@ class Application {
     }
     
     public function getMessages($params) {
+        if($params['hash'] == 'null') return "ERROR: EMPTY HASH";
+
         $user = $this->user->getUser($params['token']);
         if ($user) {
             return $this->chat->getMessages($params['hash'], $user);
