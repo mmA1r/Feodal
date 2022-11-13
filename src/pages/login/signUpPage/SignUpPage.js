@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import store from '../../../store/store';
 import LoginButton from "../components/loginButton/LoginButton";
 import AngleLogo from "../components/angleLogo/AngleLogo";
 import LoginHeader from '../components/loginHeader/LoginHeader';
@@ -8,114 +9,118 @@ import LoginInput from "../components/loginInput/LoginInput";
 
 import './signUpPage.scss';
 
-export default class SignUpPage extends React.Component {
-    constructor(props) {
-        super(props);
-        const { navigate } = props;
-        this.navigate = navigate;
-        this.routes = store.getState().routes.value;
-        this.server = store.getState().server.value;
+export default function SignUpPage() {
 
-        this.login = React.createRef();
-        this.password = React.createRef();
-        this.name = React.createRef();
+        const [visible, setVisible] = useState();
+        const [dataStatus, setDataStatus] = useState();
+        const [loginStatus, setLoginStatus] = useState();
+        const [emptyString, setemptyString] = useState();
 
-        this.state = {
-            hide: 'effect-hide',
-            invalidData: false,
-            invalidLogin: false,
+        const navigate = useNavigate();
+        const routes = useSelector((state) => state.routes.value);
+        const server = useSelector((state) => state.server.value);
+
+        const login = useRef();
+        const password = useRef();
+        const name = useRef();
+
+        const inputs = {
+            name: name,
+            login: login,
+            password: password,
         }
-
-        this.inputs = {
-            name: this.name,
-            login: this.login,
-            password: this.password,
-        }
-
-        this.style = 'registration-style';
-    }
-
+        const style = 'registration-style';
     //-----------------Отпраляет запрос серваку(регистрация) и в случае если ответ прилетел
     //-----------------Перенаправляет пользователя на страницу логина
-    async signUp() {
-        const name = this.name.current.value
-        const login = this.login.current.value;
-        const password = this.password.current.value;
-        if(name.indexOf(' ') === -1 && login.indexOf(' ') === -1 && password.indexOf(' ') === -1) {
-            const data = await this.server.registration(name, login, password);
-            if(data) {
-                this.setState({ hide: 'effect-shows' });
-                setTimeout(() => {
-                    return this.routeToSignIn();
-                }, 1500);
+    async function signUp() {
+        const nameValue = name.current.value
+        const loginValue = login.current.value;
+        const passwordValue = password.current.value;
+        if(nameValue && loginValue && passwordValue) {
+            if(nameValue.indexOf(' ') === -1 && loginValue.indexOf(' ') === -1 && passwordValue.indexOf(' ') === -1) {
+                const data = await server.registration(nameValue, loginValue, passwordValue);
+                if(data) {
+                    setVisible('effect-shows');
+                    setTimeout(() => {
+                        return routeToSignIn();
+                    }, 1500);
+                } else {
+                    return showInvalidLogin();
+                }   
             } else {
-                return this.showInvalidLogin();
-            }   
+                return showInvalidData();
+            }
         } else {
-            return this.showInvalidData();
+            setemptyString(true);
+            const returnEmptyString = setTimeout(() => {
+                setemptyString(false);
+                clearTimeout(returnEmptyString);
+            }, 2000);
         }
     }
 
-    showInvalidData() {
-        this.login.current.value = '';
-        this.password.current.value = '';
-        this.name.current.value = '';
-        this.setState({ invalidData: true });
-        setTimeout(() => {
-            this.setState({ invalidData: false });
+    const showInvalidData = () => {
+        login.current.value = '';
+        password.current.value = '';
+        name.current.value = '';
+        setDataStatus(true);
+        const returnDataStatus = setTimeout(() => {
+            setDataStatus(false);
+            clearTimeout(returnDataStatus);
         }, 2500);
     }
 
-    showInvalidLogin() {
-        this.login.current.value = '';
-        this.setState({ invalidLogin: true });
-        setTimeout(() => {
-            this.setState({ invalidLogin: false });
+    const showInvalidLogin = () => {
+        login.current.value = '';
+        setLoginStatus(true);
+        const returnLoginStatus = setTimeout(() => {
+            setLoginStatus(false);
+            clearTimeout(returnLoginStatus);
         }, 2500);
     }
 
     //-----------------Перемещает На страницу логина
-    routeToSignIn() {
-        return this.navigate(this.routes.Login.path);
+    const routeToSignIn = () => {
+        return navigate(routes.Login.path);
     }
 
-    render() {
-        return(
-            <div className="registration-window">
-                <div className={`logo top-right ${ this.state.hide }`}></div>
-                <div className={`logo top-left ${ this.state.hide }`}></div>
-                <div className={`logo bottom-right ${ this.state.hide }`}></div>
-                <div className={`logo bottom-left ${ this.state.hide }`}></div>
-                <AngleLogo/>
-                <div className="newcomer-window">
-                    <div className={`logo-above ${ this.state.hide }`}></div>
-                    <LoginHeader/>
-                    {Object.keys(this.inputs).map((key) => {
-                        return (
-                            <LoginInput
-                                key={key}
-                                type={`${key}`} 
-                                inputLink={this.inputs}
-                                style={this.style}
-                            />
-                        );
-                    })}
-                    <div className={`invalid-message ${this.state.invalidLogin ? 'invalid-show' : 'invalid-hide'}`}>this login is already used</div>
-                    <div className={`invalid-message ${this.state.invalidData ? 'invalid-show' : 'invalid-hide'}`}>invalid username login or password</div>
-                    <div className="button-box">
-                        <LoginButton
-                            onClick={() => this.signUp()}
-                            className={"registration-button"}
-                            text={'Sign Up'}
+    return(
+        <div className="registration-window">
+            <div className={`logo top-right ${ visible }`}></div>
+            <div className={`logo top-left ${ visible }`}></div>
+            <div className={`logo bottom-right ${ visible }`}></div>
+            <div className={`logo bottom-left ${ visible }`}></div>
+            <AngleLogo/>
+            <div className="newcomer-window">
+                <div className={`logo-above ${ visible }`}></div>
+                <LoginHeader/>
+                {Object.keys(inputs).map((key) => {
+                    return (
+                        <LoginInput
+                            key={key}
+                            type={`${key}`} 
+                            inputLink={inputs}
+                            // eslint-disable-next-line
+                            style={style}
                         />
-                        <LoginButton
-                            onClick={() => this.routeToSignIn()}
-                            className={"sign-in-button"}
-                            text={'Already Sign Up? Sign In.'}
-                        />
-                    </div>
+                    );
+                })}
+                <div className={`invalid-message ${loginStatus ? 'invalid-show' : 'invalid-hide'}`}>*this login is already used</div>
+                <div className={`invalid-message ${dataStatus ? 'invalid-show' : 'invalid-hide'}`}>*invalid username login or password</div>
+                <div className={`invalid-message ${emptyString ? 'invalid-show' : 'invalid-hide'}`}>*please fill all the fields</div>
+                <div className="button-box">
+                    <LoginButton
+                        onClick={() => signUp()}
+                        className={"registration-button"}
+                        text={'Sign Up'}
+                    />
+                    <LoginButton
+                        onClick={() => routeToSignIn()}
+                        className={"sign-in-button"}
+                        text={'Already Sign Up? Sign In.'}
+                    />
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
 }

@@ -1,6 +1,6 @@
-import React from "react";
-
-import store from '../../../../store/store';
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import YesButton from "./yesButton/YesButton";
 import NoButton from "./noButton/NoButton";
@@ -8,67 +8,61 @@ import ConfirmBorder from "./confirmBorder/ConfirmBorder";
 
 import './confirmWindow.scss'
 
-export default class ConfirmWindow extends React.Component {
-    constructor(props) {
-        super(props);
-        const { openConfirmWindow, navigate } = props;
-        this.navigate = navigate;
-        this.openConfirmWindow = openConfirmWindow;
-        
-        this.routes = store.getState().routes.value;
-        this.server = store.getState().server.value;
+export default function ConfirmWindow(props) {
+        const { openConfirmWindow } = props;
 
-        this.shadeBlock = React.createRef();
-    }
+        const navigate = useNavigate();
+        const routes = useSelector((state) => state.routes.value);
+        const server = useSelector((state) => state.server.value);
+
+        const shadeBlock = useRef();
 
     //-------------Запрос на логаут
-    async logoutUser() {
-        return await this.server.logout();
+    async function logoutUser() {
+        return await server.logout();
     }
 
     //-------------логаут пользователя
-    confirmLogout() {
-        this.shadeBlock.current.classList.add('disappearing');
+    const confirmLogout = () => {
+        shadeBlock.current.classList.add('disappearing');
         setTimeout(() => {
-            if(this.logoutUser()) {
-                return this.navigate(this.routes.Login.path);
+            if(logoutUser()) {
+                return navigate(routes.Login.path);
             }
         }, 500);
     }
 
     //--------------Закрывает окно логаута
-    return() {
-        this.shadeBlock.current.classList.add('disappearing');
+    const closeLogoutWindow = () => {
+        shadeBlock.current.classList.add('disappearing');
         setTimeout(() => {
-            this.openConfirmWindow(false);
+            openConfirmWindow(false);
         }, 500)
     }
 
-    render() {
-        return(
-            <div className="shade-block" ref={ this.shadeBlock }>
-                <div className="confirm-logout-window">
-                    <ConfirmBorder side={'left-side'}/>
-                    <ConfirmBorder side={'right-side'}/>
-                    <div className="confirm-button-box">
-                        <button 
-                            className="agree-button"
-                            onClick={() => this.confirmLogout()}
-                        >
-                            <YesButton/>
-                        </button>
-                        <button
-                            className="disagree-button"
-                            onClick={() => this.return()}
-                        >
-                            <NoButton/>
-                        </button>
-                    </div>
-                    <div className="back-confirm-window">
-                        <div className="text-confirm-window">Are you sure you want to logout?</div>
-                    </div>
+    return(
+        <div className="shade-block" ref={ shadeBlock }>
+            <div className="confirm-logout-window">
+                <ConfirmBorder side={'left-side'}/>
+                <ConfirmBorder side={'right-side'}/>
+                <div className="confirm-button-box">
+                    <button 
+                        className="agree-button"
+                        onClick={() => confirmLogout()}
+                    >
+                        <YesButton/>
+                    </button>
+                    <button
+                        className="disagree-button"
+                        onClick={() => closeLogoutWindow()}
+                    >
+                        <NoButton/>
+                    </button>
+                </div>
+                <div className="back-confirm-window">
+                    <div className="text-confirm-window">Are you sure you want to logout?</div>
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
 }

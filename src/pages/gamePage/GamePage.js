@@ -1,54 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useStore } from 'react-redux';
 
 import Logout from './logout/Logout';
 import Chat from "./chat/Chat";
 import MiniMapFrame from "./miniMapFrame/MiniMapFrame";
 import CastleButton from "./castleButton/CastleButton";
-import CastleUI from "./castleUI/CastleUI";
+import UI from "./UI/UI";
 import GamerMoney from "./gamerMoney/GamerMoney";
-
 import Game from './game/Game';
+
+import { hide, castle } from '../../store/features/storeInterface/storeInterface';
 
 import './gamePage.scss';
 
-export default class GamePage extends React.Component {
-    constructor(props) {
-        super(props);
-        const { navigate } = props;
-        this.navigate = navigate;
+export default function GamePage() {
+    const dispatch = useDispatch();
 
-        this.state = {
-            castleInterface: false,
+    const store = useStore();
+
+    useEffect(() => {
+        return () => {
+
         }
+    }, []);
+
+    function openInterface() {
+        if(store.getState().interface.value === 'castle') {
+            return dispatch(hide());
+        }
+        return dispatch(castle());
     }
 
-    componentDidMount() {
-        this.setState({ castleInterface: true });
-    }
-
-    componentWillUnmount() {
-    }
-
-    render() {
-        return(
-            <div className="game">
-                <div className="mini-map-window">
-                    <button
-                        className="castle-manage-button"
-                        onClick={() => {this.setState({ castleInterface: !this.state.castleInterface })}} 
-                    >
-                        <CastleButton></CastleButton>
-                    </button>
-                    <MiniMapFrame></MiniMapFrame>
-                </div>
-                <div className={`castle-interface ${this.state.castleInterface ? 'show-castle-UI' : 'hide-castle-UI'}`}>
-                    <CastleUI/>
-                </div>
-                <Logout navigate={this.navigate}></Logout>
-                <GamerMoney/>
-                <Chat/>
-                <Game/>
+    return(
+        <div className="game">
+            <div className="mini-map-window">
+                <button
+                    className="castle-manage-button"
+                    onClick={() => openInterface()}
+                >
+                    <CastleButton></CastleButton>
+                </button>
+                <MiniMapFrame></MiniMapFrame>
             </div>
-        );
-    }
+            <UI/>
+            <Logout></Logout>
+            <GamerMoney/>
+            <Chat/>
+            <Game/>
+        </div>
+    );
 }

@@ -1,0 +1,13 @@
+$inform-border: url('../../../../../assets/UI/villageUI/villageInform.png');
+
+.village-inform-panel {
+    box-sizing: border-box;
+    width: 650px;
+    height: 150px;
+
+    background-image: $inform-border;
+    background-position: center;
+    background-size: cover;
+
+    z-index: 2;
+}

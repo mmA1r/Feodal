@@ -52,36 +52,7 @@ export default class WorldScene extends Phaser.Scene {
         /********************/
         /****** Castle ******/
         /********************/
-
-        castles.forEach(castle => {
-            if(userCastle.id !== castle.id) {
-                if(castle.castleLevel === '1') {
-                    castle = physics.add.image(castle.posX-0, castle.posY-0, 'castleFirstLevel');
-                    castle.setInteractive();
-                    castle.setState('alive');
-                    const castleUntits = [];
-                    let castleHP = 0;
-                    units.forEach(unit => {
-                        if(unit.userId === castle.userId) {
-                            castleHP += unit.hp;
-                            return castleUntits.push(unit);
-                        }
-                    });
-                    castle.setData({
-                        hp: castleHP,
-                        level: castle.castleLevel-0,
-                        units: castleUntits,
-                    });
-                    castle.addListener('pointerover', () => {
-                        castle.setTint(185274);
-                    });
-                    castle.addListener('pointerout', () => {
-                        castle.setTint();
-                    });
-                }
-            }
-        });
-
+        
         const castle = physics.add.image(userCastle.castleX-0, userCastle.castleY-0, 'castleFirstLevel');
         castle.setInteractive();
         const castleUntits = [];

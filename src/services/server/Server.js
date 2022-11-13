@@ -1,9 +1,9 @@
 export default class Server {
     constructor(token) {
         this.token = token || null;
-        this.hash = null;
-        this.mapHash = null;
-        this.unitsHash = null;
+        this.hash = 123;
+        this.mapHash = 123;
+        this.unitsHash = 123;
     }
 
     async send(params = {}) {
@@ -13,7 +13,7 @@ export default class Server {
         const query = Object.keys(params).map(key =>
             `${key}=${params[key]}`
         ).join("&");
-        const responce = await fetch(`http://feodal/api/?${query}`);
+        const responce = await fetch(`http://localhost/feodal/api/?${query}`);
         const answer = await responce.json();
         return answer?.result === 'ok' ? answer?.data : null;
     }

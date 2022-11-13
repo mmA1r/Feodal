@@ -1,6 +1,5 @@
-import React from "react";
-
-import store from "../../../store/store";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 import AvailUsers from "./availUsers/AvailUsers";
 import SendMessageButton from "./sendMessage/sendMessageButton/SendMessageButton";
@@ -12,215 +11,205 @@ import SendMessageInputDown from "./sendMessage/sendMessageInput/SendMessageInpu
 
 import './chat.scss';
 
-export default class Chat extends React.Component {
-    constructor(props) {
-        super(props);
+export default function Chat() {
 
-        this.server = store.getState().server.value;
+    const server = useSelector((state) => state.server.value);
+    const message = useRef();
 
-        this.message = React.createRef();
-        this.chat = React.createRef();
+    const [messages, setMessages] = useState([]);
+    const [chatState, setChatState] = useState(false);
+    const [activeUsers, setActiveUsers] = useState(false);
+    const [inputFailure, setInputFailure] = useState(false);
+    const [loggedUsers, setLoggedUsers] = useState([]);
 
-        this.loggedUsers = null;
-
-        this.state = {
-            showUsers: false,
-            showInputFailure: false,
-            messages: [],
-            isOpenChat: false
-        }
-
-        this.interval = null;
-    }
-
-    componentDidMount() {
-        this.interval = setInterval(() => {
-            this.getMessages();
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getMessages();
         }, 1500);
-    }
-    
-    componentWillUnmount() {
-        clearInterval(this.interval);
+
+
+        return () => {
+            clearInterval(interval);
+        }
+         // eslint-disable-next-line
+    }, []);
+
+    async function sendMessageTo(message, messageTo) {
+        return await server.sendMessageTo(message, messageTo);
     }
 
-    async sendMessageTo(message, messageTo) {
-        return await this.server.sendMessageTo(message, messageTo);
-    }
-
-    async sendMessageAll(message) {
-        return await this.server.sendMessageAll(message);
+    async function sendMessageAll(message) {
+        return await server.sendMessageAll(message);
     }
     
-    async getMessages() {
-        const message = await this.server.getMessages();
+    async function getMessages() {
+        const message = await server.getMessages();
         if(message) {
-            if(this.state.messages.length !== message.length) {
-                return this.setState({ messages: message.reverse() });
+            if(messages.length !== message.length) {
+                return setMessages(message.reverse());
             }
         }
     }
 
-    async getLoggedUsers() {
-        return this.loggedUsers = await this.server.getLoggedUsers();
+    async function getLoggedUsers() {
+        return setLoggedUsers(await server.getLoggedUsers());
     }
 
-    onFocus() {
-        this.setState({ isOpenChat: true })
-        return this.getLoggedUsers();
+    function onFocus() {
+        setChatState(true);
+        return getLoggedUsers();
     }
 
     //----------Послать сообщение
-    sendMessage(e) {
+    function sendMessage(e) {
         e.preventDefault()
-        const text = this.message.current.value;
-        this.message.current.value = '';
+        const text = message.current.value;
+        message.current.value = '';
         if(text) {
             const arrOfSymbols = text.split('');
             if (
                 arrOfSymbols[0] === '@' && 
                 arrOfSymbols.includes('#')
             ) {
-                return this.sendMessageById(text);
+                return sendMessageById(text);
             } else if (
                 arrOfSymbols[0] === '@' && 
                 !arrOfSymbols.includes('#')
             ) {
-                return this.sendMessageWithoutId(text);
+                return sendMessageWithoutId(text);
             } else if(arrOfSymbols[0] !== '@') {
-                this.sendMessageAll(text);
+                sendMessageAll(text);
             }
         }
     }
 
-    sendMessageById(message) {
+    function sendMessageById(message) {
         const splttedText = message.split('#').slice(1).join(' ').split(' ');
         const userId = splttedText[0];
         const userMessage = splttedText.slice(1).join(' ');
-        return this.sendMessageTo(userMessage, userId);
+        return sendMessageTo(userMessage, userId);
     }
 
-    sendMessageWithoutId(message) {
-        const splttedText = message.split('@').slice(1).join(' ').split(' ');
+    function sendMessageWithoutId(messageValue) {
+        const splttedText = messageValue.split('@').slice(1).join(' ').split(' ');
         const userName = splttedText[0];
         const userMessage = splttedText.slice(1).join(' ');
         const userArr = [];
-        this.loggedUsers.forEach(user => {
+        loggedUsers.forEach(user => {
             if(user.name === userName) {
                 return userArr.push(user);
             }
         });
         if(userArr.length > 1) {
             const length = userArr[0].name.split('').length;
-            this.message.current.value = `@${userArr[0].name}#  ${userMessage}`;
-            this.setState({ showInputFailure: true });
+            message.current.value = `@${userArr[0].name}#  ${userMessage}`;
+            setInputFailure(true);
             setTimeout(() => {
-                return this.setState({ showInputFailure: false });
+                return setInputFailure(false);
             }, 300);
-            return this.message.current.selectionStart = this.message.current.selectionEnd = length + 2;
+            return message.current.selectionStart = message.current.selectionEnd = length + 2;
         } else {
-            this.sendMessageTo(userMessage, userArr[0].id);
+            sendMessageTo(userMessage, userArr[0].id);
         }
     }
 
     //--------Показывает залогининых юзеров
-    showAvailableUsers() {
-        const text = this.message.current.value;
+    function showAvailableUsers() {
+        const text = message.current.value;
         if(text) {
             const message = text.split();
             if(message[0].includes('@') && message[0].split('@')[1] === '') {
-                return this.setState({ showUsers: true });
+                return setActiveUsers(true);
             } else {
-                return this.setState({ showUsers: false });
+                return setActiveUsers(false);
             }
         }
     }
 
     // Закрывает окошко залогиненых юзеров
-    closeList(e) {
+    function closeList(e) {
         if(e.keyCode === 8) {
-            return this.setState({ showUsers: false });
+            return setActiveUsers(false);
         }
     }
     
     // Кладет выбранного юзера в инпут
-    getUserToInput(name, id) {
-        this.setState({ showUsers: false });
-        this.userAddresseeId = id;
-        this.message.current.value = '';
-        setTimeout(() => {
-            this.message.current.focus();
-            this.message.current.selectionStart = this.message.current.selectionEnd = this.message.current.value.length;
-        }, 100);
-        return this.message.current.value = '@' + name + '#' + id + ' ';
+    function getUserToInput(name, id) {
+        setActiveUsers(false);
+        message.current.value = '';
+        const timeout = setTimeout(() => {
+            message.current.focus();
+            message.current.selectionStart = message.current.selectionEnd = message.current.value.length;
+            return clearTimeout(timeout);
+        }, 50);
+        return message.current.value = '@' + name + '#' + id + ' ';
     }
 
-    blurChat() {
+    function blurChat() {
         let chatBlock = document.querySelector('.chat-box');
         document.addEventListener('click', (e) => {
             if(chatBlock) {
                 if(!chatBlock.contains(e.target)) {
-                    this.message.current?.blur();
-                    return this.setState({ isOpenChat: false });
+                    message.current?.blur();
+                    return setChatState(false);
                 }
             }
         });
     }
 
-    render() {
-        return(
-            <div className={`chat-box ${ this.state.isOpenChat ? 'show-chat-box' : 'hide-chat-box' }`} onClick={() => this.blurChat()}>
-                <div className={`message-block ${ this.state.isOpenChat ? 'showChat' : 'hideChat' }`}>
-                    {/* ------------------------------Уф.....Ну тут кароче чота происходит....... Вам не обязательно знать......---------------------------- */}
-                    { 
-                        this.state.showUsers ? 
-                            <AvailUsers 
-                                users={this.loggedUsers}
-                                placeUser={(name, id) => this.getUserToInput(name, id)}
-                            />
-                        : ''
-                    }
-                    {
-                        this.state.messages.map(message => {
-                            return message.messageTo !== null ? 
-                                <div
-                                    className="personal-message-line" 
-                                    key={message.id}
-                                >
-                                    <span className="message-sender">{message.name}: </span>
-                                    <span className="message">{message.message}</span>    
-                                </div>
-                            : <div
-                                className="message-line" 
+    return(
+        <div className={`chat-box ${ chatState ? 'show-chat-box' : 'hide-chat-box' }`} onClick={() => blurChat()}>
+            <div className={`message-block ${ chatState ? 'showChat' : 'hideChat' }`}>
+                {/* ------------------------------Уф.....Ну тут кароче чота происходит....... Вам не обязательно знать......---------------------------- */}
+                { 
+                    activeUsers ? 
+                        <AvailUsers 
+                            users={loggedUsers}
+                            placeUser={(name, id) => getUserToInput(name, id)}
+                        />
+                    : ''
+                }
+                {
+                    messages.map(message => {
+                        return message.messageTo !== null ? 
+                            <div
+                                className="personal-message-line" 
                                 key={message.id}
                             >
                                 <span className="message-sender">{message.name}: </span>
                                 <span className="message">{message.message}</span>    
                             </div>
-                        })
-                    }
-                </div>
-                <form className="send-message-block">
-                    <SendMessageInputLeft/>
-                    <SendMessageInputRight/>
-                    <SendMessageInputDown/>
-                    <SendMessageInputTop/>
-                    <input 
-                        className={`message-input ${this.state.showInputFailure ? 'show-input-failure' : ''}`}
-                        type={'text'} 
-                        ref={this.message}
-                        onFocus={() => this.onFocus()}
-                        onInput={(e) => this.showAvailableUsers(e)}
-                        onKeyDown={(e) => this.closeList(e)}
-                    />
-                    <button 
-                        className="send-message-button"
-                        type={'submit'}
-                        onClick={(e) => this.sendMessage(e)}
-                    >
-                        <SendMessageButton/>
-                    </button>
-                </form>
+                        : <div
+                            className="message-line" 
+                            key={message.id}
+                        >
+                            <span className="message-sender">{message.name}: </span>
+                            <span className="message">{message.message}</span>    
+                        </div>
+                    })
+                }
             </div>
-        );
-    }
+            <form className="send-message-block">
+                <SendMessageInputLeft/>
+                <SendMessageInputRight/>
+                <SendMessageInputDown/>
+                <SendMessageInputTop/>
+                <input 
+                    className={`message-input ${inputFailure ? 'show-input-failure' : ''}`}
+                    type={'text'} 
+                    ref={message}
+                    onFocus={() => onFocus()}
+                    onInput={(e) => showAvailableUsers(e)}
+                    onKeyDown={(e) => closeList(e)}
+                />
+                <button 
+                    className="send-message-button"
+                    type={'submit'}
+                    onClick={(e) => sendMessage(e)}
+                >
+                    <SendMessageButton/>
+                </button>
+            </form>
+        </div>
+    );
 }
