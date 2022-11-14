@@ -8,6 +8,7 @@ import CastleButton from "./castleButton/CastleButton";
 import UI from "./UI/UI";
 import GamerMoney from "./gamerMoney/GamerMoney";
 import Game from './game/Game';
+import GameOver from './gameOver/GameOver'
 
 import { hide, castle } from '../../store/features/storeInterface/storeInterface';
 
@@ -47,6 +48,9 @@ export default function GamePage() {
             <GamerMoney/>
             <Chat/>
             <Game/>
+            <GameOver
+                windowState = {{isOpened: true}}
+            />
         </div>
     );
 }
