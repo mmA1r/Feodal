@@ -1,26 +1,51 @@
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 
-import GameOverWindow from "./gameOverWindow/GameOverWindow";
+import GameOverWindow from "./gameOverWindow/GameOverWindow"
 
 export default function GameOver(props) {
-    const windowState = props.windowState;    
-    const [gameOverWindowState, setGameOverWindowState] = useState(windowState)
+    const windowState = props.windowState;
+    const [gameOverWindowState, setGameOverWindowState] = useState(windowState);
 
-    async function userLogout(event){
-        setGameOverWindowState({isOpened: false})
-        // user logout
+    const navigate = useNavigate();
+    const routes = useSelector((state) => state.routes.value);
+    const server = useSelector((state) => state.server.value);
 
-        // console.log(event)
-        // console.log('last gameOverWindowState:', gameOverWindowState)
-        return true;
+    /* Запрос на сервер на логаут. */
+    async function sendUserLogout() {
+        return await server.logout();
     }
 
-    function restartGame(event){
-        setGameOverWindowState({isOpened: false})
-        // restart game
+    /* Рестарт гейм на сервере.
+        Запросы на сервер на обнуление даты юзера.
+        А именно: сброс голды, удаление замка и пр.
+    */
+    async function sendUserRestart(){
+        // TODO
+    }
 
+
+    /* Логаут пользователя на фронте. */
+    function userLogout(event){
+        // console.log(event)
+
+        setGameOverWindowState({isOpened: false})
+        
+        // TODO: change to setInterval() (need a better Server.js)
+        setTimeout(() => {
+            if(sendUserLogout()) {
+                return navigate(routes.Login.path)        
+            }
+        }, 500);
+    }
+
+    /* Рестарт гейм на фронте. */
+    function restartGame(event){
         // console.log(event);
-        // console.log('last gameOverWindowState:', gameOverWindowState)
+
+        setGameOverWindowState({isOpened: false})
+        // ...
         return true;
     }
 
