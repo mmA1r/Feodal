@@ -34,6 +34,13 @@ class DB {
         }
     }
 
+    // only for string
+    private function simpleUpdate($table, $field, $value) {
+        $query = 'UPDATE '.$table.' SET '.$field.'="'.$value.'"';
+        $this->db->query($query);
+        return true;
+    }
+
     ////////////////////////////////////////
     //////////////forUser///////////////////
     ////////////////////////////////////////
@@ -100,28 +107,13 @@ class DB {
         return $this->getArray($query);
     }
 
-    public function getChatHash() {
-        $query = '
-                SELECT chatHash 
-                FROM statuses
-            ';
-        return $this->db->query($query)->fetchObject()->chatHash;
-    }
-
-    public function setChatHash($hash) {
-        $query = '
-                UPDATE statuses 
-                SET chatHash="' . $hash . '"
-            ';
-        $this->db->query($query);
-    }
 
     ////////////////////////////////////////
     //////////////forMap////////////////////
     ////////////////////////////////////////
     public function getMap() {
         $query = '
-                SELECT tiles
+                SELECT layer1, layer2, layer3
                 FROM Maps
             ';
         return $this->getArray($query);
@@ -135,15 +127,6 @@ class DB {
         return $this->getArray($query);
     }
 
-    public function getMapTimeStamp() {
-        $query = 'SELECT mapTimeStamp FROM statuses';
-        return $this->db->query($query)->fetchObject()->mapTimeStamp;
-    }
-
-    public function setMapTimeStamp($time) {
-        $query = 'UPDATE statuses SET mapTimeStamp="' . $time . '"';
-        $this->db->query($query);
-    }
 
     ////////////////////////////////////////
     //////////////forCastles////////////////
@@ -158,18 +141,11 @@ class DB {
         return true;
     }
 
-    public function getCastle($gamerId) {
-        $query = '
-                SELECT id, castleLevel, castleX, castleY, money
-                FROM gamers
-                WHERE id=' . $gamerId;
-        return $this->db->query($query)->fetchObject();
-    }
-
     public function getCastles() {
         $query = '
-                SELECT id, userId, castleLevel, castleX as posX, castleY as posY 
-                FROM gamers
+                SELECT g.id as id, u.name as ownerName, g.castleLevel as Level, g.castleX as posX, g.castleY as posY 
+                FROM gamers as g 
+                JOIN users as u ON g.userId=u.id
             ';
         return $this->getArray($query);
     }
@@ -200,15 +176,6 @@ class DB {
         return true;
     }
 
-    public function getMapHash() {
-        $query = 'SELECT mapHash FROM statuses';
-        return $this->db->query($query)->fetchObject()->mapHash;
-    }
-
-    public function setMapHash($hash) {
-        $query = 'UPDATE statuses SET mapHash="' . $hash . '"';
-        $this->db->query($query);
-    }
 
     public function destroyCastle($id) {
         $query = 'DELETE FROM gamers
@@ -254,8 +221,7 @@ class DB {
     }
 
     public function updateVillagePopulations() {
-        $query = 'UPDATE villages SET
-        population = population + 1';
+        $query = 'UPDATE villages SET population = population + 1';
     }
 
     public function robVillage($id, $money) {
@@ -267,8 +233,7 @@ class DB {
     }
 
     public function destroyVillage($id) {
-        $query = 'DELETE FROM villages
-        WHERE id=' . $id;
+        $query = 'DELETE FROM villages WHERE id=' . $id;
         $this->db->query($query);
         return true;
     }
@@ -276,57 +241,71 @@ class DB {
     //////////////forUnits//////////////////
     ////////////////////////////////////////
 
-    public function addUnit($gamer, $unit) {
+    public function addUnit($gamer, $unit, $hp, $posX, $posY) {
         $query = '
             INSERT INTO units (gamerId, type, hp, posX, posY) 
-            VALUES (' . $gamer . ',' . $unit . ', (SELECT hp FROM unitsTypes WHERE id=' . $unit . '),(SELECT castleX FROM gamers WHERE id=' . $gamer . '),(SELECT castleY FROM gamers WHERE id=' . $gamer . ') )';
+            VALUES ('.$gamer.', '.$unit.', '.$hp.', '.$posX.', '.$posY.')';
         $this->db->query($query);
         return true;
     }
 
-    public function getUnitCost($unitType) {
+    public function getUnitTypeData($unitType) {
         $query = '
-            SELECT cost 
+            SELECT cost, hp
             FROM unitsTypes 
             WHERE id=' . $unitType;
-        return $this->db->query($query)->fetchObject()->cost;
+        return $this->db->query($query)->fetchObject();
     }
 
     public function getUnits() {
         $query = '
-            SELECT u.id as id, g.userId as userId, u.type as type, u.hp as hp, u.posX as posX, u.posY as posY, u.status as status, u.direction as direction 
-            FROM units as u JOIN gamers as g ON u.gamerId=g.id
+            SELECT id, gamerId as ownerId, type, hp, posX, posY, status, direction 
+            FROM units
             ORDER BY gamerId';
         return $this->getArray($query);
     }
 
-    public function getUnitsHash() {
-        $query = '
-            SELECT unitsHash 
-            FROM statuses';
-        return $this->db->query($query)->fetchObject()->unitsHash;
-    }
-
-    public function setUnitsHash($hash) {
-        $query = '
-            UPDATE statuses 
-            SET unitsHash="' . $hash . '"';
-        $this->db->query($query);
-    }
 
     ////////////////////////////////////////
     //////////////forGamers/////////////////
     ////////////////////////////////////////
     public function getGamer($user) {
         $query = '
-            SELECT id 
+            SELECT *
             FROM gamers 
             WHERE userId=' . $user;
-        return $this->db->query($query)->fetchObject()->id;
+        return $this->db->query($query)->fetchObject();
     }
 
     /*public function getGamerByToken($token) {
             $query = 'SELECT g.id AS id FROM gamers AS g JOIN users as u ON g.userId=u.id WHERE u.token=' . $token;
             return $this->db->query($query)->fetchObject()->id;
         }*/
+
+    /* About statuses */
+    public function getStatuses() {
+        $query = 'SELECT * FROM statuses';
+        return $this->db->query($query)->fetchObject();
+    }
+
+    public function getChatHash() {
+        $query = 'SELECT chatHash FROM statuses';
+        return $this->db->query($query)->fetchObject()->chatHash;
+    }
+
+    public function setChatHash($hash) {
+        return $this->simpleUpdate('statuses', 'chatHash', $hash);
+    }
+
+    public function setMapTimeStamp($time) {
+        return $this->simpleUpdate('statuses', 'mapTimeStamp', $time);
+    }
+
+    public function setMapHash($hash) {
+        return $this->simpleUpdate('statuses', 'mapHash', $hash);
+    }
+
+    public function setUnitsHash($hash) {
+        return $this->simpleUpdate('statuses', 'unitsHash', $hash);
+    }
 }

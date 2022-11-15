@@ -119,7 +119,7 @@ export default class Server {
             this.unitsHash = data.unitsHash;
             delete data.unitsHash;
         }
-        return data;
+        return data
     }
 
     async getMap() {
@@ -146,6 +146,6 @@ export default class Server {
             method: 'getCastle',
             token: this.token
         });
-        return data
+        return data.castle;
     }
 }

@@ -1,6 +1,9 @@
 import Phaser from "phaser";
 
 import store from '../../../../store/store';
+import { money } from '../../../../store/features/user/userMoney';
+import { level } from '../../../../store/features/user/userLevel';
+import { units } from '../../../../store/features/user/userUnits';
 
 import tileMapSheet from '../../../../assets/gameSprites/spriteMap.png';
 import castleSprite from '../../../../assets/gameSprites/castle.png';
@@ -37,38 +40,58 @@ export default class WorldScene extends Phaser.Scene {
         // eslint-disable-next-line
         const trees = map.createLayer('trees', tiles, 0, 0);
         const physics = this.physics;
+
         physics.world.bounds.width = map.widthInPixels;
         physics.world.bounds.height = map.heightInPixels;
 
         const server = store.getState().server.value;
-        const data = await server.getScene();
-        const castles = data.castles;
-        const villages = data.villages;
-        const units = data.unit;
+        const preCastleData = await server.getCastle();
+        const preSceneData = await server.getScene();
+        let castleData;
+        let unitsData;
+        let villagesData;
+        let castlesData;
+        if(preCastleData) {
+            castleData = preCastleData;
+        }
+        if(preSceneData) {
+            unitsData = preSceneData.units;
+            // eslint-disable-next-line
+            villagesData = preSceneData.villages;
+            // eslint-disable-next-line
+            castlesData = preSceneData.castles;
+        }
 
-        const userData = await server.getCastle();
-        const userCastle = userData.castle;
+        console.log(castleData);
+        // console.log(unitsData);
+        // console.log(villagesData);
+        // console.log(castlesData);
 
-        /********************/
-        /****** Castle ******/
-        /********************/
+        // /********************/
+        // /****** Castle ******/
+        // /********************/
         
-        const castle = physics.add.image(userCastle.castleX-0, userCastle.castleY-0, 'castleFirstLevel');
+        const castle = physics.add.image(castleData.posX-0, castleData.posY-0, 'castleFirstLevel');
         castle.setInteractive();
         const castleUntits = [];
         let castleHp = 0
-        units.forEach(unit => {
-            if(unit.userId === userCastle.id) {
-                castleHp += unit.hp
+        unitsData?.forEach(unit => {
+            if(unit.ownerId === castleData.id) {
+                castleHp += unit.hp-0
                 return castleUntits.push(unit);
             }
         });
         castle.setData({
             hp: castleHp,
-            money: userCastle.money-0,
-            level: userCastle.castleLevel-0,
+            money: castleData.money-0,
+            level: castleData.level-0,
             units: castleUntits,
         });
+
+        /**** Записываем данные в store ***/
+        store.dispatch(money(castle.data.list.money));
+        store.dispatch(level(castle.data.list.level));
+        store.dispatch(units(castle.data.list.units));
         
         castle.addListener('pointerover', () => {
             castle.setTint(185274);
@@ -80,25 +103,11 @@ export default class WorldScene extends Phaser.Scene {
             document.getElementsByClassName('castle-manage-button')[0].click();
         });
 
+        console.log(castle);
+
         /*********************/
         /****** Village ******/
         /*********************/
-
-        villages.forEach(village => {
-            village = physics.add.image(village.posX-0, village.posY-0, 'village');
-            village.setInteractive();
-            village.setData({
-                level: village.level,
-                money: village.money,
-                population: village.population
-            });
-            village.addListener('pointerover', () => {
-                village.setTint(185274);
-            });
-            village.addListener('pointerout', () => {
-                village.setTint();
-            });
-        });
 
 
         /******************/
@@ -112,7 +121,7 @@ export default class WorldScene extends Phaser.Scene {
         camera.useBounds = true;
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         camera.setViewport(0, 0, winWidth, winHeight);
-        camera.centerOn(userCastle.castleX, userCastle.castleY);
+        camera.centerOn(castle.x, castle.y);
 
         /**** CameraMove  ****/
 
@@ -121,8 +130,8 @@ export default class WorldScene extends Phaser.Scene {
             y: winHeight/2 
         }
         const cameraMovesTo = {
-            x: userCastle.castleX - winWidth/2,
-            y: userCastle.castleY - winHeight/2,
+            x: castle.x - winWidth/2,
+            y: castle.y - winHeight/2,
             move: false
         }
         const mouseVector = {

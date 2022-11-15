@@ -1,18 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Phaser from "phaser";
-
-import store from "../../../store/store";
+import { useSelector } from "react-redux";
 
 import WorldScene from "./scenes/WorldScene";
 
-export default class Game extends React.Component {
-    constructor() {
-        super();
+export default function Game() {
+    // eslint-disable-next-line 
+    const server = useSelector((state) => state.server.value);
 
-        this.server = store.getState().server.value;
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         const config = {
             type: Phaser.AUTO,
             width: '100%',
@@ -34,14 +30,16 @@ export default class Game extends React.Component {
             ]
         };
         const game = new Phaser.Game(config);
-    }
+
+        return () => {
+            game.destroy(true, false);
+        }
+    }, []);
 
 
-    render() {
-        return(
-            <div id="game"/>
-        );
-    }
+    return(
+        <div id="game"/>
+    );
 }
 
 

@@ -69,9 +69,11 @@ class Application {
     }
     
     public function getMessages($params) {
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            return $this->chat->getMessages($params['hash'], $user);
+        if ($params['hash']) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                return $this->chat->getMessages($params['hash'], $user);
+            }
         }
     }
 
@@ -104,7 +106,7 @@ class Application {
     public function getScene($params) {
         $user = $this->user->getUser($params['token']);
         if ($user) {
-            return $this->game->getScene($params['updates'], $params['unitsHash'], $params['mapHash']);
+            return $this->game->getScene($params['unitsHash'], $params['mapHash']);
         }
     }
     public function updateMap() {
@@ -121,6 +123,7 @@ class Application {
             $gamer = $this->gamer->getGamer($user);
             if (!$gamer) {
                 $this->gamer->addCastle($user);
+                $gamer = $this->gamer->getGamer($user);
             }
             return $this->gamer->getCastle($gamer);
         }
@@ -170,5 +173,19 @@ class Application {
 
     public function destroyCastle($params){
         
+    }
+
+    public function updateUnits($params) {
+        $userId = $this->user->getUser($params['token']);
+        if ($userId) {
+            $gamerId = $this->gamer->getGamer($userId);
+            if ($gamerId) {
+                $time = $this->gamer->updateUnits($gamerId, $params['units']);
+                if ($time) {
+                    $this->game->updateMap($time);
+                }
+                return true;
+            }
+        }
     }
 }
