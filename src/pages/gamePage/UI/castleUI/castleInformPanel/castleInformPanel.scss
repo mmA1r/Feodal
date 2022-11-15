@@ -1,6 +1,6 @@
 $inform-border: url('../../../../../assets/UI/CastleUI/InformFrame.png');
 $inform-back: url('../../../../../assets/UI/CastleUI/FrameBackground.png');
-$units-frame: url('../../../../../assets/UI/CastleUI/unitsFrame2.png');
+$soldier-frame: url('../../../../../assets/UI/CastleUI/soldier-frame.png');
 
 
 .castle-inform-panel {
@@ -47,12 +47,11 @@ $units-frame: url('../../../../../assets/UI/CastleUI/unitsFrame2.png');
     z-index: 1;
 }
 
-.hp-bar {
-    position: absolute;
-}
-
 .solider-frame {
     right: 0px;
+    background-image: $soldier-frame;
+    background-position: center;
+    background-size: contain;
 }
 .archer-frame {
     right: 42px;
@@ -64,10 +63,6 @@ $units-frame: url('../../../../../assets/UI/CastleUI/unitsFrame2.png');
     width: 42px;
 
     color: white;
-
-    background-image: $units-frame;
-    background-position: center;
-    background-size: contain;
 }
 
 .soldier-number, .archer-number {

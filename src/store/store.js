@@ -6,6 +6,8 @@ import storeInterface from "./features/storeInterface/storeInterface";
 import userMoney from "./features/user/userMoney";
 import userUnits from "./features/user/userUnits";
 import userLevel from './features/user/userLevel';
+import userHp from "./features/user/userHp";
+import soldier from "./features/units/soldier";
 
 export default configureStore({
     reducer: {
@@ -15,6 +17,8 @@ export default configureStore({
         userMoney: userMoney,
         userUnits: userUnits,
         userLevel: userLevel,
+        userHp: userHp,
+        soldier: soldier,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

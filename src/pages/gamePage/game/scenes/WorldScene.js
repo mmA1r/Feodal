@@ -4,7 +4,8 @@ import store from '../../../../store/store';
 import { money } from '../../../../store/features/user/userMoney';
 import { level } from '../../../../store/features/user/userLevel';
 import { units } from '../../../../store/features/user/userUnits';
-
+import { hp } from '../../../../store/features/user/userHp';
+ 
 import tileMapSheet from '../../../../assets/gameSprites/spriteMap.png';
 import castleSprite from '../../../../assets/gameSprites/castle.png';
 import villageSprite from '../../../../assets/gameSprites/village.png'
@@ -63,7 +64,7 @@ export default class WorldScene extends Phaser.Scene {
         }
 
         console.log(castleData);
-        // console.log(unitsData);
+        console.log(unitsData);
         // console.log(villagesData);
         // console.log(castlesData);
 
@@ -92,6 +93,7 @@ export default class WorldScene extends Phaser.Scene {
         store.dispatch(money(castle.data.list.money));
         store.dispatch(level(castle.data.list.level));
         store.dispatch(units(castle.data.list.units));
+        store.dispatch(hp(castle.data.list.hp));
         
         castle.addListener('pointerover', () => {
             castle.setTint(185274);

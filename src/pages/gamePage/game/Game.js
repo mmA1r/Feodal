@@ -15,7 +15,7 @@ export default function Game() {
             height: '100%',
             parent: 'game',
             fps: {
-                target: 60,
+                target: 75,
                 forceSetTimeOut: true
             },
             pixelArt: true,
