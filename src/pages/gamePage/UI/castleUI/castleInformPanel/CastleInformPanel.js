@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import './castleInformPanel.scss';
 import HpBar from './hpBar/HpBar';

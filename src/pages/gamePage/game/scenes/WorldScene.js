@@ -9,6 +9,7 @@ import { hp } from '../../../../store/features/user/userHp';
 import tileMapSheet from '../../../../assets/gameSprites/spriteMap.png';
 import castleSprite from '../../../../assets/gameSprites/castle.png';
 import villageSprite from '../../../../assets/gameSprites/village.png'
+import soldierSprite from '../../../../assets/gameSprites/soldier.png'
 import tileMap from "../tileMap/tileMap";
 
 
@@ -21,6 +22,7 @@ export default class WorldScene extends Phaser.Scene {
         this.load.image('spriteMap', tileMapSheet);
         this.load.image('castleFirstLevel', castleSprite);
         this.load.image('village', villageSprite);
+        this.load.image('soldier', soldierSprite);
         try {
             this.load.tilemapTiledJSON('tilemap', tileMap);
         } catch (e) {
@@ -63,21 +65,22 @@ export default class WorldScene extends Phaser.Scene {
             castlesData = preSceneData.castles;
         }
 
-        console.log(castleData);
-        console.log(unitsData);
+        // console.log(castleData);
+        // console.log(unitsData);
         // console.log(villagesData);
         // console.log(castlesData);
 
         // /********************/
         // /****** Castle ******/
         // /********************/
+
         
         const castle = physics.add.image(castleData.posX-0, castleData.posY-0, 'castleFirstLevel');
         castle.setInteractive();
         const castleUntits = [];
         let castleHp = 0
         unitsData?.forEach(unit => {
-            if(unit.ownerId === castleData.id) {
+            if(unit.ownerId === castleData.id && unit.status === 'inCastle') {
                 castleHp += unit.hp-0
                 return castleUntits.push(unit);
             }
@@ -87,6 +90,7 @@ export default class WorldScene extends Phaser.Scene {
             money: castleData.money-0,
             level: castleData.level-0,
             units: castleUntits,
+            id: castleData.id
         });
 
         /**** Записываем данные в store ***/
@@ -105,7 +109,34 @@ export default class WorldScene extends Phaser.Scene {
             document.getElementsByClassName('castle-manage-button')[0].click();
         });
 
-        console.log(castle);
+        /*********************/
+        /****** Player ******/
+        /*********************/
+
+        this.soldier = this.add.sprite(2200, 2100, 'soldier');
+        this.soldier.setInteractive();
+        this.soldier.setActive();
+
+        this.soldier.addListener('pointerdown', () => {
+            this.soldier.setData({status: 'active'});
+        });
+
+        this.input.on('pointerdown', (e) => {
+            // console.log(e)
+            if(this.soldier.getData('status') === 'active') {
+                // console.log(Math.abs(mouseVector.x))
+                const move = setInterval(() => {
+                    this.soldier.x += mouseVector.x/100;
+                    this.soldier.y += mouseVector.y/100;
+                    if(Math.abs(this.soldier.x) > Math.abs(e.worldX) && Math.abs(this.soldier.y) > Math.abs(e.worldY)) {
+                        clearInterval(move);
+                    }
+                }, 30)
+            }
+            if(e.event.button === 2) {
+                this.soldier.setData({status: 'inactive'});
+            }
+        });
 
         /*********************/
         /****** Village ******/
@@ -127,6 +158,8 @@ export default class WorldScene extends Phaser.Scene {
 
         /**** CameraMove  ****/
 
+        // this.input.setPollOnMove()
+
         const pageCenter = { 
             x: winWidth/2, 
             y: winHeight/2 
@@ -141,7 +174,7 @@ export default class WorldScene extends Phaser.Scene {
             y: 0
         }
 
-        const moveCamera = setInterval(() => {
+        const moveCamera = setInterval(function() {
             if(cameraMovesTo.move) {
                 if(
                     (Math.ceil(camera.worldView.right) >= camera._bounds.right && mouseVector.x > 0) ||
@@ -214,6 +247,30 @@ export default class WorldScene extends Phaser.Scene {
         }
     }
 
-    update() {
+    async update() {
+        const server = store.getState().server.value;
+        const preSceneData = await server.getScene();
+        if(preSceneData) {
+            const castle = await server.getCastle();
+
+            const sceneUnits = preSceneData.units;
+            // eslint-disable-next-line
+            const villages = preSceneData.villages;
+            // eslint-disable-next-line
+            const castles = preSceneData.castles;
+
+            const userUnits = [];
+            let castleHp = 0;
+            sceneUnits.forEach(unit => {
+                if(unit.ownerId === castle.id) {
+                    userUnits.push(unit);
+                    castleHp += unit.hp-0;
+                }
+            });
+            store.dispatch(money(castle.money));
+            store.dispatch(level(castle.level));
+            store.dispatch(units(userUnits));
+            store.dispatch(hp(castleHp));
+        }
     }
 }

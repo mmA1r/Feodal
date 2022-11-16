@@ -4,6 +4,7 @@ import './hpBar.scss';
 export default function HpBar() {
 
     const castleUnits = useSelector((state) => state.userUnits.value);
+    
     const castleHp = useSelector((state) => state.userHp.value);
 
     const unitsHp = castleUnits.map(unit => {

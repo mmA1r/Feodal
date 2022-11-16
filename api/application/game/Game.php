@@ -1,7 +1,8 @@
 <?php
     class Game {
-        function __construct($db) {
+        function __construct($db,$map) {
             $this->db = $db;
+            $this->map = $map;
         }
 
         public function addVillage(){
@@ -19,13 +20,17 @@
                 case 3: $name="Разгромки"; break;
                 case 4: $name="Удалёнки"; break;
             }
-            $this->db->createVillage($subname . $name, $posX, $posY);
+            $this->db->createVillage($subname.' '.$name, $posX, $posY);
         }
 
         public function getMap() {
-            return array (
-                'map' => $this->db->getMap()
-            );
+            $map = $this->db->getMap(1);
+            return array(
+                'map'=>array(
+                    'ground'=>json_decode($map->ground),
+                    'plants'=>json_decode($map->plants),
+                    'trees'=>json_decode($map->trees)
+                ));
         }
 
         public function getUnitsTypes() {
@@ -36,6 +41,11 @@
             return $this->db->getVillage($villageId);
         }
 
+        public function getCastle($castleId) {
+            if ($castleId) {
+                return $this->db->getCastle($castleId);
+            }
+        }
 
         public function getScene($unitsHash, $mapHash) {
             $statuses = $this->db->getStatuses();
@@ -66,30 +76,26 @@
             // обновить все деревни
             $villages = $this->db->getVillages();
             foreach ($villages as $village) {
-                if ($time - $village->lastUpdate >= 1000 * 60 * 5) {
+                if ((float)$time>=(float)$village->nextUpdateTime) {
+                    $id= $village->id;
                     // посчитать новую популяцию
+                    $population = $village->population + rand(1, 1+round($village->population/10,0,PHP_ROUND_HALF_EVEN));
                     // посчитать новые деньги
+                    $money = $village->money + rand(1,$village->level*(1+round($village->population/10,0,PHP_ROUND_HALF_EVEN)));
                     // увеличить уровень если чо
-                    // записать в БД
-                    $this->db->setMapHash(md5(rand()));
-                }
+                    $cost = 300*$village->level + $village->level*$village->level*200;
+                    if ($village->money >= $cost && $village->level <5 ){
+                        $level =$village->level +1;
+                        $money = $village->money - $cost;
+                    } else{$level= $village->level;};
+            // записать в БД
+            $this->db->updateVillage($id,$money,$level,$population,$time+rand(300,400-10*$village->level));
+            $this->db->setMapHash(md5(rand()));
             }
-
+            }
+            
             // обновить все замки
             //...
-
-            /*$timeDB = $this->db->getMapTimeStamp();
-            $time = time();
-            if ($time>=$timeDB) {
-                $this->db->setMapTimeStamp($time+300);
-                $this->db->updateVillagePopulations();
-                $this->db->updateVillagesMoney();
-                if (count($this->db->getVillages())<10){
-                    $this->addVillage();
-                }
-                $this->db->updateVillagesLevel();
-                $hash = md5(rand());
-                $this->db->setMapHash($hash);
-            }*/
-        }
+            
+            }
     }

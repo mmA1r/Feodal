@@ -155,4 +155,13 @@ export default class Server {
         });
         return data.castle;
     }
+
+    async buyUnit(unitId) {
+        const data = await this.send({
+            method: 'buyUnit',
+            unitType: unitId,
+            token : this.token
+        });
+        return data;
+    }
 }

@@ -100,7 +100,7 @@ class DB {
 
     public function getMessages($user) {
         $query = '
-                    SELECT u.name as name, m.message as message, m.messageTo, m.id
+                    SELECT m.id, u.name as name, m.message as message, m.messageTo
                     FROM messages as m JOIN users AS u ON u.id=m.userId 
                     WHERE (userId=' . $user . ' or messageTo is NULL or messageTo=' . $user . ') ORDER BY m.id
                 ';
@@ -111,12 +111,12 @@ class DB {
     ////////////////////////////////////////
     //////////////forMap////////////////////
     ////////////////////////////////////////
-    public function getMap() {
+    public function getMap($id) {
         $query = '
-                SELECT layer1, layer2, layer3
+                SELECT ground,plants,trees
                 FROM Maps
-            ';
-        return $this->getArray($query);
+                WHERE id='.$id;
+        return $this->db->query($query)->fetchObject();
     }
 
     public function getUnitsTypes() {
@@ -139,6 +139,11 @@ class DB {
             ';
         $this->db->query($query);
         return true;
+    }
+
+    public function getCastle($id) {
+        $query = 'SELECT id, castleX as posX, castleY as posY, money FROM gamers WHERE id='.$id;
+        return $this->db->query($query)->fetchObject();
     }
 
     public function getCastles() {
@@ -195,7 +200,7 @@ class DB {
     }
 
     public function getVillage($id) {
-        $query = 'SELECT id, money, population FROM villages';
+        $query = 'SELECT id, money, population FROM villages WHERE id='.$id;
         return $this->db->query($query)->fetchObject();
     }
 
@@ -204,7 +209,18 @@ class DB {
         return $this->getArray($query);
     }
 
-    public function updateVillagesLevel() {
+    public function updateVillage($id, $money, $level, $population, $time){
+        $query = 'UPDATE villages SET money ='. $money .
+            ', level ='. $level .
+            ', population ='. $population .
+            ', nextUpdateTime ='. $time . ' WHERE id ='. $id;
+        $this -> db -> query($query);
+        return true;
+    }
+
+
+    // Пока не стали удалять
+    /*public function updateVillagesLevel() {
         $query = 'UPDATE villages 
                 SET money = money - 300*level-level*level*200,
                 level=level + 1
@@ -220,8 +236,11 @@ class DB {
         return true;
     }
 
-    public function updateVillagePopulations() {
-        $query = 'UPDATE villages SET population = population + 1';
+    */
+    public function updateVillagePopulations($id,$population){
+        $query = 'UPDATE villages SET population ='. $population . ' WHERE id ='.  $id;
+        $this -> db -> query($query);
+        return true;
     }
 
     public function robVillage($id, $money) {
@@ -257,6 +276,14 @@ class DB {
         return $this->db->query($query)->fetchObject();
     }
 
+    public function getUnitsInCastle($castleId){
+        $query = '
+        SELECT id, type, hp, posX, posY, status, direction 
+        FROM units
+        WHERE status="inCastle" and gamerId='.$castleId;
+    return $this->getArray($query);
+    }
+
     public function getUnits() {
         $query = '
             SELECT id, gamerId as ownerId, type, hp, posX, posY, status, direction 
@@ -265,22 +292,27 @@ class DB {
         return $this->getArray($query);
     }
 
+    // По id отдельного юнита меняет у него 
+    // hp, posX, posY, status, direction в БД
+    public function updateUnit($unitId, $hp, $posX, $posY, $status, $direction){
+        $query = '
+            UPDATE units
+            SET hp='. $hp. ',posX='. $posX. ',posY='. $posY. ',status='. $status. ',direction='. $direction. '
+            WHERE id=' .$unitId;
+        $this->db->query($query);
+        return $query;
+    }
 
     ////////////////////////////////////////
     //////////////forGamers/////////////////
     ////////////////////////////////////////
     public function getGamer($user) {
         $query = '
-            SELECT *
+            SELECT id, castleLevel as level, castleX as posX, castleY as posY, money
             FROM gamers 
             WHERE userId=' . $user;
         return $this->db->query($query)->fetchObject();
     }
-
-    /*public function getGamerByToken($token) {
-            $query = 'SELECT g.id AS id FROM gamers AS g JOIN users as u ON g.userId=u.id WHERE u.token=' . $token;
-            return $this->db->query($query)->fetchObject()->id;
-        }*/
 
     /* About statuses */
     public function getStatuses() {

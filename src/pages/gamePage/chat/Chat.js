@@ -25,7 +25,7 @@ export default function Chat() {
     useEffect(() => {
         const interval = setInterval(() => {
             getMessages();
-        }, 1500);
+        }, 1000);
 
 
         return () => {

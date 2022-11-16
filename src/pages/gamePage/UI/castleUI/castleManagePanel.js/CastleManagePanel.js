@@ -41,7 +41,11 @@ export default function CastleManagePanel() {
         return setUnits(await server.getUnitsTypes());
     }
 
-    const showCost = (unitName) => {
+    async function buySoldier() {
+        return await server.buyUnit(1);
+    }
+
+    function showCost(unitName) {
         if(unitName === 'soldier') {
             setUnitPrice(soldierCost);
         } else {
@@ -50,9 +54,10 @@ export default function CastleManagePanel() {
         setPrice(true);
     }
 
-    const hideCost = () => {
+    function hideCost() {
         return setPrice(false);
     }
+
 
     return (
         <div className="castle-manage-panel">
@@ -64,6 +69,7 @@ export default function CastleManagePanel() {
                 className="buy-warrior-unit-button"
                 onMouseOver={() => showCost("soldier")}
                 onMouseOut={() => hideCost()}
+                onClick={() => buySoldier()}
             >
                 <WarriorButton/>
             </button>
