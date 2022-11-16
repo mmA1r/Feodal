@@ -117,24 +117,42 @@ export default class WorldScene extends Phaser.Scene {
         this.soldier.setInteractive();
         this.soldier.setActive();
 
-        this.soldier.addListener('pointerdown', () => {
-            this.soldier.setData({status: 'active'});
+        this.soldier.addListener('pointerdown', (e) => {
+            if(e.event.button === 0) {
+                this.soldier.setData({status: 'active'});
+                this.soldier.setTint(185274);
+            }
         });
 
+        let moveInterval;
+
         this.input.on('pointerdown', (e) => {
-            // console.log(e)
-            if(this.soldier.getData('status') === 'active') {
-                // console.log(Math.abs(mouseVector.x))
-                const move = setInterval(() => {
-                    this.soldier.x += mouseVector.x/100;
-                    this.soldier.y += mouseVector.y/100;
-                    if(Math.abs(this.soldier.x) > Math.abs(e.worldX) && Math.abs(this.soldier.y) > Math.abs(e.worldY)) {
-                        clearInterval(move);
-                    }
-                }, 30)
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            clearInterval(moveInterval);
+            const worldX = e.worldX;
+            const worldY = e.worldY;
+            const moveVector = {
+                x: worldX - this.soldier.x,
+                y: worldY - this.soldier.y
             }
-            if(e.event.button === 2) {
-                this.soldier.setData({status: 'inactive'});
+
+            if(this.soldier.getData('status') === 'active') { 
+                if(e.event.button === 2) {
+                    moveInterval = setInterval(() => {
+                        this.soldier.x += moveVector.x/100;
+                        this.soldier.y += moveVector.y/100;
+                        if(
+                            (this.soldier.x > worldX - 10 && this.soldier.x < worldX + 10) &&
+                            (this.soldier.y > worldY - 10 && this.soldier.y < worldY + 10)
+                        ) {
+                            return clearInterval(moveInterval);
+                        }
+                    }, 30)
+                } 
+                // if(e.event.button === 0 && this.soldier.getData('status') === 'active') {
+                //     this.soldier.setData({status: 'inactive'});
+                    // this.soldier.setTint();
+                // }
             }
         });
 
