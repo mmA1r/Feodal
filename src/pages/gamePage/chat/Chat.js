@@ -25,11 +25,12 @@ export default function Chat() {
     useEffect(() => {
         const interval = setInterval(() => {
             getMessages();
-        }, 1500);
+        }, 1000);
 
 
         return () => {
-            clearInterval(interval);
+            getMessages(true);
+            return clearInterval(interval);
         }
          // eslint-disable-next-line
     }, []);
@@ -42,8 +43,8 @@ export default function Chat() {
         return await server.sendMessageAll(message);
     }
     
-    async function getMessages() {
-        const message = await server.getMessages();
+    async function getMessages(isLogout) {
+        const message = await server.getMessages(isLogout);
         if(message) {
             if(messages.length !== message.length) {
                 return setMessages(message.reverse());

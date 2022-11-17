@@ -1,0 +1,33 @@
+.hp-bar {
+    position: absolute;
+    left: 243px;
+    bottom: 25px;
+    box-sizing: border-box;
+    width: 300px;
+    height: 30px;
+    border: 1px solid white;
+
+    & > .hp-counter {
+        position: absolute;
+        width: 100px;
+        top: 5px;
+        left: calc(50% - 50px);
+        text-align: center;
+        color: white;
+        z-index: 2;
+    }
+    & > .true-hp-bar {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background-color: red;
+    }
+}
+
+progress[value]::-webkit-progress-bar {
+    background-color: rgb(48, 1, 1);
+}
+progress[value]::-webkit-progress-value {
+    background-color: rgb(192, 3, 29);
+}

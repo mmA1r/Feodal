@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { soldierValues } from "../../../../../store/features/units/soldier";
 
 import Money from "./money/Money";
 import WarriorButton from "./manageButtons/warriorButton/WarriorButton";
@@ -9,13 +10,25 @@ import './castleManagePanel.scss';
 
 export default function CastleManagePanel() {
     const server = useSelector((state) => state.server.value);
+    const dispatch = useDispatch();
 
     const [price, setPrice] = useState(false);
-    // eslint-disable-next-line
-    const [unit, setUnit] = useState('soldier');
+    const [unitPrice, setUnitPrice] = useState(0);
+    const [units, setUnits] = useState([]);
 
-    let units = [];
-    let cost = 0;
+    let soldierCost;
+
+    units.forEach(type => {
+        if(type.name === 'soldier') {
+            dispatch(soldierValues({
+                hp: type.hp,
+                cost: type.cost,
+                damage: type.damage,
+                speed: type.speed
+            }));
+            return soldierCost = type.cost;
+        }
+    });
 
 
     
@@ -25,35 +38,38 @@ export default function CastleManagePanel() {
     }, []);
 
     async function getUnitsTypes() {
-        return units = await server.getUnitsTypes();
+        return setUnits(await server.getUnitsTypes());
     }
 
-    const showCost = (unitName = 0) => {
-        units.forEach(unit => {
-            if(unit.name === unitName) {
-                return cost = unit.cost;
-            } else  {
-                cost = 0;
-            }
-        });
+    async function buySoldier() {
+        return await server.buyUnit(1);
+    }
+
+    function showCost(unitName) {
+        if(unitName === 'soldier') {
+            setUnitPrice(soldierCost);
+        } else {
+            setUnitPrice(0);
+        }
         setPrice(true);
-        setUnit(unitName);
     }
 
-    const hideCost = () => {
+    function hideCost() {
         return setPrice(false);
     }
+
 
     return (
         <div className="castle-manage-panel">
             <div className={`price ${price ? 'show-price' : 'hide-price'}`}>
                 <Money/>
-                <span className="price-num">{cost}</span>
+                <span className="price-num">{unitPrice}</span>
             </div>
             <button
                 className="buy-warrior-unit-button"
                 onMouseOver={() => showCost("soldier")}
                 onMouseOut={() => hideCost()}
+                onClick={() => buySoldier()}
             >
                 <WarriorButton/>
             </button>

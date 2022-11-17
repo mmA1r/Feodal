@@ -1,7 +1,4 @@
-import store from "../../../../store/store";
-
-const server = store.getState().server.value;
-const data = server.getMap();
+// const data = server.getMap();
 
 const tileMap = { "compressionlevel":-1,
 "height":90,

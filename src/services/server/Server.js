@@ -87,7 +87,7 @@ export default class Server {
         });
     }
 
-    async getMessages() {
+    async getMessages(isLogout = false) {
         const data = await this.send({ 
             method: 'getMessages',
             token: this.token,
@@ -95,6 +95,9 @@ export default class Server {
         });
         if(data?.hash) {
             this.hash = data.hash;
+        }
+        if(isLogout) {
+            this.hash = 123;
         }
         if(data) {
             return data.messages;            
@@ -119,7 +122,7 @@ export default class Server {
             this.unitsHash = data.unitsHash;
             delete data.unitsHash;
         }
-        return data;
+        return data
     }
 
     async getMap() {
@@ -135,7 +138,11 @@ export default class Server {
             method: 'getUnitsTypes',
             token: this.token
         });
-        return data;
+        if(data) {
+            return data;
+        } else {
+            return null;
+        }
     }
 
     /******************/
@@ -146,6 +153,15 @@ export default class Server {
             method: 'getCastle',
             token: this.token
         });
-        return data
+        return data.castle;
+    }
+
+    async buyUnit(unitId) {
+        const data = await this.send({
+            method: 'buyUnit',
+            unitType: unitId,
+            token : this.token
+        });
+        return data;
     }
 }
