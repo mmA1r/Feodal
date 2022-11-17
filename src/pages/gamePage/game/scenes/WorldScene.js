@@ -57,17 +57,14 @@ export default class WorldScene extends Phaser.Scene {
         castle.setInteractive();
         const castleUntits = [];
         let castleHp = 0
-        /* Fix bug 'units is null'.
-            p.s Рома
-        */
-        // if(units){
-            units.forEach(unit => {
+        
+        units.forEach(unit => {
                 if(unit.userId === userCastle.id) {
                     castleHp += unit.hp
                     return castleUntits.push(unit);
                 }
             });
-        // }
+
         castle.setData({
             hp: castleHp,
             money: userCastle.money-0,
