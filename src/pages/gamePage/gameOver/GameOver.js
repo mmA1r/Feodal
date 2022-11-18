@@ -52,10 +52,10 @@ export default function GameOver(props) {
     return(<div>
         {  gameOverWindowState.isOpened ?
             <GameOverWindow
-                title = 'GAME OVER'
+                title = 'Game Over'
                 buttons = {{
-                    logoutButton: {title: 'Logout',},
-                    restartGameButton: {title : 'Restart Game'}
+                    logoutButton: {title: 'logout',},
+                    restartGameButton: {title : 'try again'}
                 }}
                 callbacks = {{
                     userLogout: userLogout,

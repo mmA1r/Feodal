@@ -1,12 +1,12 @@
 @import '../../gameConst.scss';
-// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 
 
 .game-over-window {
     position: absolute;
     z-index: 2;
     width: 650px;
-    height: 250px;
+    height: 200px;
     left: 50%;
     top: 50%;
     margin-right: -50%;
@@ -14,27 +14,33 @@
 
     background-color: $window-background-color;
     border-width: 3px;
-    border-color: $window-border-color;
-    border-style: solid;
-    border-radius: 10px;
+    // border-color: $window-border-color;
+    // border-style: solid;
+    // border-radius: 10px;
     
     font-family: 'Inter', sans-serif;
     user-select: none;
 }
 
 .game-over-text-box {
-    position: relative;
+    position: absolute;
     color: $window-text-color;
-    height: 50px;
+    // height: 50px;
     width: 100%;
-    text-align: center;
+    margin-top: 10px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 77px;
     align-items: center;
-    font-size: 40px;
-    font-weight: bold;
+    text-align: center;
+    text-shadow: $window-text-color-2 4px 0 0px;
 }
 
 .game-over-buttons-box {
-    position: relative;
+    position: absolute;
     background-color: transparent;
     width: 100%;
     height: 200px;
@@ -47,17 +53,24 @@
 
 .game-over-button{
     cursor: pointer;
-    width: 200px;
+    width: 160px;
     height: 50px;
+    margin-top: 70px;
     font-size: 20px;
-    text-align: center;
+    font-family: 'Inter';
+    font-style: normal;
+    line-height: 20px;
+    font-weight: 500;
 
     color: $window-button-text-color;
     background-color: $window-button-background-color;
-    border:2px solid $window-button-border-color;
-    border-radius: 2px;
-    
+    border: 4px solid $window-button-border-color;
     transition: 0.2s;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 .game-over-button:hover{
@@ -66,4 +79,230 @@
 
 .game-over-button:active{
     background-color: $window-button-background-color-active;
+}
+
+#gameOverWindowDecorationTopLeftCorner {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    left: 9px;
+    top: 12px;
+    
+    transform: rotate(90deg);
+}
+
+#gameOverWindowDecorationBottomLeftCorner {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    left: 9px;
+    top: 148px;
+    
+    // transform: rotate(-90deg);
+}
+
+#gameOverWindowDecorationTopRightCorner {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    left: 598px;
+    top: 12px;
+    
+    transform: rotate(180deg);
+}
+
+#gameOverWindowDecorationBottomRightCorner {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    left: 598px;
+    top: 148px;
+    
+    transform: rotate(-90deg);
+}
+
+#gameOverWindowDecorationTopLeftBorder {
+    position: absolute;
+    width: 21px;
+    height: 23px;
+    left: -13px;
+    top: -23px;
+}
+
+#gameOverWindowDecorationLeftOuterBorder {
+    position: absolute;
+    width: 5px;
+    height: 210px;
+    left: -5px;
+    top: -5px;
+    background: $window-border-color; 
+}
+
+#gameOverWindowDecorationLeftInnerBorder{
+    position: absolute;
+    width: 5px;
+    height: 200px;
+    left: 0px;
+    top: 0px;
+    background: $window-border-color-2;
+}
+
+#gameOverWindowDecorationBottomLeftBorder {
+    position: absolute;
+    width: 21px;
+    height: 23px;
+    left: -13px;
+    top: 200px;
+
+    transform: rotate(180deg);
+}
+
+
+#gameOverWindowDecorationTopOuterBorder {
+    position: absolute;
+    width: 650px;
+    left: 0px;
+    top: 0px;
+    background: $window-border-color;
+}
+
+#gameOverWindowDecorationTopInnerBorder {
+    position: absolute;
+    width: 5px;
+    height: 650px;
+    left: 322px;
+    top: -319px;
+
+    background: $window-border-color-2;
+    transform: rotate(-90deg);
+}
+
+
+#gameOverWindowDecorationTopRightBorder {
+    position: absolute;
+    width: 21px;
+    height: 23px;
+    left: 643px;
+    top: -23px;
+}
+
+#gameOverWindowDecorationRightOuterBorder {
+    position: absolute;
+    width: 5px;
+    height: 210px;
+    left: 650px;
+    top: -5px;
+    background: $window-border-color; 
+}
+
+#gameOverWindowDecorationRightInnerBorder{
+    position: absolute;
+    width: 5px;
+    height: 200px;
+    left: 645px;
+    top: 5px;
+    background: $window-border-color-2;
+}
+
+
+#gameOverWindowDecorationBottomRightBorder {
+    position: absolute;
+    width: 21px;
+    height: 23px;
+    left: 643px;
+    top: 200px;
+
+    transform: rotate(180deg);
+}
+
+#gameOverWindowDecorationBottomOuterBorder {
+    position: absolute;
+    width: 650px;
+    left: 0px;
+    top: 200px;
+    background: $window-border-color;
+}
+
+#gameOverWindowDecorationBottomInnerBorder {
+    position: absolute;
+    width: 5px;
+    height: 650px;
+    left: 322px;
+    top: -129px;
+
+    background: $window-border-color-2;
+    transform: rotate(-90deg);
+}
+
+#gameOverWindowDecorationLogoutButtonTopLeftCorner{
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 106px;
+    left: 132px;
+}
+
+#gameOverWindowDecorationLogoutButtonTopRightCorner{
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 106px;
+    left: 290px;
+}
+
+#gameOverWindowDecorationLogoutButtonBottomLeftCorner {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 154px;
+    left: 132px;
+}
+
+#gameOverWindowDecorationLogoutButtonBottomRightCorner {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 154px;
+    left: 290px;
+}
+
+
+#gameOverWindowDecorationTryAgainButtonTopLeftCorner {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 106px;
+    left: 350px;
+}
+
+#gameOverWindowDecorationTryAgainButtonTopRightCorner {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 106px;
+    left: 508px;
+}
+
+#gameOverWindowDecorationTryAgainButtonBottomRightCorner {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 154px;
+    left: 508px;
+}
+
+#gameOverWindowDecorationTryAgainButtonBottomLeftCorner {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    height: 10px;
+    top: 154px;
+    left: 350px;
 }
