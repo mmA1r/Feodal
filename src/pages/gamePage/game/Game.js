@@ -26,7 +26,7 @@ export default function Game() {
                 }
             },
             scene: [
-                WorldScene,
+                WorldScene
             ]
         };
         const game = new Phaser.Game(config);
