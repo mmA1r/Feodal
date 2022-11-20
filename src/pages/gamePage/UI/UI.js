@@ -6,6 +6,7 @@ import CastleManagePanel from "./castleUI/castleManagePanel.js/CastleManagePanel
 import CastleMiniFrame from "./castleUI/castleMiniFrame/CastleMiniFrame";
 import VillageInformPanel from "./villageUI/villageInformPanel/VillageInformPanel";
 import VillageMiniFrame from "./villageUI/villageMiniFrame/VillageMiniFrame";
+import ChooseUnitWindow from "./castleUI/chooseUintWindow/ChooseUnitWindow";
 
 
 import './UI.scss';
@@ -16,6 +17,7 @@ export default function UI() {
 
     return (
         <div className={`pop-up-interface ${ UI !== 'hide' ? 'show-pop-up-interface' : 'hide-pop-up-interface' }`}>
+            <ChooseUnitWindow/>
             {
                 UI === 'castle' ? 
                     <div className={'castle-UI'}>

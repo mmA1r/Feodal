@@ -17,6 +17,7 @@ export default function HpBar() {
 
     return (
         <div className="hp-bar">
+            <div className='hp-bar-frame'></div>
             <div className='hp-counter'> {castleHp} / {fullHp}</div>
             <progress value={castleHp} max={fullHp} className='true-hp-bar'/>
         </div>

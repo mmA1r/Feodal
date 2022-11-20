@@ -60,7 +60,7 @@ export default function ConfirmWindow(props) {
                     </button>
                 </div>
                 <div className="back-confirm-window">
-                    <div className="text-confirm-window">Are you sure you want to logout?</div>
+                    <div className="text-confirm-window">Вы правда хотите выйти?</div>
                 </div>
             </div>
         </div>

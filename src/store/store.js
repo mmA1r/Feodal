@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import storeRoutes from './features/storeRoutes/storeRoutes';
 import storeServer from './features/storeServer/storeServer';
+import chooseUnitsInterface from "./features/storeInterface/chooseUnitsInterface";
 import storeInterface from "./features/storeInterface/storeInterface";
 import userMoney from "./features/user/userMoney";
 import userUnits from "./features/user/userUnits";
@@ -14,6 +15,7 @@ export default configureStore({
         routes: storeRoutes,
         server: storeServer,
         interface: storeInterface,
+        unitsInterface: chooseUnitsInterface,
         userMoney: userMoney,
         userUnits: userUnits,
         userLevel: userLevel,

@@ -1,11 +1,22 @@
+$hp-bar: url('../../../../../../assets/UI/CastleUI/hpBar.png');
+
 .hp-bar {
     position: absolute;
-    left: 243px;
+    left: 245px;
     bottom: 25px;
-    box-sizing: border-box;
     width: 300px;
     height: 30px;
-    border: 1px solid white;
+
+    & > .hp-bar-frame {
+        position: absolute;
+        top: -10px;
+        left: -25px;
+        width: 350px;
+        height: 50px;
+        background-image: $hp-bar;
+        background-position: center;
+        background-size: contain;
+    }
 
     & > .hp-counter {
         position: absolute;
@@ -18,6 +29,7 @@
     }
     & > .true-hp-bar {
         position: absolute;
+        box-sizing: border-box;
         width: 100%;
         height: 100%;
         z-index: 1;

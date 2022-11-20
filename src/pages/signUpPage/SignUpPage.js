@@ -112,12 +112,12 @@ export default function SignUpPage() {
                     <LoginButton
                         onClick={() => signUp()}
                         className={"registration-button"}
-                        text={'Sign Up'}
+                        text={'Войти'}
                     />
                     <LoginButton
                         onClick={() => routeToSignIn()}
                         className={"sign-in-button"}
-                        text={'Already Sign Up? Sign In.'}
+                        text={'Уже зарегистрированны? Войти.'}
                     />
                 </div>
             </div>

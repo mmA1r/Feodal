@@ -29,7 +29,6 @@ export default function Chat() {
 
 
         return () => {
-            getMessages(true);
             return clearInterval(interval);
         }
          // eslint-disable-next-line
@@ -43,8 +42,8 @@ export default function Chat() {
         return await server.sendMessageAll(message);
     }
     
-    async function getMessages(isLogout) {
-        const message = await server.getMessages(isLogout);
+    async function getMessages() {
+        const message = await server.getMessages();
         if(message) {
             if(messages.length !== message.length) {
                 return setMessages(message.reverse());
