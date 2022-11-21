@@ -9,6 +9,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.id = unitData.id;
         this.selected = false;
         this.type = 'entites';
+        scene.unitsGroup.add(this);
         this.setTexture('soldier');
         this.rewriteData(unitData);
         this.setInteractive();
@@ -32,9 +33,16 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     unSelect () {
-        this.setTint();
-        this.selected = false;
-        this.scene.selectedUnits.remove(this);
+        if (!this.scene.selectedObject) {
+            console.log(321);
+            this.setTint();
+            this.selected = false;
+            this.scene.selectedUnits.remove(this);
+        }
+    }
+
+    returnCastle(){
+        this.moveTo(this.myCastle.posX,this.myCastle.posY)
     }
 
     moveTo(x,y){
