@@ -9,6 +9,9 @@
 
 # How to install
 ```bash
+На самом деле просто 
+npm i
+Он установит все зависимости
 npm install react-router-dom
 npm install react-redux
 npm install @reduxjs/toolkit
