@@ -22,8 +22,6 @@ export default function EventsOn(scene) {
         }
     }) 
 
-
-
     //Передвижение юнитов по клику
     scene.input.on('pointerdown', (pointer, gameObject) => {
             if (pointer.button === 2) {
