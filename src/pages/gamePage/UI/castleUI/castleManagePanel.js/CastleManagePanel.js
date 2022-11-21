@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { soldierValues } from "../../../../../store/features/units/soldier";
+import { useSelector } from "react-redux";
 
+import StoreLoader from "../../../../../store/StoreLoader";
 import Money from "./money/Money";
 import WarriorButton from "./manageButtons/warriorButton/WarriorButton";
 import CastleUpgradeButton from "./manageButtons/castleUpgradeButton/CastleUpgradeButton";
@@ -11,12 +11,12 @@ import './castleManagePanel.scss';
 
 export default function CastleManagePanel() {
     const server = useSelector((state) => state.server.value);
-    const castleLevel = useSelector((state) => state.userLevel.value);
-    const dispatch = useDispatch();
+    const castleLevel = useSelector((state) => state.gamer.level);
+    const storeLoader = new StoreLoader();
 
     const [price, setPrice] = useState(false);
     const [unitPrice, setUnitPrice] = useState(0);
-    const [units, setUnits] = useState([]);
+    const [unitsTypes, setUnitsTypes] = useState([]);
 
     let castleUpgradeCost;
     let soldierCost;
@@ -27,7 +27,7 @@ export default function CastleManagePanel() {
     }, []);
 
     async function getUnitsTypes() {
-        return setUnits(await server.getUnitsTypes());
+        return setUnitsTypes(await server.getUnitsTypes());
     }
 
     async function buySoldier() {
@@ -38,14 +38,14 @@ export default function CastleManagePanel() {
         return await server.upgradeCastle();
     }
 
-    units.forEach(type => {
+    unitsTypes.forEach(type => {
         if(type.name === 'soldier') {
-            dispatch(soldierValues({
+            storeLoader.loadToStore({
                 hp: type.hp,
                 cost: type.cost,
                 damage: type.damage,
                 speed: type.speed
-            }));
+            }, 'soldier');
             return soldierCost = type.cost;
         }
     });

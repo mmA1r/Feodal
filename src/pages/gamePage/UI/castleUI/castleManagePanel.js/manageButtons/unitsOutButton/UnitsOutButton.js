@@ -1,18 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { open } from '../../../../../../../store/features/storeInterface/chooseUnitsInterface';
+import { useSelector } from 'react-redux';
+import StoreLoader from '../../../../../../../store/StoreLoader';
 
 import './unitsOutButton.scss';
 
 export default function UnitsOutButton() {
 
-    const dispatch = useDispatch();
     const unitsUI = useSelector((state) => state.unitsInterface.value);
+    const storeLoader = new StoreLoader();
 
     function openUnitsInterface() {
         if(unitsUI) {
-            return dispatch(open(false));
+            return storeLoader.loadToStore(false, 'withdrawUnits');
         } else {
-            return dispatch(open(true));
+            return storeLoader.loadToStore(true, 'withdrawUnits');
         }
     }
 

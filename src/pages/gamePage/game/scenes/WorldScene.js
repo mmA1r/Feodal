@@ -1,11 +1,8 @@
 import Phaser from "phaser";
 
 import store from '../../../../store/store';
-import { money } from '../../../../store/features/user/userMoney';
-import { level } from '../../../../store/features/user/userLevel';
-import { units } from '../../../../store/features/user/userUnits';
-import { hp } from '../../../../store/features/user/userHp';
-import soldier from "../../../../store/features/units/soldier";
+
+import { ui } from "../../../../store/features/storeInterface/userInterface";
 
 import EventsOn from '../source/methods/eventsOn'
 import uploadSources from '../source/methods/uploadSource'
@@ -15,6 +12,7 @@ import getCastle from '../source/getCastle/getCastle'
 
 import { defaultEqualityCheck } from "reselect";
 import { upload } from "@testing-library/user-event/dist/upload";
+import StoreLoader from "../../../../store/StoreLoader";
 
 
 export default class WorldScene extends Phaser.Scene {
@@ -120,40 +118,6 @@ export default class WorldScene extends Phaser.Scene {
                 u.moveTo(u.goX, u.goY);
             }
         })
-
-        /*const server = store.getState().server.value;
-            const preCastleData = await server.getCastle();
-            const preSceneData = await server.getScene();
-            let castleData;
-            let unitsData;
-            let villagesData;
-            let castlesData;
-            if(preCastleData) {
-                castleData = preCastleData;
-            }
-            if(preSceneData) {
-                unitsData = preSceneData.units;
-                // eslint-disable-next-line
-                villagesData = preSceneData.villages;
-                // eslint-disable-next-line
-                castlesData = preSceneData.castles;
-            }
-        
-    
-            // console.log(castleData);
-            // console.log(unitsData);
-            // console.log(villagesData);
-            // console.log(castlesData);
-    
-            // /********************/
-        // /****** Castle ******/
-        // /********************/
-
-
-        /*const castle = physics.add.image(castleData.posX-0, castleData.posY-0, 'castleFirstLevel');
-        castle.setInteractive();
-        const castleUntits = [];
-        let castleHp = 0
         /*unitsData?.forEach(unit => {
             if(unit.ownerId === castleData.id && unit.status === 'inCastle') {
                 castleHp += unit.hp-0
@@ -180,7 +144,7 @@ export default class WorldScene extends Phaser.Scene {
         this.selectorUnits.addToDisplayList();
         this.selectorUnits.depth=100000000;
         this.physics.add.existing(this.selectorUnits);
-        console.log(this.selectorUnits);
+        // console.log(this.selectorUnits);
         this.physics.add.collider(this.selectorUnits, this.unitsGroup, (selector,unit)=> unit.select());
         this.selectorUnits.body.onCollide = true;
     }
@@ -191,6 +155,5 @@ export default class WorldScene extends Phaser.Scene {
         if (this.cameras.main.moveX || this.cameras.main.moveY) {
             this.cameras.main.move();
         }
-        //this.physics.overlap(this.selectorUnits, this.unitsGroup, (gameobjects)=>{
     }
 }

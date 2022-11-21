@@ -4,7 +4,7 @@ import Money from '../UI/castleUI/castleManagePanel.js/money/Money';
 import './gamerMoney.scss'
 
 export default function GamerMoney() {
-    const money = useSelector((state) => state.userMoney.value);
+    const money = useSelector((state) => state.gamer.money);
 
     return(
         <div className="gamer-money">

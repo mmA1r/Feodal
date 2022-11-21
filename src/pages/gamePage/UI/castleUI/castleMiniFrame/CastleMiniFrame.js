@@ -3,7 +3,7 @@ import './castleMiniFrame.scss';
 
 export default function CastleMiniFrame() {
 
-    const level = useSelector((state) => state.userLevel.value);
+    const level = useSelector((state) => state.gamer.level);
 
     return (
         <div>

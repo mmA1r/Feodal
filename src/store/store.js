@@ -3,12 +3,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import storeRoutes from './features/storeRoutes/storeRoutes';
 import storeServer from './features/storeServer/storeServer';
 import chooseUnitsInterface from "./features/storeInterface/chooseUnitsInterface";
-import storeInterface from "./features/storeInterface/storeInterface";
-import userMoney from "./features/user/userMoney";
-import userUnits from "./features/user/userUnits";
-import userLevel from './features/user/userLevel';
-import userHp from "./features/user/userHp";
+import storeInterface from "./features/storeInterface/userInterface";
 import soldier from "./features/units/soldier";
+import gamer from "./features/gamer/gamer";
 
 export default configureStore({
     reducer: {
@@ -16,10 +13,7 @@ export default configureStore({
         server: storeServer,
         interface: storeInterface,
         unitsInterface: chooseUnitsInterface,
-        userMoney: userMoney,
-        userUnits: userUnits,
-        userLevel: userLevel,
-        userHp: userHp,
+        gamer: gamer,
         soldier: soldier,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({

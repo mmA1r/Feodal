@@ -1,14 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { open } from '../../../../../store/features/storeInterface/chooseUnitsInterface';
+import { useSelector } from 'react-redux';
+import StoreLoader from '../../../../../store/StoreLoader';
 import './chooseUnitWindow.scss';
 
 export default function ChooseUnitWindow() {
 
     const isUnitsWindowOpen = useSelector((state) => state.unitsInterface.value);
-    const dispatch = useDispatch()
+    const storeLoader = new StoreLoader();
 
     function closeUnitsInterface() {
-        return dispatch(open(false));
+        return storeLoader.loadToStore(false, 'withdrawUnits');
     }
 
     return (

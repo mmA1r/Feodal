@@ -6,12 +6,12 @@ export const chooseUnitsInterface = createSlice({
         value: false,
     },
     reducers: {
-        open: (state, action) => {
+        openUnitUI: (state, action) => {
             state.value = action.payload;
         }
     }
 });
 
-export const { open } = chooseUnitsInterface.actions;
+export const { openUnitUI } = chooseUnitsInterface.actions;
 
 export default chooseUnitsInterface.reducer;
