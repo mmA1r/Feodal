@@ -7,6 +7,7 @@ import './chooseUnitWindow.scss';
 export default function ChooseUnitWindow() {
 
     const isUnitsWindowOpen = useSelector((state) => state.unitsInterface.value);
+    const ui = useSelector((state) => state.interface.value.castle);
     const soldierFullHp = useSelector((state) => state.soldier.hp);
     const storeLoader = new StoreLoader();
     const store = useStore();
@@ -28,7 +29,7 @@ export default function ChooseUnitWindow() {
     }
 
     return (
-        <div className={`choose-units-ui ${isUnitsWindowOpen ? 'units-interface-show' : 'units-interface-hide'}`}>
+        <div className={`choose-units-ui ${(isUnitsWindowOpen && ui) ? 'units-interface-show' : 'units-interface-hide'}`}>
             <UnitsTypeSelector/>
             <button 
                 className='close-units-ui'
