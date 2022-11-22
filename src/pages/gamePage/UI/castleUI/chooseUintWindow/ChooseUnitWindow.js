@@ -42,6 +42,7 @@ export default function ChooseUnitWindow() {
                 className='withdraw-army-button'
                 onClick={() => withdrawUnits()}
             >
+                Вывести
                 <WithdrawButton/>
             </button>
         </div>
