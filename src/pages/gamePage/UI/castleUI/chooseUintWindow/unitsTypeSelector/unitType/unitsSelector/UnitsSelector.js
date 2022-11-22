@@ -28,7 +28,7 @@ export default function UnitsSelector(props) {
 
     return (
         <div className='units-selector'>
-            <div className='units-selector-image'/>
+            <div className={`${damaged ? 'damaged': 'full'}-${type}-selector-image`}/>
             <input 
                 className={`units-selector-input-range ${type}-${damaged ? 'damaged': 'full'}`}
                 ref={rangeInput}

@@ -1,6 +1,9 @@
 import { useSelector, useStore } from 'react-redux';
 import StoreLoader from '../../../../../store/StoreLoader';
+
 import UnitsTypeSelector from './unitsTypeSelector/UnitsTypeSelector';
+import WithdrawButton from './withdrawButton/WithdrawButton';
+
 
 import './chooseUnitWindow.scss';
 
@@ -38,7 +41,9 @@ export default function ChooseUnitWindow() {
             <button
                 className='withdraw-army-button'
                 onClick={() => withdrawUnits()}
-            ></button>
+            >
+                <WithdrawButton/>
+            </button>
         </div>
     );
 }

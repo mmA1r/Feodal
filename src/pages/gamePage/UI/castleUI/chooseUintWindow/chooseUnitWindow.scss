@@ -32,7 +32,17 @@ $withdraw-panel: url('../../../../../assets/UI/CastleUI/unitsWithdrawPanel.png')
 
 .withdraw-army-button {
     position: absolute;
+    left: 50%;
+    box-sizing: border-box;
+    padding: 0;
     bottom: 0;
     width: 80px;
     height: 30px;
+
+    transform: translateX(-50%);
+
+    background: transparent;
+    border: 0;
+    
+    outline: none;
 }

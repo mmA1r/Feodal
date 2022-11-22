@@ -37,22 +37,20 @@ export const gamerStore = createSlice({
     },
     reducers: {
         gamer: (state, action) => {
-            if(action.level) {
+            if(action.payload.level) {
                 state.level = action.payload.level;
             }
-            if(action.hp) {
+            if(action.payload.hp) {
                 state.hp = action.payload.hp;
             }
-            if(action.money) {
+            if(action.payload.money) {
                 state.money = action.payload.money;
             }
-            if(action.units) {
+            if(action.payload.units) {
                 state.units = action.payload.units
             }
         },
         changeStatus: (state, action) => {
-            // state.units.forEach(unit => unit.status = 'outOfCastle');
-            // eslint-disable-next-line
             const soldiers = state.units.map(unit => {
                 if(unit.type === 1) {
                     return unit;
