@@ -1,0 +1,35 @@
+@import '../../../../gameConst.scss';
+
+.cross {
+    fill: $brighter-stone;
+    stroke: $stone;
+}
+
+.cross-back {
+    fill: $icon-background-color;
+}
+
+.cross-frame {
+    fill: $brighter-stone;
+}
+
+.cross-button {
+    &:hover {
+        .cross-frame {
+            fill: $icon-border-color;
+        }
+        .cross {
+            fill: $icon-border-color;
+            stroke: $jewerly-border-color;
+        }
+    }
+    &:active {
+        .cross-frame {
+            fill: $button-border-color;
+        }
+        .cross {
+            fill: $button-border-color;
+            stroke: $button-border-color;
+        }
+    }
+}

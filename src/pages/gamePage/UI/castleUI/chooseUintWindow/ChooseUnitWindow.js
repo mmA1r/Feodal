@@ -3,7 +3,7 @@ import StoreLoader from '../../../../../store/StoreLoader';
 
 import UnitsTypeSelector from './unitsTypeSelector/UnitsTypeSelector';
 import WithdrawButton from './withdrawButton/WithdrawButton';
-
+import CloseWindow from './closeWindow/CloseWindow';
 
 import './chooseUnitWindow.scss';
 
@@ -20,8 +20,8 @@ export default function ChooseUnitWindow() {
     }
 
     function withdrawUnits() {
-        const fullHpSoldiers = document.getElementsByClassName('soldier-full')[0].value-0;
-        const damagedSoldiers = document.getElementsByClassName('soldier-damaged')[0].value-0
+        const fullHpSoldiers = document.getElementsByClassName('soldier-full')[0]?.value-0;
+        const damagedSoldiers = document.getElementsByClassName('soldier-damaged')[0]?.value-0
         storeLoader.loadToStore({
             type: 1,
             fullHpNumber: fullHpSoldiers,
@@ -37,12 +37,13 @@ export default function ChooseUnitWindow() {
             <button 
                 className='close-units-ui'
                 onClick={() => closeUnitsInterface()}
-            ></button>
+            >
+                <CloseWindow/>
+            </button>
             <button
                 className='withdraw-army-button'
                 onClick={() => withdrawUnits()}
             >
-                Вывести
                 <WithdrawButton/>
             </button>
         </div>

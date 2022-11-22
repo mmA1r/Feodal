@@ -13,6 +13,11 @@
             fill: $icon-background-color;
         }
     }
+    &:active {
+        .wooden-background {
+            fill: $icon-background-darker-color;
+        }
+    }
 }
 
 .stone {
