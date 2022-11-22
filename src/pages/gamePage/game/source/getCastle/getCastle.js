@@ -2,17 +2,39 @@ import Phaser from "phaser";
 import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
 
-export default async function getCastle(scene, myCastle) {
+export default async function getCastle(scene) {
     const server = store.getState().server.value;
     let data = await server.getCastle();
+    console.log(data);
     if (data) {
-        let castle = myCastle.getChildren().find(el => el.id === data.id)
-        if (myCastle.getChildren().find(el => el.id === castle.id)) {
-            castle.rewriteData(data);
-        } 
-        else {
-            castle = new Castle(scene,data);
-            myCastle.add(castle);
+        scene.myCastle = {
+            x: Math.round(data.posX * 64),
+            y: Math.round(data.posY * 64),
+            level: data.level
+        };
+        /*scene.myCastle.queryUnits = scene.add.group();
+        scene.myCastle.free = true;
+        scene.myCastle.enter = function(unit){
+            scene.myCastle.queryUnits.add(unit);
+            if (scene.myCastle.free) {
+                scene.myCastle.queryUnits.enterUnits();
+            }
         }
+        scene.myCastle.queryUnits.enterUnits = function(){
+            scene.myCastle.free = false;
+            let unit = scene.myCastle.queryUnits.getChildren()[0];
+            let i = 1;
+            console.log('enterUnit');
+            while (unit) {
+                setTimeout((unit)=> {
+                        unit.enterCastle()
+                }, 500*i)
+                i += 1;
+                scene.myCastle.queryUnits.remove(unit);
+                unit = scene.myCastle.queryUnits.getChildren()[0]
+            }
+            scene.myCastle.free = true;
+        }*/
+        scene.player = data.id;
     }
 }

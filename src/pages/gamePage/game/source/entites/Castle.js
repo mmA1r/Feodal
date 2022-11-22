@@ -5,14 +5,44 @@ export default class Castle extends Phaser.GameObjects.Image {
         super(scene);
         this.x = Math.round(castleData.posX * 64);
         this.y = Math.round(castleData.posY * 64);;
+        this.depth = this.y;
         this.id = castleData.id;
-        //this.rewriteData(castleData);
+        this.scene.castlesGroup.add(this);
+        this.rewriteData(castleData);
         this.setActive(true);
         this.addedToScene();
         this.addToDisplayList();
+        this.selected = false;
+        this.type = 'entites';
+        this.setTexture('castleFirstLevel');
+        this.setInteractive();
+        this.scene.physics.add.existing(this, true);
+        this.body.isCircle = true;
+
     }
 
-    rewriteData(castleData){
-        
+    select() {
+        if (!this.scene.selectedUnits.getChildren()[0]) {
+            this.setTint(4234);
+            this.selected = true;
+            this.scene.selectedObject = this;
+            console.log(123);
+            if (this.id = this.scene.player) {
+                this.scene.store.loadToStore('castle', 'ui');
+            } else {
+                this.scene.store.loadToStore('enemyCastle', 'ui');
+            }
+        }
+    }
+
+    unSelect() {
+        this.setTint();
+        this.selected = false;
+        this.scene.selectedObject = null;
+        this.scene.store.loadToStore('hide', 'ui');
+    }
+
+    rewriteData(castleData) {
+        this.level = castleData.level;
     }
 }
