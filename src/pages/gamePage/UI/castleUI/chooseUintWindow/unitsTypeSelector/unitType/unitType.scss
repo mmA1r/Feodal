@@ -1,0 +1,10 @@
+$frames: url('../../../../../../../assets/UI/CastleUI/unitsWithDrawCounter.png');
+
+.unit-type-block {
+    width: 100%;
+    height: 130px;
+
+    background-image: $frames ;
+    background-position: center;
+    background-size: cover;
+}

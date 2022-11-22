@@ -1,0 +1,14 @@
+.units-type-selector {
+    position: absolute;
+    box-sizing: border-box;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 300px;
+
+    border: none;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}

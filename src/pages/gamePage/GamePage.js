@@ -19,14 +19,32 @@ export default function GamePage() {
 
     const store = useStore();
     const navigate = useNavigate();
-    const storeLoader = new StoreLoader();
     const routes = store.getState().routes.value;
+    const server = store.getState().server.value;
+    const storeLoader = new StoreLoader();
 
     useEffect(() => {
+        getUnitsTypes();
         if(!localStorage.getItem('token')) {
             return navigate(routes.Login.path);
         }
-    });
+        window.addEventListener("contextmenu", e => e.preventDefault());
+        // eslint-disable-next-line
+    }, []);
+
+    async function getUnitsTypes() {
+        const units = await server.getUnitsTypes();
+        if(units) {
+            units.forEach(type => {
+                storeLoader.loadToStore({
+                    hp: type.hp,
+                    cost: type.cost,
+                    damage: type.damage,
+                    speed: type.speed
+                }, 'soldier');
+            });
+        }
+    }
     
     function openInterface() {
         if(store.getState().interface.value.castle) {

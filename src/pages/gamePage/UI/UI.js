@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 
 import CastleInformPanel from "./castleUI/castleInformPanel/CastleInformPanel";
@@ -12,7 +11,6 @@ import ChooseUnitWindow from "./castleUI/chooseUintWindow/ChooseUnitWindow";
 import './UI.scss';
 
 export default function UI() {
-
     const UI = useSelector((state) => state.interface.value);
 
     return (
