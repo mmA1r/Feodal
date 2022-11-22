@@ -1,8 +1,8 @@
-@import '../../../const.scss';
+@import '../../const.scss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 
-$helmet-logo: url(../../../assets/logo/logo-helmet.png);
-$helmet-logo-effects: url(../../../assets/logo/logo-helmet2.2.png);
+$helmet-logo: url(../../assets/logo/logo-helmet.png);
+$helmet-logo-effects: url(../../assets/logo/logo-helmet2.2.png);
 
 .auth-window {
     position: absolute;
@@ -133,8 +133,9 @@ $helmet-logo-effects: url(../../../assets/logo/logo-helmet2.2.png);
     border-bottom: 0.5px solid $login-input;
 
     color: $login-input;
-    font-size: 12px;
+    font-size: 9px;
     font-family: 'Inter', sans-serif;
+    text-align: center;
 
     transition: 0s;
 

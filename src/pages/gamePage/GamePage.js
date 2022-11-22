@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { useDispatch, useStore } from 'react-redux';
+import { useStore } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
 import Logout from './logout/Logout';
 import Chat from "./chat/Chat";
@@ -10,26 +11,29 @@ import GamerMoney from "./gamerMoney/GamerMoney";
 import Game from './game/Game';
 import GameOver from './gameOver/GameOver'
 
-import { hide, castle } from '../../store/features/storeInterface/storeInterface';
+import StoreLoader from "../../store/StoreLoader";
+
 
 import './gamePage.scss';
 
 export default function GamePage() {
-    const dispatch = useDispatch();
 
     const store = useStore();
+    const navigate = useNavigate();
+    const storeLoader = new StoreLoader();
+    const routes = store.getState().routes.value;
 
     useEffect(() => {
-        return () => {
-
+        if(!localStorage.getItem('token')) {
+            return navigate(routes.Login.path);
         }
-    }, []);
-
+    });
+    
     function openInterface() {
-        if(store.getState().interface.value === 'castle') {
-            return dispatch(hide());
+        if(store.getState().interface.value.castle) {
+            return storeLoader.loadToStore('hide', 'ui');
         }
-        return dispatch(castle());
+        return storeLoader.loadToStore('castle', 'ui');
     }
 
     return(

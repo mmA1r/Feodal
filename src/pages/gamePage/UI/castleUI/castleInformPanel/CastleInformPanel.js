@@ -4,7 +4,7 @@ import HpBar from './hpBar/HpBar';
 
 export default function CastleInformPanel() {
 
-    const units = useSelector((state) => state.userUnits.value);
+    const units = useSelector((state) => state.gamer.units);
     
     let soldiersNumber = 0;
 

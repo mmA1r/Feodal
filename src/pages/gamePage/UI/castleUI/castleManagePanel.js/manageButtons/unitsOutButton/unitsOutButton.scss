@@ -1,0 +1,44 @@
+@import '../../../../../gameConst.scss';
+
+.units-go-out-button {
+    width: 56px; 
+    height: 56px;
+    fill: none;
+
+    &:hover {
+        .upgrade-icon-frame {
+            fill: $jewerly-border-color;
+        }
+        .upgrade-icon-frame2 {
+            stroke: $jewerly-border-color;
+        }
+        .units-go-out-button-back {
+            fill: #300000;
+        }
+    }
+    &:active {
+        .upgrade-castle-mini, .upgrade-castle-mini-door, .upgrade-arrow {
+            transform: scale(0.95);
+            transform-origin: 15px;
+        }
+    }
+}
+
+.upgrade-arrow {
+    stroke: $icon-inside-color;
+}
+
+.upgrade-castle-mini {
+    fill: $icon-inside-color;
+}
+
+.upgrade-castle-mini-door {
+    fill: #590010;
+}
+
+.upgrade-icon-frame {
+    fill: $icon-border-color;
+}
+.upgrade-icon-frame2 {
+    stroke: $icon-border-color;
+}

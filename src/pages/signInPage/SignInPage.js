@@ -95,12 +95,12 @@ export default function SignInPage() {
                     <LoginButton
                         onClick={() => signIn()}
                         className={"login-game-button"}
-                        text={'Sing In'}
+                        text={'Войти'}
                     />
                     <LoginButton
                         onClick={() => routeToSignUp()}
                         className={"sign-up-button"}
-                        text={'Sing Up'}
+                        text={'Регистрация'}
                     />
                 </div>
             </div>

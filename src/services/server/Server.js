@@ -1,9 +1,9 @@
 export default class Server {
     constructor(token) {
         this.token = token || null;
-        this.hash = 123;
-        this.mapHash = 123;
-        this.unitsHash = 123;
+        this.chatHash = 1; // value 1 is to initialize methods
+        this.mapHash = 1;
+        this.unitsHash = 1;
     }
 
     async send(params = {}) {
@@ -29,7 +29,7 @@ export default class Server {
             });
             if(data?.token) {
                 this.token = data.token;
-                window.localStorage.setItem('token', this.token);
+                localStorage.setItem('token', this.token);
                 delete data.token;
                 return data;
             } else {
@@ -44,8 +44,9 @@ export default class Server {
             token : this.token 
         });
         if(this.token) {
-            window.localStorage.removeItem('token');
+            localStorage.removeItem('token');
             this.token = null;
+            this.chatHash = 1;
             return true;
         }
     }
@@ -60,11 +61,7 @@ export default class Server {
     }
 
     async getLoggedUsers() {
-        const data = await this.send({ 
-            method: 'getLoggedUsers',
-            token: this.token
-        });
-        return data;
+        return await this.send({ method: 'getLoggedUsers' });
     }
 
     /*****************/
@@ -73,35 +70,27 @@ export default class Server {
     async sendMessageAll(message) {
         await this.send({ 
             method: 'sendMessageAll', 
-            token: this.token,
-            message 
+            message
         });
     }
 
     async sendMessageTo(message, messageTo) {
         return await this.send({ 
             method: 'sendMessageTo', 
-            token : this.token,
             message, 
             messageTo 
         });
     }
 
-    async getMessages(isLogout = false) {
+    async getMessages() {
         const data = await this.send({ 
             method: 'getMessages',
-            token: this.token,
-            hash: this.hash
+            hash: this.chatHash
         });
         if(data?.hash) {
-            this.hash = data.hash;
+            this.chatHash = data.hash;
         }
-        if(isLogout) {
-            this.hash = 123;
-        }
-        if(data) {
-            return data.messages;            
-        }
+        return data?.messages;   
     }
 
     /*****************/
@@ -112,7 +101,6 @@ export default class Server {
             method: 'getScene',
             mapHash: this.mapHash,
             unitsHash: this.unitsHash,
-            token: this.token
         });
         if(data?.mapHash) {
             this.mapHash = data.mapHash;
@@ -126,42 +114,28 @@ export default class Server {
     }
 
     async getMap() {
-        const data = await this.send({ 
-            method: 'getMap',
-            token: this.token
-        });
-        return data.map;
+        return (await this.send({ method: 'getMap' }))?.map;
     }
 
     async getUnitsTypes() {
-        const data = await this.send({
-            method: 'getUnitsTypes',
-            token: this.token
-        });
-        if(data) {
-            return data;
-        } else {
-            return null;
-        }
+        return await this.send({ method: 'getUnitsTypes' });
     }
 
     /******************/
     /***** Gamer ******/
     /******************/
     async getCastle() {
-        const data = await this.send({ 
-            method: 'getCastle',
-            token: this.token
-        });
-        return data.castle;
+        return (await this.send({ method: 'getCastle' }))?.castle;
     }
 
     async buyUnit(unitId) {
-        const data = await this.send({
+        return await this.send({
             method: 'buyUnit',
             unitType: unitId,
-            token : this.token
         });
-        return data;
+    }
+
+    async upgradeCastle() {
+        return await this.send({ method: 'upgradeCastle' });
     }
 }
