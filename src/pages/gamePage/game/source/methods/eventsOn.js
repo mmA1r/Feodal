@@ -6,34 +6,36 @@ export default function EventsOn(scene) {
     //Выбор объекта ЛКМ
     Scene.input.on('gameobjectup', (pointer, gameObject) => {
         if (pointer.button === 0 && gameObject.type === 'entites') {
-            console.log(123);
             gameObject.select();
         }
     });
 
     //Взаимодействие юнитов с объектом
     Scene.input.on('gameobjectdown', (pointer, gameObject) => {
-        if (pointer.button === 1 && Scene.selectedUnits.getChildren()[0]) {
+        if (pointer.button === 2 && Scene.selectedUnits.getChildren()[0]) {
             if (scene.castlesGroup.contains(gameObject)) {
                 if (gameObject.id = scene.player) {
-                    console.log('input')
+                    scene.selectedUnits.getChildren().forEach((unit)=>unit.returnToCastle());
                 }
             }
         }
-    }) 
+    })
 
     //Передвижение юнитов по клику
     scene.input.on('pointerdown', (pointer, gameObject) => {
-            if (pointer.button === 2) {
-                Scene.selectedUnits.getChildren().forEach(el => {
-                    el.moveTo(pointer.worldX, pointer.worldY)
-                }
-                );
+        if (pointer.button === 2) {
+            Scene.selectedUnits.getChildren().forEach(el => {
+                el.moveTo(pointer.worldX, pointer.worldY)
             }
-        })
+            );
+        }
+
+
+        if (pointer.button === 0 && !gameObject[0]) {
+            Scene.store.loadToStore('hide','ui');
+        }
 
     //Сброс выбора юнитов
-    Scene.input.on('pointerdown', (pointer, gameObject) => {
         if (pointer.button === 0 && !scene.CTRL) {
             let unit = Scene.selectedUnits.getChildren()[0];
             while (unit) {
@@ -41,25 +43,21 @@ export default function EventsOn(scene) {
                 unit = Scene.selectedUnits.getChildren()[0];
             }
         }
-    })
 
 
-    Scene.input.on('pointerdown', (pointer, gameObject) => {
         if (pointer.button === 0 && !scene.CTRL && Scene.selectedObject && !gameObject[0]) {
-                console.log(Scene.selectedObject.id, gameObject);
-                Scene.selectedObject.unSelect();
+            console.log(Scene.selectedObject.id, gameObject);
+            Scene.selectedObject.unSelect();
         }
-    })
 
-    Scene.input.on('gameobjectdown', (pointer, gameObject) => {
         if (pointer.button === 0 && !scene.CTRL && Scene.selectedObject && Scene.selectedObject.id != gameObject.id) {
-                console.log(Scene.selectedObject.id, gameObject);
-                Scene.selectedObject.unSelect();
+            console.log(Scene.selectedObject.id, gameObject);
+            Scene.selectedObject.unSelect();
         }
     })
 
     //Зажатие клавиши CTRL
-    Scene.input.keyboard.on('keydown-CTRL', ()=>Scene.CTRL = true);
-    Scene.input.keyboard.on('keyup-CTRL', ()=>Scene.CTRL = false);
+    Scene.input.keyboard.on('keydown-CTRL', () => Scene.CTRL = true);
+    Scene.input.keyboard.on('keyup-CTRL', () => Scene.CTRL = false);
 
 }

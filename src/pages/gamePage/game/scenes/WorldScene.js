@@ -19,6 +19,7 @@ import AutoUpdater from "../source/autoUpdater/autoUpdater";
 import Physics from "../source/phisics/Physics";
 import Trees from "../source/trees/Trees";
 import SelectorUnits from "../source/selectorUnits/SelectorUnits";
+import StoreLoader from "../../../../store/StoreLoader";
 
 
 export default class WorldScene extends Phaser.Scene {
@@ -44,6 +45,7 @@ export default class WorldScene extends Phaser.Scene {
         const grass = map.createLayer('grass', tiles, 0, 0);
         const bushes = map.createLayer('bushes', tiles, 0, 0);
         const trees = map.createLayer('trees', tiles, 0, 0);
+        this.store = new StoreLoader;
         SelectorUnits(this);
         EventsOn(this);
         Camera(this);
@@ -59,6 +61,5 @@ export default class WorldScene extends Phaser.Scene {
         if (this.cameras.main.isMoved) {
             this.cameras.main.move();
         }
-        console.log(this.player)
     }
 }

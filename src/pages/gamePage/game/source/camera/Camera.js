@@ -20,14 +20,13 @@ export default function Camera(scene) {
             if (event.deltaY < 0 && zoom < 5) camera.setZoom(zoom * 1.1);
     });
 
-    Scene.input.on('pointermove',(pointer) =>{
+    window.addEventListener('mousemove',(pointer) =>{
         camera.isMoved = false;
-        if(pointer.x<camera.width*0.1 || pointer.x>camera.width*0.9 ||pointer.y<camera.height*0.2||pointer.y>camera.height*0.80){
-            let vector = camera.getScroll(pointer.x, pointer.y);
+        if(pointer.clientX<camera.width*0.02 || pointer.clientX>camera.width*0.98 ||pointer.clientY<camera.height*0.03||pointer.clientY>camera.height*0.97){
             let coef = camera.width/camera.height;
-            const dist = Phaser.Math.Distance.Between(pointer.x/coef,pointer.y,camera.centerX/coef,camera.centerY);
-            let dx = (pointer.x/coef - camera.centerX/coef)/dist;
-            let dy = (pointer.y - camera.centerY)/dist;
+            const dist = Phaser.Math.Distance.Between(pointer.clientX/coef,pointer.clientY,camera.centerX/coef,camera.centerY);
+            let dx = (pointer.clientX/coef - camera.centerX/coef)/dist;
+            let dy = (pointer.clientY - camera.centerY)/dist;
             camera.dX = dx;
             camera.dY = dy;
             camera.isMoved = true;

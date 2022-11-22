@@ -32,7 +32,6 @@ export default function getScene(scene, groups) {
                         new Castle(Scene,castle);
                     }
                 }) 
-                console.log(Scene.castlesGroup.getChildren());
             }
         }
         ,1000

@@ -9,6 +9,7 @@ export default function SelectorUnits(scene) {
     scene.physics.add.existing(scene.selectorUnits, false);
     scene.selectorUnits.body.onCollide = true;
 
+
     //Начало области выделения юнитов
     scene.input.on('pointerdown', (pointer, gameObject) => {
         if (pointer.isDown && pointer.button === 0) {
