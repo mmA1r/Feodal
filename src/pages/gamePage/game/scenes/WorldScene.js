@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import EventsOn from '../source/methods/eventsOn'
+import EventsOn from '../source/methods/ventsOn'
 import uploadSources from '../source/methods/uploadSource'
 import Camera from '../source/camera/Camera'
 import getScene from '../source/getScene/getScene'
