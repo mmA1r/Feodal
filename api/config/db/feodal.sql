@@ -32,6 +32,7 @@ CREATE TABLE `gamers` (
   `userId` int NOT NULL,
   `money` int NOT NULL DEFAULT '1000',
   `castleLevel` int NOT NULL DEFAULT '1',
+  `castleColor` varchar(64) COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `castleX` double NOT NULL,
   `castleY` double NOT NULL,
   `nextRentTime` varchar(256) NOT NULL
@@ -41,9 +42,9 @@ CREATE TABLE `gamers` (
 -- Дамп данных таблицы `gamers`
 --
 
-INSERT INTO `gamers` (`id`, `userId`, `money`, `castleLevel`, `castleX`, `castleY`, `nextRentTime`) VALUES
-(5, 2, 3361, 4, 40.411, 1.687, ''),
-(8, 1, 500, 1, 71.609, 56.837, '');
+INSERT INTO `gamers` (`id`, `userId`, `money`, `castleLevel`, `castleColor`, `castleX`, `castleY`, `nextRentTime`) VALUES
+(5, 2, 3361, 4, '#eb343a', 40.411, 1.687, ''),
+(8, 1, 500, 1, '#34eb6e', 71.609, 56.837, '');
 
 -- --------------------------------------------------------
 

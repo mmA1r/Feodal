@@ -3,7 +3,7 @@ import StoreLoader from '../../../../../store/StoreLoader';
 
 import UnitsTypeSelector from './unitsTypeSelector/UnitsTypeSelector';
 import WithdrawButton from './withdrawButton/WithdrawButton';
-import CloseWindow from './closeWindow/CloseWindow';
+
 
 import './chooseUnitWindow.scss';
 
@@ -37,9 +37,7 @@ export default function ChooseUnitWindow() {
             <button 
                 className='close-units-ui'
                 onClick={() => closeUnitsInterface()}
-            >
-                <CloseWindow/>
-            </button>
+            ></button>
             <button
                 className='withdraw-army-button'
                 onClick={() => withdrawUnits()}
