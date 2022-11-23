@@ -1,12 +1,10 @@
-/*import React from "react";
-import store from '../../../../../store/store';
-import { useSelector } from "react-redux";
+import React from "react";
 
 export default function AutoUpdater (scene){
     const Scene = scene;
-    const AutoUpdater = useSelector((state) => state.gamer.value);
+    //const AutoUpdater = useSelector((state) => state.unit.status);
 
     return (
-        <>{Scene.data.set('status',AutoUpdater)} {console.log(AutoUpdater)}</>
+        <div id="autoUpdater">{Scene.data.set('status',AutoUpdater)}</div>
     )
-}*/
+}

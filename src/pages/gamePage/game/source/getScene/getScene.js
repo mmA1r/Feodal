@@ -4,7 +4,7 @@ import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
 
 
-export default function getScene(scene) {
+export default function getScene(scene, groups) {
     const server = store.getState().server.value;
     let Scene = scene;
     let data;

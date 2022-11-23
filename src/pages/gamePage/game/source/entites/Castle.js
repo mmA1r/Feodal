@@ -18,6 +18,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.setInteractive();
         this.scene.physics.add.existing(this, true);
         this.body.isCircle = true;
+
     }
 
     select() {
@@ -25,6 +26,7 @@ export default class Castle extends Phaser.GameObjects.Image {
             this.setTint(4234);
             this.selected = true;
             this.scene.selectedObject = this;
+            console.log(123);
             if (this.id = this.scene.player) {
                 this.scene.store.loadToStore('castle', 'ui');
             } else {
