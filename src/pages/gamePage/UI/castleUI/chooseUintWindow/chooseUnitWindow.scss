@@ -1,3 +1,4 @@
+
 $withdraw-panel: url('../../../../../assets/UI/CastleUI/unitsWithdrawPanel.png');
 
 .choose-units-ui {
@@ -25,9 +26,16 @@ $withdraw-panel: url('../../../../../assets/UI/CastleUI/unitsWithdrawPanel.png')
 
 .close-units-ui{
     position: absolute;
-    right: 0px;
+    right: 15px;
+    top: 15px;
+    box-sizing: border-box;
+    padding: 0;
     width: 20px;
     height: 20px;
+    background: transparent;
+    border: 0;
+    
+    outline: none;
 }
 
 .withdraw-army-button {

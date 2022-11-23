@@ -5,9 +5,5 @@
 	"name": "feodal",
 	"user": "root",
 	"password":""
-	},
-	"Game": {
-		"intervalUpdateVillage": 5,
-		"intervalRentMinutes": 60
 	}
 }

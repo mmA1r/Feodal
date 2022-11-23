@@ -1,13 +1,6 @@
 import Phaser from "phaser";
 
-import store from '../../../../store/store';
-import { money } from '../../../../store/features/user/userMoney';
-import { level } from '../../../../store/features/user/userLevel';
-import { units } from '../../../../store/features/user/userUnits';
-import { hp } from '../../../../store/features/user/userHp';
-import soldier from "../../../../store/features/units/soldier";
-
-import EventsOn from '../source/methods/EventsOn'
+import EventsOn from '../source/methods/eventsOn'
 import uploadSources from '../source/methods/uploadSource'
 import Camera from '../source/camera/Camera'
 import getScene from '../source/getScene/getScene'
@@ -16,11 +9,10 @@ import getCastle from '../source/getCastle/getCastle'
 import { defaultEqualityCheck } from "reselect";
 import { upload } from "@testing-library/user-event/dist/upload";
 import AutoUpdater from "../source/autoUpdater/autoUpdater";
-import Physics from "../source/physics/Physics";
+import Physics from "../source/phisics/Physics";
 import Trees from "../source/trees/Trees";
 import SelectorUnits from "../source/selectorUnits/SelectorUnits";
 import StoreLoader from "../../../../store/StoreLoader";
-import StoreData from "../source/storeData/StoreData";
 
 
 export default class WorldScene extends Phaser.Scene {
@@ -36,8 +28,6 @@ export default class WorldScene extends Phaser.Scene {
         this.villagesGroup = this.add.group();
         this.selectedUnits = this.add.group();
         this.treesGroup = this.add.group();
-        this.unitsInCastleGroup = this.add.group();
-        this.unitsPointersGroup = this.add.group();
         this.selectorUnits = {};
     }
 
@@ -55,7 +45,7 @@ export default class WorldScene extends Phaser.Scene {
         Trees(this);
         Physics(this);
         getScene(this);
-        StoreData(this);
+        AutoUpdater(this);
     }
 
 
@@ -64,6 +54,5 @@ export default class WorldScene extends Phaser.Scene {
         if (this.cameras.main.isMoved) {
             this.cameras.main.move();
         }
-        this.unitsPointersGroup.getChildren().forEach((el) => el.update());
     }
 }

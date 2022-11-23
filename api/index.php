@@ -55,7 +55,4 @@ function answer($data) {
     );
 }
 
-$params = array_merge($_POST,$_GET);
-$answer = answer(router($params));
-
-echo(json_encode($answer));
+echo(json_encode(answer(router($_GET))));
