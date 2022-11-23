@@ -3,7 +3,7 @@ import Phaser from "phaser";
 export default function Camera(scene) {
     const Scene = scene;
     const camera = Scene.cameras.main;
-    camera.scrollSpeed = 20;
+    camera.scrollSpeed = 30;
     
     //Начальная настройка камеры
     camera.setBounds(0, 0, Scene.map.widthInPixels, Scene.map.heightInPixels);
@@ -22,7 +22,7 @@ export default function Camera(scene) {
 
     window.addEventListener('mousemove',(pointer) =>{
         camera.isMoved = false;
-        if(pointer.clientX<camera.width*0.02 || pointer.clientX>camera.width*0.98 ||pointer.clientY<camera.height*0.03||pointer.clientY>camera.height*0.97){
+        if(pointer.clientX<15 || pointer.clientX>camera.width-15 ||pointer.clientY<15||pointer.clientY>camera.height-15){
             let coef = camera.width/camera.height;
             const dist = Phaser.Math.Distance.Between(pointer.clientX/coef,pointer.clientY,camera.centerX/coef,camera.centerY);
             let dx = (pointer.clientX/coef - camera.centerX/coef)/dist;

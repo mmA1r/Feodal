@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 
+
 export default function EventsOn(scene) {
     const Scene = scene;
 
@@ -10,22 +11,11 @@ export default function EventsOn(scene) {
         }
     });
 
-    //Взаимодействие юнитов с объектом
-    Scene.input.on('gameobjectdown', (pointer, gameObject) => {
-        if (pointer.button === 2 && Scene.selectedUnits.getChildren()[0]) {
-            if (scene.castlesGroup.contains(gameObject)) {
-                if (gameObject.id = scene.player) {
-                    scene.selectedUnits.getChildren().forEach((unit)=>unit.returnToCastle());
-                }
-            }
-        }
-    })
-
     //Передвижение юнитов по клику
     scene.input.on('pointerdown', (pointer, gameObject) => {
         if (pointer.button === 2) {
             Scene.selectedUnits.getChildren().forEach(el => {
-                el.moveTo(pointer.worldX, pointer.worldY)
+                el.pointer.move(pointer.worldX, pointer.worldY)
             }
             );
         }
@@ -33,6 +23,7 @@ export default function EventsOn(scene) {
 
         if (pointer.button === 0 && !gameObject[0]) {
             Scene.store.loadToStore('hide','ui');
+
         }
 
     //Сброс выбора юнитов
@@ -46,7 +37,6 @@ export default function EventsOn(scene) {
 
 
         if (pointer.button === 0 && !scene.CTRL && Scene.selectedObject && !gameObject[0]) {
-            console.log(Scene.selectedObject.id, gameObject);
             Scene.selectedObject.unSelect();
         }
 

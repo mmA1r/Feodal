@@ -18,7 +18,7 @@ export default class Server {
         return answer?.result === 'ok' ? answer?.data : null;
     }
 
-    async postSend(params = {}) {
+    /*async postSend(params = {}) {
         params.method = 'updateUnits';
         if(this.token) {
             params.token = this.token;
@@ -32,7 +32,7 @@ export default class Server {
         });
         const answer = await responce.json();
         return answer?.result === 'ok' ? answer?.data : null;
-    }
+    }*/
 
     /*****************/
     /***** User ******/

@@ -20,8 +20,8 @@ export default function UnitType(props) {
 
     return (
         <div className='unit-type-block'>
-            {fullHpSoldiers?.length > 0 ? <UnitsSelector units={fullHpSoldiers} damaged={false} type={'soldier'}/> : ''}
-            {damagedSoldiers?.length > 0 ? <UnitsSelector units={damagedSoldiers} damaged={true} type={'soldier'}/> : ''}
+            <UnitsSelector units={fullHpSoldiers} damaged={false} type={'soldier'}/>
+            {damagedSoldiers.length > 0 ? <UnitsSelector units={damagedSoldiers} damaged={true} type={'soldier'}/> : ''}
         </div>
     );
 }
