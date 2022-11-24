@@ -1,0 +1,43 @@
+@import '../../../../gameConst.scss';
+
+.custom-withdraw-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 30px;
+    fill: none;
+
+    &:hover {
+        .wooden-background {
+            fill: $icon-background-color;
+        }
+    }
+    &:active {
+        .wooden-background {
+            fill: $icon-background-darker-color;
+        }
+    }
+}
+
+.stone {
+    fill: $stone;
+}
+
+.bright-stone {
+    fill: $brighter-stone;
+}
+
+.wooden-frame {
+    fill: $wooden-frame;
+} 
+
+.brighter-wooden-frame {
+    fill: $wooden-brighter-frame;
+}
+
+.wooden-background {
+    width: 80px;
+    height: 30px;
+    fill: $wooden-background;
+}
