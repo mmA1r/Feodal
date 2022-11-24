@@ -7,37 +7,10 @@ export const gamerStore = createSlice({
         nextRentTime: 0,
         upadateLevelCost: 0,
         money: 0,
-        units: [
-            {
-                type: 1,
-                hp: 8,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'walk',
-            },
-        ]
+        units: []
     },
     reducers: {
         gamer: (state, action) => {
-            console.log(action);
             if(action.payload.level) {
                 state.level = action.payload.level;
             }

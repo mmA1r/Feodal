@@ -9,11 +9,16 @@ import './chooseUnitWindow.scss';
 
 export default function ChooseUnitWindow() {
 
+    const server = useSelector((state) => state.server.value); 
     const isUnitsWindowOpen = useSelector((state) => state.unitsInterface.value);
     const ui = useSelector((state) => state.interface.value.castle);
     const soldierFullHp = useSelector((state) => state.soldier.hp);
     const storeLoader = new StoreLoader();
     const store = useStore();
+
+    async function updateUnits(params) {
+        return await server.updateUnits(params);
+    }
 
     function closeUnitsInterface() {
         return storeLoader.loadToStore(false, 'withdrawUnits');
@@ -28,7 +33,8 @@ export default function ChooseUnitWindow() {
             damagedNumber: damagedSoldiers,
             fullHp: soldierFullHp
         }, 'changeUnitsStatus');
-        console.log(store.getState().gamer.units);
+        const units = store.getState().gamer.units;
+        updateUnits({ units });
         closeUnitsInterface();
     }
 
