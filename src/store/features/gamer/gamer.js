@@ -37,6 +37,7 @@ export const gamerStore = createSlice({
     },
     reducers: {
         gamer: (state, action) => {
+            console.log(action);
             if(action.payload.level) {
                 state.level = action.payload.level;
             }

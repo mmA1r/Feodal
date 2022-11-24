@@ -29,6 +29,7 @@ export default function ChooseUnitWindow() {
             fullHp: soldierFullHp
         }, 'changeUnitsStatus');
         console.log(store.getState().gamer.units);
+        closeUnitsInterface();
     }
 
     return (

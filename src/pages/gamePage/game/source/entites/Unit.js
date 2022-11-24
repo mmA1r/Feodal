@@ -110,7 +110,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                             hp: el.hp
                         }
                     })
-                    console.log(array);
+                    // console.log(array);
                     this.scene.store.loadToStore({units: array}, 'gamer')
             }
         }

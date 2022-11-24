@@ -1,46 +1,40 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useStore } from "react-redux";
 
 import Money from "./money/Money";
 import WarriorButton from "./manageButtons/warriorButton/WarriorButton";
 import CastleUpgradeButton from "./manageButtons/castleUpgradeButton/CastleUpgradeButton";
 import UnitsOutButton from "./manageButtons/unitsOutButton/UnitsOutButton";
+import StoreLoader from "../../../../../store/StoreLoader";
+
 
 import './castleManagePanel.scss';
 
 export default function CastleManagePanel() {
     const server = useSelector((state) => state.server.value);
-    const castleLevel = useSelector((state) => state.gamer.level);
+    const upgradeCastleCost = useSelector((state) => state.gamer.upadateLevelCost);
     const soldierCost = useSelector((state) => state.soldier.cost);
+
+    const store = new StoreLoader();
 
     const [price, setPrice] = useState(false);
     const [unitPrice, setUnitPrice] = useState(0);
 
-    let castleUpgradeCost;
-
     async function buySoldier() {
-        return await server.buyUnit(1);
+        await server.buyUnit(1);
+        const castleMoney = (await server.getCastle()).money;
+        store.loadToStore({ money: castleMoney }, 'gamer');
     }
 
     async function upgradeCastle() {
-        return await server.upgradeCastle();
-    }
-
-    if(castleLevel === 1) {
-        castleUpgradeCost = 1000;
-    } else if(castleLevel === 2) {
-        castleUpgradeCost = 2000;
-    } else if(castleLevel === 3) {
-        castleUpgradeCost = 3000;
-    } else if(castleLevel === 4) {
-        castleUpgradeCost = 4000;
-    } else if(castleLevel === 5) {
-        castleUpgradeCost = 5000;
+        const castleMoney = await server.upgradeCastle();
+        const castleLevel = (await server.getCastle()).level-0;
+        store.loadToStore({ money: castleMoney, level: castleLevel }, 'gamer');
     }
 
     function showCost(unitName) {
         if(unitName === 'castle') {
-            setUnitPrice(castleUpgradeCost);
+            setUnitPrice(upgradeCastleCost);
         } else if(unitName === 'soldier') {
             setUnitPrice(soldierCost);
         } else {

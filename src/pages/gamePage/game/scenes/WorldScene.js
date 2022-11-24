@@ -1,12 +1,5 @@
 import Phaser from "phaser";
 
-import store from '../../../../store/store';
-import { money } from '../../../../store/features/user/userMoney';
-import { level } from '../../../../store/features/user/userLevel';
-import { units } from '../../../../store/features/user/userUnits';
-import { hp } from '../../../../store/features/user/userHp';
-import soldier from "../../../../store/features/units/soldier";
-
 import EventsOn from '../source/methods/EventsOn'
 import uploadSources from '../source/methods/uploadSource'
 import Camera from '../source/camera/Camera'
@@ -29,6 +22,7 @@ export default class WorldScene extends Phaser.Scene {
     }
 
     preload() {
+        this.store = new StoreLoader;
         uploadSources(this);
         getCastle(this);
         this.unitsGroup = this.add.group();
@@ -48,7 +42,6 @@ export default class WorldScene extends Phaser.Scene {
         const grass = map.createLayer('grass', tiles, 0, 0);
         const bushes = map.createLayer('bushes', tiles, 0, 0);
         const trees = map.createLayer('trees', tiles, 0, 0);
-        this.store = new StoreLoader;
         SelectorUnits(this);
         EventsOn(this);
         Camera(this);

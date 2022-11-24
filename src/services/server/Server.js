@@ -19,7 +19,6 @@ export default class Server {
     }
 
     async postSend(params = {}) {
-        params.method = 'updateUnits';
         if(this.token) {
             params.token = this.token;
         }
@@ -156,6 +155,6 @@ export default class Server {
     }
 
     async updateUnits(params) {
-        return await this.postSend(params);
+        return await this.postSend({ method: 'updateUnits', ...params });
     }
 }
