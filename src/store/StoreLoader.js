@@ -1,5 +1,5 @@
 import { openUnitUI } from './features/storeInterface/chooseUnitsInterface';
-import { gamer, changeStatus } from './features/gamer/gamer';
+import { gamer, changeStatus, outOfCastle } from './features/gamer/gamer';
 import { ui } from './features/storeInterface/userInterface';
 import { soldierValues } from './features/units/soldier';
 
@@ -13,6 +13,8 @@ export default class StoreLoader {
                 return store.dispatch(gamer(value));
             case 'changeUnitsStatus': 
                 return store.dispatch(changeStatus(value));
+            case 'outOfCastle' :
+                return store.dispatch(outOfCastle(value));
             case 'ui':
                 return store.dispatch(ui(value));
             case 'soldier':

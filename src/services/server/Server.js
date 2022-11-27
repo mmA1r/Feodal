@@ -22,7 +22,7 @@ export default class Server {
         if(this.token) {
             params.token = this.token;
         }
-        const responce = await fetch(`http://feodal/api`, {
+        const responce = await fetch(`http://feodal/api/?method=${params['method']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

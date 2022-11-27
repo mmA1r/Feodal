@@ -66,10 +66,17 @@ export const gamerStore = createSlice({
                     fullHpSoldiers[i].status = 'outOfCastle';
                 }
             }
+        },
+        outOfCastle : (state, action) => {
+            state.units.forEach(unit => {
+                if(unit.status === 'inCastle') {
+                    unit.status = action.payload;
+                }
+            });
         }
     }
 });
 
-export const { gamer, changeStatus } = gamerStore.actions;
+export const { gamer, changeStatus, outOfCastle } = gamerStore.actions;
 
 export default gamerStore.reducer;

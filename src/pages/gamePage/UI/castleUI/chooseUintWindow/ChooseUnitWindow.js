@@ -3,6 +3,7 @@ import StoreLoader from '../../../../../store/StoreLoader';
 
 import UnitsTypeSelector from './unitsTypeSelector/UnitsTypeSelector';
 import WithdrawButton from './withdrawButton/WithdrawButton';
+import WithdrawAllButton from './withdrawAllButton/withdrawAllButton';
 import CloseWindow from './closeWindow/CloseWindow';
 
 import './chooseUnitWindow.scss';
@@ -25,8 +26,14 @@ export default function ChooseUnitWindow() {
     }
 
     function withdrawUnits() {
-        const fullHpSoldiers = document.getElementsByClassName('soldier-full')[0]?.value-0;
-        const damagedSoldiers = document.getElementsByClassName('soldier-damaged')[0]?.value-0
+        let fullHpSoldiers = 0;
+        let damagedSoldiers = 0;
+        if(document.getElementsByClassName('soldier-full')[0]?.value) {
+            fullHpSoldiers = document.getElementsByClassName('soldier-full')[0]?.value-0;
+        } 
+        if(document.getElementsByClassName('soldier-damaged')[0]?.value) {
+            damagedSoldiers = document.getElementsByClassName('soldier-damaged')[0]?.value-0;
+        }
         storeLoader.loadToStore({
             type: 1,
             fullHpNumber: fullHpSoldiers,
@@ -34,7 +41,14 @@ export default function ChooseUnitWindow() {
             fullHp: soldierFullHp
         }, 'changeUnitsStatus');
         const units = store.getState().gamer.units;
-        updateUnits({ units });
+        // updateUnits({ units });
+        closeUnitsInterface();
+    }
+
+    function withdrawAllUnits() {
+        storeLoader.loadToStore('outOfCastle', 'outOfCastle');
+        const units = store.getState().gamer.units;
+        // updateUnits({ units });
         closeUnitsInterface();
     }
 
@@ -52,6 +66,12 @@ export default function ChooseUnitWindow() {
                 onClick={() => withdrawUnits()}
             >
                 <WithdrawButton/>
+            </button>
+            <button
+                className='withdraw-all-units'
+                onClick={() => withdrawAllUnits()}
+            >
+                <WithdrawAllButton/>
             </button>
         </div>
     );
