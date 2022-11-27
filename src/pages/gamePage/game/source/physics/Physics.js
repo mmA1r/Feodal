@@ -6,10 +6,6 @@ export default function Physics(scene) {
     physics.world.bounds.height = scene.map.heightInPixels;
 
     physics.add.collider(scene.unitsGroup, scene.unitGroup, (unit1, unit2) => {
-        if (unit1.id != unit2.id) {
-            unit1.pointer.moveTo(unit1.pointer.x,unit1.pointer.y);
-            unit2.pointer.moveTo(unit2.pointer.x,unit2.pointer.y);
-        }
     });
 
     /*physics.add.collider(scene.unitsGroup, scene.treesGroup, (u, tree) => {
