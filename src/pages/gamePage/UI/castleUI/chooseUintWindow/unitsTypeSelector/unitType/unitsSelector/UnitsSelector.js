@@ -37,12 +37,16 @@ export default function UnitsSelector(props) {
                 min={0} 
                 max={units.length}
             />
-            <input
-                className='units-selector-input'
-                ref={numberInput}
-                type={'number'}
-                onChange={() => onInputchange()}
-            />
+            <div className='units-selector-input-box'>
+                <button className='units-selector-input-button'>-</button>
+                <input
+                    className='units-selector-input'
+                    ref={numberInput}
+                    type={'number'}
+                    onChange={() => onInputchange()}
+                />
+                <button className='units-selector-input-button'>+</button>
+            </div>
         </div>
     );
 }

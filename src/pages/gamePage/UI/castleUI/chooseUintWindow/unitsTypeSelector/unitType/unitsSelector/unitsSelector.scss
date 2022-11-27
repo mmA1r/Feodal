@@ -1,3 +1,5 @@
+@import '../../../../../../gameConst.scss';
+
 $soldier-mini: url('../../../../../../../../assets/UI/CastleUI/SoldierMini.png');
 $damaged-soldier-mini: url('../../../../../../../../assets/UI/CastleUI/damagedSoldierMini.png');
 
@@ -14,10 +16,23 @@ $damaged-soldier-mini: url('../../../../../../../../assets/UI/CastleUI/damagedSo
     width: 400px;
 }
 
+.units-selector-input-box {
+    display: flex;
+    width: 150px;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .units-selector-input {
-    width: 100px;
-    height: 40px;
+    box-sizing: border-box;
+    width: 70px;
+    height: 30px;
     font-size: 20px;
+    outline: none;
+    border: 2px solid $icon-border-color;
+    background-color: $wooden-background;
+    color: $brighter-stone;
 }
 
 .full-soldier-selector-image {
@@ -34,4 +49,94 @@ $damaged-soldier-mini: url('../../../../../../../../assets/UI/CastleUI/damagedSo
     background-image: $damaged-soldier-mini;
     background-position: center;
     background-size: contain;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input[type=range] {
+    width: 50%;
+    margin: 10px 0;
+    background-color: transparent;
+    -webkit-appearance: none;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    background: $wooden-background;
+    border: 1px solid $icon-border-color;
+    width: 100%;
+    height: 7px;
+    cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+    margin-top: -9px;
+    width: 13px;
+    height: 25px;
+    background: $wooden-background;
+    border: 1.5px solid $icon-border-color;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: $icon-background-darker-color-active;
+}
+input[type=range]::-moz-range-track {
+    background: $wooden-background;
+    border: 1px solid $icon-border-color;
+    width: 100%;
+    height: 7px;
+    cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+    width: 11px;
+    height: 25px;
+    background: $wooden-background;
+    border: 1.5px solid $icon-border-color;
+    cursor: pointer;
+}
+input[type=range]::-ms-track {
+    background: transparent;
+    border-color: transparent;
+    border-width: 10px 0;
+    color: transparent;
+    width: 100%;
+    height: 7px;
+    cursor: pointer;
+}
+input[type=range]::-ms-fill-lower {
+    background: $wooden-background;
+    border: 1px solid $icon-border-color;
+}
+input[type=range]::-ms-fill-upper {
+    background: $wooden-background;
+    border: 1px solid $icon-border-color;
+}
+input[type=range]::-ms-thumb {
+    width: 11px;
+    height: 25px;
+    background: $wooden-background;
+    border: 1.5px solid $icon-border-color;
+    cursor: pointer;
+    margin-top: 0px;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: $wooden-background;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: $icon-background-darker-color-active;
+}
+@supports (-ms-ime-align:auto) {
+    input[type=range] {
+        margin: 0;
+    }
 }
