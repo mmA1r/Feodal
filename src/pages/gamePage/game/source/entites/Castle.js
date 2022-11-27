@@ -43,11 +43,10 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     updateUI(){
-
-            let array = this.units.getChildren().map((el)=>{
+            const array = this.units.getChildren().map((el)=>{
                 return {
                     type: el.unitType,
-                    status: el.status,
+                    status: 'inCastle',
                     hp: el.hp
                 }
             });

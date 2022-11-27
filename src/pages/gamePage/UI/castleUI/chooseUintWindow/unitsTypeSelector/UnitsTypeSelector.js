@@ -19,6 +19,8 @@ export default function ChooseUnitWindow() {
         return unitsType.indexOf(item) === pos;
     });
 
+    console.log(units);
+
     return (
         <div className='units-type-selector'>
             {

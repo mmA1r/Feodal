@@ -43,14 +43,12 @@ export default function ChooseUnitWindow() {
             fullHp: soldierFullHp
         }, 'changeUnitsStatus');
         const units = store.getState().gamer.units;
-        // updateUnits({ units });
         closeUnitsInterface();
     }
 
     function withdrawAllUnits() {
         storeLoader.loadToStore('outOfCastle', 'outOfCastle');
         const units = store.getState().gamer.units;
-        // updateUnits({ units });
         closeUnitsInterface();
     }
 

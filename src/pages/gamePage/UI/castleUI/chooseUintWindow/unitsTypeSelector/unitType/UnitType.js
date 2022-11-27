@@ -13,6 +13,8 @@ export default function UnitType(props) {
         return result;
     }, []);
 
+    console.log(units);
+
     const damagedSoldiers = units.reduce((result, unit) => {
         if(unit?.hp < soldierHp) {
             result.push(unit);
