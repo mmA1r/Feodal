@@ -1,0 +1,34 @@
+@import '../../../../../../../gameConst.scss';
+
+.change-value-button {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    &:hover {
+        .change-value-button-background {
+            fill: $glommy-wooden-background;
+        }
+    }
+    &:active {
+        .change-value-button-angle, .change-value-button-icon {
+            fill: $much-brighter-stone;
+            stroke: $brighter-stone;
+        }
+        .change-value-button-background {
+            stroke: $brighter-stone;
+        }
+    }
+}
+
+.change-value-button-background {
+    width: 29px;
+    height: 29px;
+    fill: $wooden-background;
+    stroke: $stone;
+}
+
+.change-value-button-angle, .change-value-button-icon {
+    stroke-width: 0.5px;
+    fill: $brighter-stone;
+    stroke: $stone;
+}

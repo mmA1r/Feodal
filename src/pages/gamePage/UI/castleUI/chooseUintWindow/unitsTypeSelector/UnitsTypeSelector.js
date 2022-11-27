@@ -17,7 +17,7 @@ export default function ChooseUnitWindow() {
     });
     const types = unitsType.filter((item, pos) => {
         return unitsType.indexOf(item) === pos;
-    })
+    });
 
     return (
         <div className='units-type-selector'>

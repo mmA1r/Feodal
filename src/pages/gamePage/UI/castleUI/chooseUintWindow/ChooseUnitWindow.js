@@ -28,11 +28,13 @@ export default function ChooseUnitWindow() {
     function withdrawUnits() {
         let fullHpSoldiers = 0;
         let damagedSoldiers = 0;
-        if(document.getElementsByClassName('soldier-full')[0]?.value) {
-            fullHpSoldiers = document.getElementsByClassName('soldier-full')[0]?.value-0;
+        const fullSoldiers = document.getElementsByClassName('soldier-full')[0]?.value;
+        const soldiersDamaged = document.getElementsByClassName('soldier-damaged')[0]?.value
+        if(fullSoldiers && fullSoldiers-0 >= 0) {
+            fullHpSoldiers = fullSoldiers-0;
         } 
-        if(document.getElementsByClassName('soldier-damaged')[0]?.value) {
-            damagedSoldiers = document.getElementsByClassName('soldier-damaged')[0]?.value-0;
+        if(soldiersDamaged && soldiersDamaged-0 >= 0) {
+            damagedSoldiers = soldiersDamaged-0;
         }
         storeLoader.loadToStore({
             type: 1,
