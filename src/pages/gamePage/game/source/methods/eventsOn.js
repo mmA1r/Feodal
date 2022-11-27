@@ -6,21 +6,29 @@ export default function EventsOn(scene) {
 
     //Выбор объекта ЛКМ
     Scene.input.on('gameobjectup', (pointer, gameObject) => {
-        if (pointer.button === 0 && gameObject.type === 'entites') {
+        if (pointer.button === 0) {
+            console.log(123);
             gameObject.select();
+        }
+    });
+
+    scene.input.on('gameobjectdown', (pointer, gameObject) => {
+        if (pointer.button === 2 && !gameObject[0] && Scene.selectedUnits.getChildren()[0]) {
+            Scene.selectedUnits.getChildren().forEach(el => {
+                el.pointer.target(gameObject);
+            }
+            );
         }
     });
 
     //Передвижение юнитов по клику
     scene.input.on('pointerdown', (pointer, gameObject) => {
-        if (pointer.button === 2) {
+        if (pointer.button === 2 && !gameObject[0]) {
             Scene.selectedUnits.getChildren().forEach(el => {
-                el.pointer.move(pointer.worldX, pointer.worldY)
+                el.pointer.moveTo(pointer.worldX, pointer.worldY)
             }
             );
         }
-
-
         if (pointer.button === 0 && !gameObject[0]) {
             Scene.store.loadToStore('hide','ui');
 
@@ -40,7 +48,7 @@ export default function EventsOn(scene) {
             Scene.selectedObject.unSelect();
         }
 
-        if (pointer.button === 0 && !scene.CTRL && Scene.selectedObject && Scene.selectedObject.id != gameObject.id) {
+        if (pointer.button === 0 && !scene.CTRL && Scene.selectedObject && !gameObject.selected) {
             console.log(Scene.selectedObject.id, gameObject);
             Scene.selectedObject.unSelect();
         }

@@ -4,47 +4,54 @@ import UnitPointer from "./UnitPointer";
 export default class Unit extends Phaser.GameObjects.Sprite {
     constructor(scene, unitData) {
         super(scene);
-        this.x = Math.round(unitData.posX * 64);
-        this.y = Math.round(unitData.posY * 64);
-        this.depth = this.y;
+        this.ownerId = unitData.ownerId;
         this.id = unitData.id;
+        this.castle = this.scene.castlesGroup.getChildren().find(el => el.id === this.ownerId);
         this.selected = false;
-        this.unitType = unitData.type-0;
-        if (unitData.id=44)this.status= 'inField';
+        this.unitType = unitData.type - 0;
         this.type = 'entites';
         scene.unitsGroup.add(this);
         this.scene.physics.add.existing(this, false);
         this.speed = 3;
         this.direction = {
-            value: unitData.direction,
-            sin: 0,
+            angle: 0,
+            sin: 1,
             cos: 0
         };
         this.body.isCircle = true;
         this.pointer = new UnitPointer(this);
+        this.selectArc = Phaser.Geom.Circle(this.x, this.y, 10,);
         this.setTexture('soldier');
         this.rewriteData(unitData);
-        this.setInteractive();
-        this.setActive();
         this.addedToScene();
         this.addToDisplayList();
-
-        this.setData('state', unitData.status);
+        this.setInteractive()
+        this.tintTopLeft = 12312;
     }
 
-    select () {
+    _setDirection(angle) {
+        if (angle != this.direction.angle) {
+            this.direction.angle = angle;
+            const normAngle = Phaser.Math.Angle.Normalize(angle);
+            this.direction.sin = Math.sin(normAngle);
+            this.direction.cos = Math.cos(normAngle);
+            (this.direction.cos >= 0) ? this.flipX = false : this.flipX = true;
+        }
+    }
+
+    select() {
         this.setTint(4234);
         this.selected = true;
         this.scene.selectedUnits.add(this);
-       /* if (this.id = this.scene.player && this.scene.unitsGroup.getLength()===1) {
-            this.scene.store.loadToStore('unit', 'ui');
-        } else {
-            this.scene.store.loadToStore('enemyUnit', 'ui');
-        }*/
         this.pointer.setVisible(true);
+        /* if (this.id = this.scene.player && this.scene.unitsGroup.getLength()===1) {
+             this.scene.store.loadToStore('unit', 'ui');
+         } else {
+             this.scene.store.loadToStore('enemyUnit', 'ui');
+         }*/
     }
 
-    unSelect () {
+    unSelect() {
         if (!this.scene.selectedObject) {
             this.setTint();
             this.selected = false;
@@ -53,106 +60,86 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         }
     }
 
-    returnToCastle(){
-        this._state = "goToCastle";
-    }
-
-    move(){
-        if (this.status != "inCastle"){
-            const angle = Phaser.Math.Angle.Between(this.x,this.y,this.pointer.x,this.pointer.y);
-            const normAngle = Phaser.Math.Angle.Normalize(angle);
-            this.direction.sin = Math.sin(normAngle);
-            this.direction.cos = Math.cos(normAngle);
-            this.direction.angle = angle;
-            if (angle>1.57 || angle <-1.57) {
-                this.flipX = true;
-            } else
-            { 
-                this.flipX = false
-            }
+    move(angle) {
+        if (this.status != "inCastle") {
+            this._setDirection(angle);
             this._setUnitStatus("move");
         }
     }
 
     _moved() {
-        this.x += this.direction.cos*this.speed;
-        this.y += this.direction.sin*this.speed;
+        this.x += this.direction.cos * this.speed;
+        this.y += this.direction.sin * this.speed;
+        this.depth = this.y;
+        if (this.ownerId = this.scene.player) {
+            this.pointer.update();
+            this.scene.updateMyUnitsGroup.add(this);
+        }
+    }
+
+    stopped() {
+        if (this.status != "inCastle") {
+            this._setUnitStatus('stand');
+        }
+        this.pointer.setVisible(false);
+    }
+
+    rewriteData(unitData) {
+        this.hp = unitData.hp - 0;
+        this._setUnitStatus(unitData.status);
+        this._setDirection(unitData.direction);
+        if (this.status !== "move") {
+            this.x = unitData.posX * 64;
+            this.y = unitData.posY * 64;
+        }
         this.depth = this.y;
     }
 
-    stop() {
-        if (this.status!="inCastle"){
-            this._setUnitStatus('stand');
-        }
+    _intoCastle() {
+        this.setVisible(false);
+        this.body.enable = false;
+        this.removedFromScene();
+        this.castle.units.add(this);
+        this.castle.updateUI();
     }
 
-    rewriteData(unitData){
-        this.hp = unitData.hp-0;
-        this._setUnitStatus(unitData.status);
-        this.pointer.move(Math.round(unitData.posX * 64),Math.round(unitData.posY * 64));
+    _outCastle() {
+        this.setVisible(true);
+        this.body.enable = true;
+        this.addedToScene();
+        this.castle.units.remove(this);
+        this.castle.updateUI();
     }
 
     _setUnitStatus(status) {
-        if (status === "inCastle") {
-            this.setVisible(false);
-            this.body.enable = false;
-            this.removedFromScene();
-            this.on('changedata-status', (parent, value)=> {
-                this._setUnitStatus(parent.getData(value));
-                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            })
-            this.scene.unitsInCastleGroup.add(this);
-                if (this.status!=="inCastle"){
-                    let array = this.scene.unitsInCastleGroup.getChildren().map((el)=>{
-                        return {
-                            type: el.unitType,
-                            status: status,
-                            hp: el.hp
-                        }
-                    })
-                    // console.log(array);
-                    this.scene.store.loadToStore({units: array}, 'gamer')
+        if (status !== this.status) {
+            if (status === "inCastle") {
+                this._intoCastle();
             }
+            else {
+                if (this.status === "inCastle") {
+                    this._outCastle();
+                    this.x = this.castle.pointer.x;
+                    this.y = this.castle.pointer.y;
+                }
+                if (status === "stand") {
+                    this.pointer.moveTo(this.x, this.y)
+                }
+            };
+            this.status = status;
+            this.scene.updateMyUnitsGroup.add(this);
         }
-        else {
-            if(this.status === "inCastle"){
-                this.off('changedata-status');
-                this.scene.unitsInCastleGroup.remove(this);
-                this._state = 'stand';
-                this.setVisible(true);
-                this.body.enable = true;
-                this.addedToScene();
-                
-                let array = this.scene.unitsInCastleGroup.getChildren().map((el)=>{
-                    return {
-                        type: el.unitType,
-                        status: status,
-                        hp: el.hp
-                    }
-                })
-                console.log(array);
-                this.scene.store.loadToStore({units: array}, 'gamer')
-                this.x +=200;
-                this.y +=200;
-                this.pointer.move(this.x+300,this.y+300);
-            }
-        };
-        this.status = status;
     }
 
-
-    enterCastle(){
+    enterCastle() {
         this._setUnitStatus("inCastle");
-        this._state='inCastle';
+    }
+
+    outCastle() {
+        this._setUnitStatus('stand');
     }
 
     update() {
-        if (this.status==='move') {
-            this._moved();
-            if (this._state==='goToCastle' && Phaser.Math.Distance.Between(this.x,this.y,this.scene.myCastle.x,this.scene.myCastle.y)<200) {
-                this.enterCastle();
-            }
-            
-        }
+        if (this.status === 'move') this._moved();
     }
 }

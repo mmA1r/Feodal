@@ -8,29 +8,27 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.depth = this.y;
         this.id = castleData.id;
         this.scene.castlesGroup.add(this);
+        this.setTexture('castleFirstLevel');
         this.rewriteData(castleData);
-        this.setActive(true);
         this.addedToScene();
         this.addToDisplayList();
+        this.setInteractive();
         this.selected = false;
         this.type = 'entites';
-        this.setTexture('castleFirstLevel');
-        this.setInteractive();
         this.scene.physics.add.existing(this, true);
         this.body.isCircle = true;
+        this.units = this.scene.add.group();
+        this.pointer = {x: this.x+300, y: this.y+300}
     }
 
     select() {
-        if (!this.scene.selectedUnits.getChildren()[0]) {
             this.setTint(4234);
             this.selected = true;
             this.scene.selectedObject = this;
-            if (this.id = this.scene.player) {
-                this.scene.store.loadToStore('castle', 'ui');
-            } else {
-                this.scene.store.loadToStore('enemyCastle', 'ui');
-            }
-        }
+            this.updateUI();
+            (this.id === this.scene.player) 
+            ? this.scene.store.loadToStore('castle', 'ui') 
+            : this.scene.store.loadToStore('enemyCastle', 'ui');
     }
 
     unSelect() {
@@ -43,4 +41,16 @@ export default class Castle extends Phaser.GameObjects.Image {
     rewriteData(castleData) {
         this.level = castleData.level;
     }
+
+    updateUI(){
+
+            let array = this.units.getChildren().map((el)=>{
+                return {
+                    type: el.unitType,
+                    status: el.status,
+                    hp: el.hp
+                }
+            });
+            this.scene.store.loadToStore({units: array}, 'gamer');
+        }
 }

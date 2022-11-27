@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 15 2022 г., 23:04
+-- Время создания: Ноя 28 2022 г., 00:53
 -- Версия сервера: 8.0.30
 -- Версия PHP: 7.2.34
 
@@ -32,19 +32,11 @@ CREATE TABLE `gamers` (
   `userId` int NOT NULL,
   `money` int NOT NULL DEFAULT '1000',
   `castleLevel` int NOT NULL DEFAULT '1',
-  `castleColor` varchar(64) COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `castleColor` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `castleX` double NOT NULL,
   `castleY` double NOT NULL,
   `nextRentTime` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `gamers`
---
-
-INSERT INTO `gamers` (`id`, `userId`, `money`, `castleLevel`, `castleColor`, `castleX`, `castleY`, `nextRentTime`) VALUES
-(5, 2, 3361, 4, '#eb343a', 40.411, 1.687, ''),
-(8, 1, 500, 1, '#34eb6e', 71.609, 56.837, '');
 
 -- --------------------------------------------------------
 
@@ -129,28 +121,8 @@ CREATE TABLE `units` (
   `posX` double NOT NULL DEFAULT '0',
   `posY` double DEFAULT '0',
   `status` varchar(256) NOT NULL DEFAULT 'inCastle',
-  `direction` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
+  `direction` double NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `units`
---
-
-INSERT INTO `units` (`id`, `type`, `gamerId`, `hp`, `posX`, `posY`, `status`, `direction`) VALUES
-(44, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(45, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(46, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(47, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(48, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(49, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(50, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(51, 1, 5, 10, 40.411, 1.687, 'inCastle', NULL),
-(53, 1, 8, 10, 71.609, 56.837, 'inCastle', NULL),
-(54, 1, 8, 10, 71.609, 56.837, 'inCastle', NULL),
-(55, 1, 8, 10, 71.609, 56.837, 'inCastle', NULL),
-(56, 1, 8, 10, 71.609, 56.837, 'inCastle', NULL),
-(57, 1, 8, 10, 71.609, 56.837, 'inCastle', NULL),
-(58, 1, 8, 10, 71.609, 56.837, 'inCastle', NULL);
 
 -- --------------------------------------------------------
 
@@ -164,7 +136,7 @@ CREATE TABLE `unitstypes` (
   `hp` int NOT NULL,
   `cost` int NOT NULL,
   `damage` int NOT NULL,
-  `might` int(64) NOT NULL,
+  `might` int NOT NULL,
   `speed` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 

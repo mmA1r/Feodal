@@ -4,28 +4,16 @@ import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
 
 
-export default function getScene(scene) {
+export default async function getScene(scene) {
     const server = store.getState().server.value;
-    let Scene = scene;
-    let data;
+    const Scene = scene;
     setInterval(
         async () => {
-            data = (await server.getScene());
-            if (data?.units) {
-                let units = data.units;
-                units.forEach((unit) => {
-                    let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
-                    if (unitOnScene) {
-                        unitOnScene.rewriteData(unit);
-                    } else {
-                        new Unit(Scene,unit);
-                    }
-                }) 
-            }
+            const data = (await server.getScene());
             if (data?.castles) {
                 let castles = data.castles;
                 castles.forEach((castle) => {
-                    let castleOnScene = Scene.castlesGroup.getChildren().find(el => el.id === castle.id)
+                    let castleOnScene = scene.castlesGroup.getChildren().find(el => el.id === castle.id);
                     if (castleOnScene) {
                         castleOnScene.rewriteData(castle);
                     } else {
@@ -33,7 +21,43 @@ export default function getScene(scene) {
                     }
                 }) 
             }
+            if (data?.units) {
+                data.units.forEach((unit) => {
+                    let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
+                    if (unitOnScene) {
+                        unitOnScene.rewriteData(unit);
+                    } else {
+                        new Unit(scene,unit);
+                    }
+                }) 
+            }
         }
-        ,1000
-    ) 
+        ,150
+    )
+
+    /*const data = (await server.getScene());
+    console.log(data);
+    if (data?.castles) {
+        let castles = data.castles;
+        castles.forEach((castle) => {
+            let castleOnScene = scene.castlesGroup.getChildren().find(el => el.id === castle.id);
+            if (castleOnScene) {
+                console.log(123);
+                castleOnScene.rewriteData(castle);
+            } else {
+                new Castle(Scene, castle);
+            }
+        })
+    }
+    if (data?.units) {
+        data.units.forEach((unit) => {
+            let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
+            if (unitOnScene) {
+                unitOnScene.rewriteData(unit);
+            } else {
+                new Unit(scene, unit);
+            }
+        })
+    }
+    setTimeout(()=> getScene(scene), 100);*/
 }
