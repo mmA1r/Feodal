@@ -7,22 +7,20 @@ export default function Physics(scene) {
 
     physics.add.collider(scene.unitsGroup, scene.unitGroup, (unit1, unit2) => {
         if (unit1.id != unit2.id) {
-            unit1.move();
-            unit2.move();
+            unit1.pointer.moveTo(unit1.pointer.x,unit1.pointer.y);
+            unit2.pointer.moveTo(unit2.pointer.x,unit2.pointer.y);
         }
     });
 
-    physics.add.collider(scene.unitsGroup, scene.treesGroup, (u, tree) => {
+    /*physics.add.collider(scene.unitsGroup, scene.treesGroup, (u, tree) => {
         if (u) {
             u.move();
         }
-    })
+    })*/
 
     physics.add.collider(scene.unitsGroup, scene.castlesGroup, (u, castle) => {
         if (u) {
-            u.move();
+            u.pointer.moveTo(u.pointer.x,u.pointer.y);
         }
     });
-
-    scene.physics.add.collider(scene.selectorUnits, scene.unitsGroup, (selector,unit)=> unit.select());
 }

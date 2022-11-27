@@ -10,8 +10,8 @@
         }
 
         public function addCastle($userId) {
-            $castleX = rand(0,160000) / 1000;
-            $castleY = rand(0,160000) / 1000;
+            $castleX = rand(0,90000) / 1000;
+            $castleY = rand(0,90000) / 1000;
 
             $nextRentTime = microtime(true) + 7200000;
 
@@ -100,9 +100,6 @@
         }
 
         public function updateUnits($gamer,$myUnits,$otherUnits,$villages) {
-            $myUnits=json_decode($myUnits);
-            $otherUnits=json_decode($villages,false);
-            $villages=json_decode($villages,false);
             if ($myUnits) {
                 $this->updateGamerUnits($gamer,$myUnits);
             }
@@ -124,7 +121,7 @@
             $isUpdate = false;
             foreach($units as $unit){
                 if($unit){
-                        $this->db->updateUnit($unit->id,$gamer->id,$unit->hp,$unit->posX,$unit->posY,$unit->status,$unit->direction);
+                        $this->db->updateUnit($gamer->id,$unit->id,$unit->hp,$unit->posX,$unit->posY,$unit->status,$unit->direction);
                         $isUpdate = true;
                 }
             }

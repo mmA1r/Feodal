@@ -207,18 +207,18 @@ class Application {
     }
 
     public function updateUnits($params) {
-        if ($this->checkParams($params) && $params['token']) {
-            $userId = $this->user->getUser($params['token']);  
+        $postBody = file_get_contents("php://input");
+        $data = json_decode($postBody);
+            $userId = $this->user->getUser($data->token); 
             if  ($userId){
                 $gamer = $this->gamer->getGamer($userId);
                 if ($gamer) {
-                    $time = $this->gamer->updateUnits($gamer, $params['myUnits'], $params['otherUnits'], $params['villages']);
+                    $time = $this->gamer->updateUnits($gamer, $data->myUnits, $params['otherUnits'], $params['villages']);
                     if ($time) {
                         $this->game->updateMap($time);
                     }
                 return true;
-                }
-            }   
+                } 
         }
     }
 }

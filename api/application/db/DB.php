@@ -299,11 +299,11 @@ class DB {
     }
     // По id отдельного юнита меняет у него 
     // hp, posX, posY, status, direction в БД
-    public function updateUnit($unitId,$gamerId,$hp, $posX, $posY, $status, $direction){
+    public function updateUnit($gamerId, $unitId,$hp, $posX, $posY, $status, $direction){
         $query = '
-            UPDATE units
-            SET hp='. $hp. ',posX='. $posX. ',posY='. $posY. ',status='. $status. ',direction='. $direction. '
-            WHERE id=' .$unitId. 'AND gamerId=' .$gamerId;
+            UPDATE units 
+            SET hp='. $hp. ',posX='. $posX. ',posY='. $posY. ',status="'. $status. '",direction='. $direction. ' 
+            WHERE id=' .$unitId. ' AND gamerId=' .$gamerId;
         $this->db->query($query);
         return $query;
     }
