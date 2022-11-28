@@ -51,5 +51,6 @@ export default class Castle extends Phaser.GameObjects.Image {
                 }
             });
             this.scene.store.loadToStore({units: array}, 'gamer');
+            console.log(array)
         }
 }
