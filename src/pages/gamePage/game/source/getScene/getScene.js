@@ -32,32 +32,6 @@ export default async function getScene(scene) {
                 }) 
             }
         }
-        ,150
+        ,100
     )
-
-    /*const data = (await server.getScene());
-    console.log(data);
-    if (data?.castles) {
-        let castles = data.castles;
-        castles.forEach((castle) => {
-            let castleOnScene = scene.castlesGroup.getChildren().find(el => el.id === castle.id);
-            if (castleOnScene) {
-                console.log(123);
-                castleOnScene.rewriteData(castle);
-            } else {
-                new Castle(Scene, castle);
-            }
-        })
-    }
-    if (data?.units) {
-        data.units.forEach((unit) => {
-            let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
-            if (unitOnScene) {
-                unitOnScene.rewriteData(unit);
-            } else {
-                new Unit(scene, unit);
-            }
-        })
-    }
-    setTimeout(()=> getScene(scene), 100);*/
 }

@@ -4,7 +4,7 @@ export default function Camera(scene) {
     const Scene = scene;
     const camera = Scene.cameras.main;
     camera.scrollSpeed = 30;
-    const viewScreenUpdate = function(){
+    camera.viewScreenUpdate = function(){
         scene.trees.forEachTile((tile) => {
             if (tile.x*64< scene.cameras.main.midPoint.x-scene.cameras.main.width/camera.zoom 
                 || tile.x*64 > scene.cameras.main.midPoint.x+scene.cameras.main.width/camera.zoom 
@@ -52,7 +52,7 @@ export default function Camera(scene) {
             let x = camera.dX*camera.scrollSpeed+camera.midPoint.x;
             let y = camera.dY*camera.scrollSpeed+camera.midPoint.y
             camera.centerOn(x,y);
-            viewScreenUpdate();
+            camera.viewScreenUpdate();
     };
 
     //Зум камеры
@@ -60,7 +60,7 @@ export default function Camera(scene) {
             let zoom = camera.zoom;
             if (event.deltaY > 0 && zoom > 0.5) camera.setZoom(zoom * 0.9);
             if (event.deltaY < 0 && zoom < 5) camera.setZoom(zoom * 1.1);
-            viewScreenUpdate();
+            camera.viewScreenUpdate();
     });
 
     window.addEventListener('mousemove',(pointer) =>{
@@ -89,7 +89,7 @@ export default function Camera(scene) {
     Scene.input.on('pointermove', (pointer) => {
         if (pointer.isDown && pointer.button === 0 && Scene.CTRL) {
             camera.centerOn(camera.midPoint.x - pointer.event.movementX / camera.zoom, camera.midPoint.y - pointer.event.movementY / camera.zoom);
-            viewScreenUpdate();
+            camera.viewScreenUpdate();
         }
     });
 

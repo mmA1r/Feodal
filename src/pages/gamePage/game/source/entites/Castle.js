@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import UnitPointer from "./UnitPointer";
 
 export default class Castle extends Phaser.GameObjects.Image {
     constructor(scene, castleData) {
@@ -6,6 +7,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.x = Math.round(castleData.posX * 64);
         this.y = Math.round(castleData.posY * 64);;
         this.depth = this.y;
+        this.activeRadius = 40000;
         this.id = castleData.id;
         this.scene.castlesGroup.add(this);
         this.setTexture('castleFirstLevel');
@@ -14,11 +16,13 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.addToDisplayList();
         this.setInteractive();
         this.selected = false;
-        this.type = 'entites';
+        this.type = (this.id === this.scene.player) ? 'myCastle' : "castle";
         this.scene.physics.add.existing(this, true);
         this.body.isCircle = true;
         this.units = this.scene.add.group();
         this.pointer = new UnitPointer(this);
+        this.pointer.x = this.x-150;
+        this.pointer.y = this.y-150;
     }
 
     select() {
@@ -29,6 +33,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         (this.id === this.scene.player)
             ? this.scene.store.loadToStore('castle', 'ui')
             : this.scene.store.loadToStore('enemyCastle', 'ui');
+        this.pointer.setVisible(true);
     }
 
     unSelect() {
@@ -36,6 +41,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.selected = false;
         this.scene.selectedObject = null;
         this.scene.store.loadToStore('hide', 'ui');
+        this.pointer.setVisible(false);
     }
 
     rewriteData(castleData) {

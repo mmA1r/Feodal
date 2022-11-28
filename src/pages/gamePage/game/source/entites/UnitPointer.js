@@ -5,7 +5,10 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         super(unit.scene, unit.x, unit.y, 10, 0, 360, false, 2132, 0.5);
         this.setVisible(false);
         this.id = unit.id;
+        console.log(unit);
         this.unit = unit;
+        this.type = "pointer";
+        this.activeRadius = 100;
         this.addedToScene();
         this.addToDisplayList();
         this.isFilled = false;
@@ -15,6 +18,7 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
 
     _relocate() {
         let i = 0;
+        console.log(this.id,this.x, this.y)
         while (this.scene.unitsGroup.getChildren().find(el => (this.id != el.pointer.id) && (this.x === el.pointer.x) && (this.y === el.pointer.y))) {
             if (i < 5) {
                 this.x += 60;
@@ -25,6 +29,7 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
                 i = 0;
             }
         }
+        console.log(this.x, this.y);
     }
 
     moveTo(x, y) {
@@ -33,6 +38,6 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         }
         this.x = x;
         this.y = y;
-        if (this.unit.type === "myUnit") this._relocate();
+        this._relocate();
     }
 }

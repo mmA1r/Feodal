@@ -12,9 +12,9 @@ export default function EventsOn(scene) {
     });
 
     scene.input.on('gameobjectdown', (pointer, gameObject) => {
-        if (pointer.button === 2 && !gameObject[0] && Scene.selectedUnits.getChildren()[0]) {
+        if (pointer.button === 2 && Scene.selectedUnits.getChildren()[0]) {
             Scene.selectedUnits.getChildren().forEach(el => {
-                el.pointer.target(gameObject);
+                el.moveTo(gameObject);
             }
             );
         }
@@ -23,16 +23,13 @@ export default function EventsOn(scene) {
     //Передвижение юнитов по клику
     scene.input.on('pointerdown', (pointer, gameObject) => {
         if (pointer.button === 2 && !gameObject[0]) {
-            if (scene.selectedObject) {
-                if (scene.selectedObject.type === "myCastle") scene.selectedObject.pointer.moveTo(pointer.worldX,pointer.worldY);
-            } else {
                 Scene.selectedUnits.getChildren().forEach(el => {
                     if (el.isMine()){
                         el.pointer.moveTo(pointer.worldX,pointer.worldY);
-                        el.moveTo(this.pointer);
+                        el.moveTo(el.pointer);
                     }
                 });
-            }
+                if (Scene.selectedObject && Scene.selectedObject.type === "myCastle")Scene.selectedObject.pointer.moveTo(pointer.worldX,pointer.worldY);
         }
         if (pointer.button === 0 && !gameObject[0]) {
             Scene.store.loadToStore('hide','ui');

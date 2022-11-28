@@ -22,6 +22,6 @@ export default function updateUnits(scene) {
                 scene.updateMyUnitsGroup.clear();
             }
         }
-        ,100
+        ,150
     )
 }
