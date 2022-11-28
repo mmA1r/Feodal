@@ -22,12 +22,13 @@ export default function CastleManagePanel() {
 
     async function buySoldier() {
         await server.buyUnit(1);
-        const castleMoney = (await server.getCastle()).money;
+        const castleMoney = (await server.getCastle()).money-0;
         store.loadToStore({ money: castleMoney }, 'gamer');
     }
 
     async function upgradeCastle() {
-        const castleMoney = await server.upgradeCastle();
+        const castleMoney = (await server.upgradeCastle()).money-0;
+        console.log(castleMoney);
         const castleLevel = (await server.getCastle()).level-0;
         store.loadToStore({ money: castleMoney, level: castleLevel }, 'gamer');
     }
