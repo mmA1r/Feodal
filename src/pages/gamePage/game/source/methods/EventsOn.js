@@ -7,7 +7,6 @@ export default function EventsOn(scene) {
     //Выбор объекта ЛКМ
     Scene.input.on('gameobjectup', (pointer, gameObject) => {
         if (pointer.button === 0) {
-            console.log(123);
             gameObject.select();
         }
     });
@@ -24,10 +23,16 @@ export default function EventsOn(scene) {
     //Передвижение юнитов по клику
     scene.input.on('pointerdown', (pointer, gameObject) => {
         if (pointer.button === 2 && !gameObject[0]) {
-            Scene.selectedUnits.getChildren().forEach(el => {
-                el.pointer.moveTo(pointer.worldX, pointer.worldY)
+            if (scene.selectedObject) {
+                if (scene.selectedObject.type === "myCastle") scene.selectedObject.pointer.moveTo(pointer.worldX,pointer.worldY);
+            } else {
+                Scene.selectedUnits.getChildren().forEach(el => {
+                    if (el.isMine()){
+                        el.pointer.moveTo(pointer.worldX,pointer.worldY);
+                        el.moveTo(this.pointer);
+                    }
+                });
             }
-            );
         }
         if (pointer.button === 0 && !gameObject[0]) {
             Scene.store.loadToStore('hide','ui');

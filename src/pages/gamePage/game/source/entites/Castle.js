@@ -18,16 +18,16 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.scene.physics.add.existing(this, true);
         this.body.isCircle = true;
         this.units = this.scene.add.group();
-        this.pointer = {x: this.x+300, y: this.y+300}
+        this.pointer = new UnitPointer(this);
     }
 
     select() {
-            this.setTint(4234);
-            this.selected = true;
-            this.scene.selectedObject = this;
-            this.updateUI();
-            (this.id === this.scene.player) 
-            ? this.scene.store.loadToStore('castle', 'ui') 
+        this.setTint(4234);
+        this.selected = true;
+        this.scene.selectedObject = this;
+        this.updateUI();
+        (this.id === this.scene.player)
+            ? this.scene.store.loadToStore('castle', 'ui')
             : this.scene.store.loadToStore('enemyCastle', 'ui');
     }
 
@@ -42,15 +42,16 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.level = castleData.level;
     }
 
-    updateUI(){
-            const array = this.units.getChildren().map((el)=>{
+    updateUI() {
+        if (this.selected) {
+            const array = this.units.getChildren().map((el) => {
                 return {
                     type: el.unitType,
                     status: 'inCastle',
                     hp: el.hp
                 }
             });
-            this.scene.store.loadToStore({units: array}, 'gamer');
-            console.log(array)
+            this.scene.store.loadToStore({ units: array }, 'gamer');
         }
+    }
 }
