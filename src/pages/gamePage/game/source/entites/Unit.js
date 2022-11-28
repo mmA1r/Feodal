@@ -6,7 +6,6 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         super(scene);
         this.scene.physics.add.existing(this, false);
         this.body.isCircle = true;
-        this.selectArc = Phaser.Geom.Circle(this.x, this.y, 10,);
         this.selected = false;
         this.id = unitData.id;
         this.ownerId = unitData.ownerId;
@@ -34,8 +33,23 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.rewriteData(unitData);
         this._addScene();
         this.addToDisplayList();
-        this.tintTopLeft = 12312;
         this._setUnitStatus(unitData.status);
+        this.selectArc = new UnitPointer(this);
+        this.selectArc.setVisible(true);
+        this.selectArc.y +=45;
+        this.selectArc.x -=5;
+        this.selectArc.depth = 0;
+        this.depth=500;
+        this.selectArc.radius = 20;
+        this.gamerTint = this.scene.add.image(this.x,this.y, 'soldierTint');
+        this.gamerTint.depth=100000;
+        this.gamerTint.tint = 0x008eab;
+        this.selectArc.strokeColor = 0x00FF00;
+        //this.selectArc.isFilled = false;
+        //this.selectArc.isStroke = false;
+        //console.log('Arcane', this.selectArc);
+        //this.selectArc.addedToScene();
+        //this.selectArc.addToDisplayList();
     }
 
     _addScene() {
