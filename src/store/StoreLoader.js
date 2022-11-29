@@ -2,6 +2,8 @@ import { openUnitUI } from './features/storeInterface/chooseUnitsInterface';
 import { gamer, changeStatus, outOfCastle } from './features/gamer/gamer';
 import { ui } from './features/storeInterface/userInterface';
 import { soldierValues } from './features/units/soldier';
+import { currentUnit } from './features/currentUnit/currentUnit';
+import { currentArmy } from './features/currentArmy/currentArmy';
 
 import store from './store';
 
@@ -21,6 +23,10 @@ export default class StoreLoader {
                 return store.dispatch(soldierValues(value));
             case 'withdrawUnits':
                 return store.dispatch(openUnitUI(value));
+            case 'currentUnit' :
+                return store.dispatch(currentUnit(value));
+            case 'currentArmy' :
+                return store.dispatch(currentArmy(value));
             default: return true;
         }
     }

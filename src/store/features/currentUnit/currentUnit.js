@@ -1,21 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const soldier = createSlice({
-    name: 'soldier',
+export const unit = createSlice({
+    name: 'unit',
     initialState: {
         hp: 0,
-        cost: 0,
         damage: 0,
         speed: 0,
         might: 0
     },
     reducers: {
-        soldierValues: (state, action) => {
+        currentUnit: (state, action) => {
             if('hp' in action.payload) {
                 state.hp = action.payload.hp;
-            }
-            if('cost' in action.payload) {
-                state.cost = action.payload.cost;
             }
             if('damage' in action.payload) {
                 state.damage = action.payload.damage;
@@ -30,6 +26,6 @@ export const soldier = createSlice({
     }
 });
 
-export const { soldierValues } = soldier.actions;
+export const { currentUnit } = unit.actions;
 
-export default soldier.reducer;
+export default unit.reducer;
