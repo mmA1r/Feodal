@@ -1,8 +1,33 @@
+.unit-hp-bar-box {
+    position: absolute;
+    bottom: 0;
+    right: 0px;
+    width: 666px;
+    height: 30px;
+    box-sizing: border-box;
+
+    & > progress[value]::-webkit-progress-bar {
+        background-color: rgb(49, 4, 4);
+    }
+    & > progress[value]::-webkit-progress-value {
+        background-color: rgb(243, 0, 32);
+    }
+}
+
+.unit-hp-number {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    color: white;
+    z-index: 2;
+}
+
 .unit-hp-bar {
     position: absolute;
-    box-sizing: border-box;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 30px;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 649px;
+    height: 7px;
+    background-color: red;
 }
