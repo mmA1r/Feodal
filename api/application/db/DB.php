@@ -292,6 +292,14 @@ class DB {
         return $this->getArray($query);
     }
 
+    public function getUnit($unitId) {
+        $query = '
+        SELECT hp
+        FROM units 
+        WHERE id=' . $unitId;
+    return $this->db->query($query)->fetchObject();
+    }
+
     public function countUnitsGamer($gamerId){
         $query ='SELECT count(*) FROM units WHERE gamerId='.$gamerId;
         return $this->db->query($query)->fetchObject();
@@ -309,7 +317,13 @@ class DB {
     }
     public function updateUnitHP($unitId,$hp){
         $query='UPDATE units
-            SET  hp='. $hp . 'WHERE id='. $unitId;
+            SET  hp='. $hp . ' WHERE id='. $unitId;
+        $this->db->query($query);
+        return true;
+    }
+
+    public function deadUnits (){
+        $query = 'DELETE FROM units WHERE hp <='. 0;
         $this->db->query($query);
         return true;
     }

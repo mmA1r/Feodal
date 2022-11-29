@@ -42,9 +42,9 @@ export default class WorldScene extends Phaser.Scene {
         Camera(this);
         Trees(this);
         Physics(this);
-        updateUnits(this);
-        getScene(this);
-        StoreData(this);
+        this.updateUnits = updateUnits(this);
+        this.getScene = getScene(this);
+        this.StoreData = StoreData(this);
     }
 
 

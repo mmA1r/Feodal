@@ -3,9 +3,10 @@ import store from '../../../../../store/store';
 export default function updateUnits(scene) {
     const server = store.getState().server.value;
     scene.updateMyUnitsGroup = scene.add.group();
-    setInterval(
+    scene.updateOtherUnitsGroup = scene.add.group();
+    const updateUnits = setInterval(
         async() => {
-            if (scene.updateMyUnitsGroup.getChildren()[0]) {
+            if (scene.updateMyUnitsGroup.getChildren()[0] || scene.updateOtherUnitsGroup.getChildren()[0]) {
                 let myUnits = scene.updateMyUnitsGroup.getChildren().map((unit) => {
                     return {
                         id: unit.id,
@@ -16,12 +17,20 @@ export default function updateUnits(scene) {
                         direction: unit.direction.angle
                     }
                 });
-                let otherUnits=[];
+                let otherUnits=scene.updateOtherUnitsGroup.getChildren().map((unit) => {
+                    return {
+                        id: unit.id,
+                        hp: unit.hp
+                    }
+                });
                 let villages = [];
                 server.updateUnits({myUnits,otherUnits,villages});
                 scene.updateMyUnitsGroup.clear();
+                scene.updateOtherUnitsGroup.clear();
             }
         }
-        ,100
+        ,150
     )
+
+    return updateUnits;
 }
