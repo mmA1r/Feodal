@@ -4,7 +4,7 @@ export default function updateUnits(scene) {
     const server = store.getState().server.value;
     scene.updateMyUnitsGroup = scene.add.group();
     scene.updateOtherUnitsGroup = scene.add.group();
-    setInterval(
+    const updateUnits = setInterval(
         async() => {
             if (scene.updateMyUnitsGroup.getChildren()[0]) {
                 let myUnits = scene.updateMyUnitsGroup.getChildren().map((unit) => {
@@ -31,4 +31,6 @@ export default function updateUnits(scene) {
         }
         ,150
     )
+
+    return updateUnits;
 }

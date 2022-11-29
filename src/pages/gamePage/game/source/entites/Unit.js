@@ -129,7 +129,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     damage(dmg) {
-        console.log(this.hp)
+        console.log(this.hp);
         this.hp -= dmg;
         this.scene.updateOtherUnitsGroup.add(this.target);
     }

@@ -4,10 +4,10 @@ import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
 
 
-export default async function getScene(scene) {
+export default function getScene(scene) {
     const server = store.getState().server.value;
     const Scene = scene;
-    setInterval(
+    const getScene = setInterval(
         async () => {
             const data = (await server.getScene());
             if (data?.castles) {
@@ -34,4 +34,6 @@ export default async function getScene(scene) {
         }
         ,100
     )
+
+    return getScene;
 }
