@@ -24,8 +24,10 @@ export default function UnitsSelector(props) {
     }
 
     function increase() {
-        numberInput.current.value++;
-        rangeInput.current.value++;
+        if(numberInput.current.value < units.length) {
+            numberInput.current.value++;
+            rangeInput.current.value++;
+        }
     }
 
     function decrease() {

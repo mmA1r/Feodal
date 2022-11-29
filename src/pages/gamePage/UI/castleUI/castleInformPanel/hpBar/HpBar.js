@@ -14,10 +14,16 @@ export default function HpBar(props) {
     }, 0);
 
     return (
-        <div className="hp-bar">
-            <div className='hp-bar-frame'></div>
-            <div className='hp-counter'> {currentHp} / {fullHp}</div>
-            <progress value={currentHp} max={fullHp} className='true-hp-bar'/>
+        <div>
+            {
+                fullHp > 0 && currentHp > 0 ? 
+                    <div className="hp-bar">
+                        <div className='hp-bar-frame'></div>
+                        <div className='hp-counter'> {currentHp} / {fullHp}</div>
+                        <progress value={currentHp} max={fullHp} className='true-hp-bar'/>
+                    </div>
+                : ''
+            }
         </div>
     );
 }

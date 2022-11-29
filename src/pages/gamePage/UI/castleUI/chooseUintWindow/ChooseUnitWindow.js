@@ -1,4 +1,4 @@
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import StoreLoader from '../../../../../store/StoreLoader';
 
 import UnitsTypeSelector from './unitsTypeSelector/UnitsTypeSelector';
@@ -10,16 +10,10 @@ import './chooseUnitWindow.scss';
 
 export default function ChooseUnitWindow() {
 
-    const server = useSelector((state) => state.server.value); 
     const isUnitsWindowOpen = useSelector((state) => state.unitsInterface.value);
     const ui = useSelector((state) => state.interface.value.castle);
     const soldierFullHp = useSelector((state) => state.soldier.hp);
     const storeLoader = new StoreLoader();
-    const store = useStore();
-
-    async function updateUnits(params) {
-        return await server.updateUnits(params);
-    }
 
     function closeUnitsInterface() {
         return storeLoader.loadToStore(false, 'withdrawUnits');
@@ -42,13 +36,11 @@ export default function ChooseUnitWindow() {
             damagedNumber: damagedSoldiers,
             fullHp: soldierFullHp
         }, 'changeUnitsStatus');
-        const units = store.getState().gamer.units;
         closeUnitsInterface();
     }
 
     function withdrawAllUnits() {
         storeLoader.loadToStore('outOfCastle', 'outOfCastle');
-        const units = store.getState().gamer.units;
         closeUnitsInterface();
     }
 
