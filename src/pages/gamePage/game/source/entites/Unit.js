@@ -11,6 +11,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.ownerId = unitData.ownerId;
         this.x = unitData.posX * 64;
         this.y = unitData.posY * 64;
+        this.depth = this.y;
         this.unitType = unitData.type - 0;
         this.type = (this.ownerId === this.scene.player) ? 'myUnit' : "unit";
         this.speed = 5;//unitData.speed;
@@ -37,6 +38,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.activeRadius = 1600;
         this.atk = 10;
         this.canAttack = true;
+        this.onServer = true;
         /*this.selectArc = new UnitPointer(this);
         this.selectArc.setVisible(true);
         this.selectArc.y +=45;
@@ -97,7 +99,9 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                     this.attack();
                     break;
                 };
-                //case "castle": {};
+                case "castle": {
+                    break;
+                };
                 //case "village": true;
                 case "myCastle": {
                     this.enterCastle();
@@ -132,7 +136,8 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         if (this.selected) this._updateUI();
         this.hp -= dmg;
         this.damaged = true;
-        this.scene.updateOtherUnitsGroup.add(this);    }
+        if (this.onServer) this.scene.updateOtherUnitsGroup.add(this);    
+    }
 
     isMine() {
         if (this.ownerId === this.scene.player) return true;
@@ -155,7 +160,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             this.scene.store.loadToStore('unit', 'ui');
             this._updateUI();
          } else {
-             //this.scene.store.loadToStore('enemyUnit', 'ui');
+            this.scene.store.loadToStore('hide', 'ui');
          }
     }
 
@@ -165,6 +170,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             this.selected = false;
             this.scene.selectedUnits.remove(this);
             this.pointer.setVisible(false);
+            this.scene.store.loadToStore('hide', 'ui');
         }
     }
 
@@ -186,9 +192,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             this._setUnitStatus('stand');
         }
         this.pointer.setVisible(false);
+        this.depth = this.y;
     }
 
     rewriteData(unitData) {
+        this.onServer = true;
         if (!this.scene.updateOtherUnitsGroup.contains(this)) this.hp = unitData.hp - 0;
         if (this.type !== "myUnit") {
             this._setUnitStatus(unitData.status);
@@ -198,6 +206,12 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                 y: unitData.posY * 64,
                 activeRadius: 100,
             })
+        }
+    }
+
+    killed(){
+        if (!this.onServer && this.hp<=10) {
+            this.destroy();
         }
     }
 
