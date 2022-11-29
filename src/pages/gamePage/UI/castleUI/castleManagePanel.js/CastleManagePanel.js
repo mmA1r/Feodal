@@ -27,6 +27,7 @@ export default function CastleManagePanel() {
     }
 
     async function upgradeCastle() {
+        await server.upgradeCastle();
         const castle = await server.getCastle();
         const castleMoney = castle.money-0;
         const castleUpgradeCost = castle?.castleUpgradeCost-0;

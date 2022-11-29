@@ -1,0 +1,20 @@
+.move-active,
+.move-inactive {
+    width: 200px;
+    height: 20px;
+    fill: none;
+}
+
+.move-inactive {
+    &:hover {
+        .move-back-button {
+            fill: rgb(18, 77, 37);
+        }
+    }
+}
+
+.move-active {
+    .move-back-button {
+        fill: rgb(27, 209, 85);
+    }
+}
