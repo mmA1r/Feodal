@@ -14,7 +14,7 @@ export default function EventsOn(scene) {
     scene.input.on('gameobjectdown', (pointer, gameObject) => {
         if (pointer.button === 2 && Scene.selectedUnits.getChildren()[0]) {
             Scene.selectedUnits.getChildren().forEach(el => {
-                el.moveTo(gameObject);
+                if (el.isMine()) el.moveTo(gameObject);
             }
             );
         }
