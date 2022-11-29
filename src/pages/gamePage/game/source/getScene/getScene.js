@@ -38,7 +38,7 @@ export default function getScene(scene) {
                 })
             }
         }
-        ,100
+        ,90
     )
 
     return getScene;
