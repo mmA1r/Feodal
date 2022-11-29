@@ -26,7 +26,6 @@ export default class Castle extends Phaser.GameObjects.Image {
         console.log(castleData);
         const name = this.scene.add.text(this.x, this.y+130,castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
         name.depth = 10000000;
-        console.log(name);
         name.style.setFontSize(30);
         name.style.setAlign('center')
         name.scrollFactorX = 1;

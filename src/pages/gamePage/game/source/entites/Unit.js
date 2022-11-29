@@ -13,7 +13,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.y = unitData.posY * 64;
         this.unitType = unitData.type - 0;
         this.type = (this.ownerId === this.scene.player) ? 'myUnit' : "unit";
-        this.speed = 3;//unitData.speed;
+        this.speed = 5;//unitData.speed;
         this.target = {
             x: unitData.posX * 64,
             y: unitData.posY * 64,
@@ -34,7 +34,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this._addScene();
         this.addToDisplayList();
         this._setUnitStatus(unitData.status);
-        this.selectArc = new UnitPointer(this);
+        this.lastDist = 0;
+        this.activeRadius = 1600;
+        this.atk = 10;
+        this.canAttack = true;
+        /*this.selectArc = new UnitPointer(this);
         this.selectArc.setVisible(true);
         this.selectArc.y +=45;
         this.selectArc.x -=5;
@@ -44,7 +48,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.gamerTint = this.scene.add.image(this.x,this.y, 'soldierTint');
         this.gamerTint.depth=100000;
         this.gamerTint.tint = 0x008eab;
-        this.selectArc.strokeColor = 0x00FF00;
+        this.selectArc.strokeColor = 0x00FF00;*/
         //this.selectArc.isFilled = false;
         //this.selectArc.isStroke = false;
         //console.log('Arcane', this.selectArc);
@@ -83,13 +87,26 @@ export default class Unit extends Phaser.GameObjects.Sprite {
 
     _move() {
         let dist = this._distance();
+        if (this.lastDist < dist) {
+            this._getDirection();
+        }
+        this.lastDist = dist;
         if (dist <= this.target.activeRadius) {
             switch (this.target.type) {
-                //case "unit": true;
+                case "unit": {
+                    this.attack();
+                    break;
+                };
                 //case "castle": true;
                 //case "village": true;
-                case "myCastle": this.enterCastle();
-                case "pointer": this.stopped();
+                case "myCastle": {
+                    this.enterCastle();
+                    break;
+                }
+                case "pointer": {
+                    this.stopped();
+                    break;
+                }
             }
         }
         else {
@@ -100,6 +117,21 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                 this.scene.updateMyUnitsGroup.add(this);
             }
         }
+    }
+
+    attack() {
+        if (this.canAttack) {
+            setTimeout(() => { this.canAttack = true }, 2000);
+            this.target.damage(this.atk);
+            this.canAttack = false;
+        }
+        this._setUnitStatus('attack');
+    }
+
+    damage(dmg) {
+        console.log(this.hp)
+        this.hp -= dmg;
+        this.scene.updateOtherUnitsGroup.add(this.target);
     }
 
     isMine() {
@@ -132,8 +164,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         if (this.status !== "inCastle") {
             this.target = obj;
             this._getDirection();
-            if (obj.type != "pointer") this.pointer.setVisible(false);
-            (this._distance()>100) ? this._setUnitStatus("move") : this._setUnitStatus("stand");
+            if (obj.type != "pointer") {
+                this.pointer.setVisible(false);
+                this._setUnitStatus("move");
+            }
+            if (obj.type === "pointer") (this._distance() > 100) ? this._setUnitStatus("move") : this._setUnitStatus("stand");
         }
     }
 
@@ -182,9 +217,10 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             }
             else {
                 if (this.status === "inCastle") {
+
                     this._outCastle();
                     this._addScene();
-                    this.pointer.moveTo(this.castle.pointer.x,this.castle.pointer.y);
+                    this.pointer.moveTo(this.castle.pointer.x, this.castle.pointer.y);
                     setTimeout(() => this.moveTo(this.pointer), 100);
                 }
                 if (status === "stand") {
@@ -206,5 +242,6 @@ export default class Unit extends Phaser.GameObjects.Sprite {
 
     update() {
         if (this.status === 'move') this._move();
+        if (this.status === 'attack') this._move();
     }
 }

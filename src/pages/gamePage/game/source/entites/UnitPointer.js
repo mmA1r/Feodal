@@ -5,7 +5,6 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         super(unit.scene, unit.x, unit.y, 10, 0, 360, false, 2132, 0.5);
         this.setVisible(false);
         this.id = unit.id;
-        console.log(unit);
         this.unit = unit;
         this.type = "pointer";
         this.activeRadius = 100;
