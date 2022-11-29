@@ -25,26 +25,28 @@ export default function SelectorUnits(scene) {
 
     //Конец области выделения юнитов
     scene.input.on('pointerup', (pointer, gameObject) => {
-        scene.unitsGroup.getChildren().forEach((unit)=>{
-            const x1 = scene.selectorUnits.x;
-            const x2 = scene.selectorUnits.x+scene.selectorUnits.width;
-            const y1 = scene.selectorUnits.y;
-            const y2 = scene.selectorUnits.y+scene.selectorUnits.height;
-            let left = (x1 <= x2) ? x1 : x2;
-            let right = (x1 >= x2) ? x1 : x2;
-            let top = (y1 <= y2) ? y1 : y2;
-            let bottom = (y1 >= y2) ? y1 : y2;
-            if (unit.x > left &&
-                unit.x < right &&
-                unit.y < bottom &&
-                unit.y > top) {
-                    unit.select();
-                }
-        })
+            scene.unitsGroup.getChildren().forEach((unit)=>{
+                const x1 = scene.selectorUnits.x;
+                const x2 = scene.selectorUnits.x+scene.selectorUnits.width;
+                const y1 = scene.selectorUnits.y;
+                const y2 = scene.selectorUnits.y+scene.selectorUnits.height;
+                let left = (x1 <= x2) ? x1 : x2;
+                let right = (x1 >= x2) ? x1 : x2;
+                let top = (y1 <= y2) ? y1 : y2;
+                let bottom = (y1 >= y2) ? y1 : y2;
+                if (unit.x > left &&
+                    unit.x < right &&
+                    unit.y < bottom &&
+                    unit.y > top &&
+                    unit.status !== "inCastle") {
+                        unit.select();
+                    }
+            })
         scene.selectorUnits.height = 0;
         scene.selectorUnits.width = 0;
         setTimeout(() => {
             scene.selectorUnits.removedFromScene();
         }, 100);
     });
+
 }
