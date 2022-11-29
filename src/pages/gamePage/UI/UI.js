@@ -6,11 +6,11 @@ import CastleMiniFrame from "./castleUI/castleMiniFrame/CastleMiniFrame";
 import VillageInformPanel from "./villageUI/villageInformPanel/VillageInformPanel";
 import VillageMiniFrame from "./villageUI/villageMiniFrame/VillageMiniFrame";
 import ChooseUnitWindow from "./castleUI/chooseUintWindow/ChooseUnitWindow";
-import UnitMiniFrame from "./unitUI/unitMiniFrame/UnitMiniFrame";
-import UnitInformPanel from "./unitUI/unitInforemPanel/UnitInformPanel";
-import UnitManagePanel from "./unitUI/unitManagePanel/UnitManagePanel";
+import UnitMiniFrame from "./unitsUI/unitUI/unitMiniFrame/UnitMiniFrame";
+import UnitInformManagePanel from "./unitsUI/unitUI/unitInformManagePanel/UnitInformManagePanel";
 
 import './UI.scss';
+
 
 export default function UI() {
     const UI = useSelector((state) => state.interface.value);
@@ -32,8 +32,7 @@ export default function UI() {
                 : UI.unit ?
                     <div className={'unit-UI'}>
                         <UnitMiniFrame/>
-                        <UnitInformPanel/>
-                        <UnitManagePanel/>
+                        <UnitInformManagePanel/>
                     </div>
                 : UI.enemyUnit ?
                     <div className={'enemy-unit-UI'}>

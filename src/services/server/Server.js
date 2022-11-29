@@ -151,6 +151,7 @@ export default class Server {
     }
 
     async upgradeCastle() {
+        console.log(await this.send({ method: 'upgradeCastle' }));
         return await this.send({ method: 'upgradeCastle' });
     }
 
