@@ -6,15 +6,13 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         this.setVisible(false);
         this.id = unit.id;
         this.unit = unit;
+        this.type = "pointer";
+        this.activeRadius = 100;
         this.addedToScene();
         this.addToDisplayList();
         this.isFilled = false;
         this.isStroked = true;
         this.lineWidth = 2;
-    }
-
-    _getAngle(){
-        return Phaser.Math.Angle.Between(this.unit.x,this.unit.y, this.x, this.y);
     }
 
     _relocate() {
@@ -31,37 +29,12 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         }
     }
 
-    _distance(obj) {
-        let dx = obj.x - this.x;
-        let dy = obj.y - this.y;
-        return dx * dx + dy * dy;
-    }
-
-    target(obj){
-        console.log(obj);
-    }
-
     moveTo(x, y) {
         if (this.unit.selected){
             this.setVisible(true)
         }
         this.x = x;
         this.y = y;
-        /*if (this._distance(this.scene.myCastle) < 15000) {
-            this.setVisible(false);
-        }
-        else {*/
-            this._relocate();
-        //}
-        this.unit.move(this._getAngle());
+        this._relocate();
     }
-
-update() {
-    if (this.unit.status === 'move') {
-        let dist = this._distance(this.unit);
-        if (dist < 10) this.unit.stopped();
-        if (this.lastDist < dist) this.unit.move(this._getAngle());
-        this.lastDist = dist;
-    }
-}
 }
