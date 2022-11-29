@@ -8,6 +8,7 @@ import soldier from "./features/units/soldier";
 import gamer from "./features/gamer/gamer";
 import unit from "./features/currentUnit/currentUnit";
 import army from "./features/currentArmy/currentArmy";
+import action from "./features/buttonAction/buttonAction";
 
 export default configureStore({
     reducer: {
@@ -18,7 +19,8 @@ export default configureStore({
         gamer: gamer,
         soldier: soldier,
         currentUnit: unit,
-        currentArmy: army
+        currentArmy: army,
+        action: action,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

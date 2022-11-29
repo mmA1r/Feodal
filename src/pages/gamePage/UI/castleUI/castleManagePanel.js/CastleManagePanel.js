@@ -27,10 +27,10 @@ export default function CastleManagePanel() {
     }
 
     async function upgradeCastle() {
-        const castleMoney = (await server.upgradeCastle()).money-0;
-        console.log(castleMoney);
-        const castleLevel = (await server.getCastle()).level-0;
-        store.loadToStore({ money: castleMoney, level: castleLevel }, 'gamer');
+        const castle = await server.getCastle();
+        const castleMoney = castle.money-0;
+        const castleUpgradeCost = castle?.castleUpgradeCost-0;
+        store.loadToStore({ money: castleMoney, castleUpdateCost: castleUpgradeCost }, 'gamer');
     }
 
     function showCost(unitName) {

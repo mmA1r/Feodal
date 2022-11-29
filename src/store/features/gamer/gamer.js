@@ -23,6 +23,9 @@ export const gamerStore = createSlice({
             if(action.payload.units) {
                 state.units = action.payload.units
             }
+            if(action.payload.castleUpdateCost) {
+                state.upadateLevelCost = action.payload.castleUpdateCost;
+            }
         },
         changeStatus: (state, action) => {
             const soldiers = state.units.map(unit => {

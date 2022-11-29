@@ -4,6 +4,7 @@ import { ui } from './features/storeInterface/userInterface';
 import { soldierValues } from './features/units/soldier';
 import { currentUnit } from './features/currentUnit/currentUnit';
 import { currentArmy } from './features/currentArmy/currentArmy';
+import { buttonAction } from './features/buttonAction/buttonAction';
 
 import store from './store';
 
@@ -27,6 +28,8 @@ export default class StoreLoader {
                 return store.dispatch(currentUnit(value));
             case 'currentArmy' :
                 return store.dispatch(currentArmy(value));
+            case 'action' :
+                return store.dispatch(buttonAction(value));
             default: return true;
         }
     }
