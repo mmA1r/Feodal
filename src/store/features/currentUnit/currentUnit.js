@@ -6,7 +6,8 @@ export const unit = createSlice({
         hp: 0,
         damage: 0,
         speed: 0,
-        might: 0
+        might: 0,
+        type: 1
     },
     reducers: {
         currentUnit: (state, action) => {
@@ -21,6 +22,9 @@ export const unit = createSlice({
             }
             if('might' in action.payload) {
                 state.might = action.payload.might;
+            }
+            if('type' in action.payload) {
+                state.type = action.payload.type;
             }
         }
     }

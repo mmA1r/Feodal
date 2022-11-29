@@ -31,8 +31,8 @@ export default function UI() {
                     </div>
                 : UI.unit ?
                     <div className={'unit-UI'}>
-                        <UnitMiniFrame/>
                         <UnitInformManagePanel/>
+                        <UnitMiniFrame/>
                     </div>
                 : UI.enemyUnit ?
                     <div className={'enemy-unit-UI'}>

@@ -31,13 +31,13 @@ export default function ManageUnitButtons() {
                 <AttackButton/>
             </button>
            <button
-                className={`move-unit-button${action.move ? '-active' : '-inactive' }`}
+                className={`move-unit-button`}
                 onClick={() => move()}
             >
                 <MoveButton/>
             </button>
            <button
-                className={`stop-unit-button${action.stop ? '-active' : '-inactive' }`}
+                className={`stop-unit-button`}
                 onClick={() => stop()}
             >
                 <StopButton/>
