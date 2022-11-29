@@ -129,7 +129,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     damage(dmg) {
-        console.log(this.hp);
+        if (this.selected) this._updateUI();
         this.hp -= dmg;
         this.damaged = true;
         this.scene.updateOtherUnitsGroup.add(this);    }
@@ -139,16 +139,24 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         return false;
     }
 
+    _updateUI () {
+        this.scene.store.loadToStore({
+            hp: this.hp - 0,
+            type: 1
+        }, 'currentUnit')
+    }
+
     select() {
         this.setTint(4234);
         this.selected = true;
         this.scene.selectedUnits.add(this);
         this.pointer.setVisible(true);
-        /* if (this.id = this.scene.player && this.scene.unitsGroup.getLength()===1) {
-             this.scene.store.loadToStore('unit', 'ui');
+        if (/*this.type="myUnit" &&*/this.scene.selectedUnits.getLength()===1) {
+            this.scene.store.loadToStore('unit', 'ui');
+            this._updateUI();
          } else {
-             this.scene.store.loadToStore('enemyUnit', 'ui');
-         }*/
+             //this.scene.store.loadToStore('enemyUnit', 'ui');
+         }
     }
 
     unSelect() {

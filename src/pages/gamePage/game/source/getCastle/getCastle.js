@@ -17,6 +17,6 @@ export default async function getCastle(scene) {
             level: data.level
         };
         scene.cameras.main.centerOn(scene.myCastle.x, scene.myCastle.y);
-        return data;
+        
     }
 }
