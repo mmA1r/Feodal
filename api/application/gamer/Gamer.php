@@ -10,8 +10,8 @@
         }
 
         public function addCastle($userId) {
-            $castleX = rand(0,90000) / 1000;
-            $castleY = rand(0,90000) / 1000;
+            $castleX = rand(10000,80000) / 1000;
+            $castleY = rand(10000,80000) / 1000;
 
             $nextRentTime = microtime(true) + 7200000;
 
@@ -104,13 +104,14 @@
                 $this->updateGamerUnits($gamer,$myUnits);
             }
             if ($otherUnits) {
-                //$this->updateOtherUnits($otherUnits);
+                $this->updateOtherUnits($otherUnits);
             }
             if ($villages) {
                 $this->damageVillages($villages);
             }
             $statuses = $this->db->getStatuses();
             $time = microtime(true);
+            $this->db->deadUnits();
             if ($time - $statuses->mapTimeStamp >= 0.3) {
                 $this->db->setMapTimeStamp($time);
                 return $time;
@@ -124,6 +125,20 @@
                         $this->db->updateUnit($gamer->id,$unit->id,$unit->hp,$unit->posX,$unit->posY,$unit->status,$unit->direction);
                         $isUpdate = true;
                 }
+            }
+            if ($isUpdate) {
+                $this->db->setUnitsHash(md5(rand()));
+            }
+        }
+
+        private function updateOtherUnits($otherUnits){
+            $isUpdate = false;
+            foreach ($otherUnits as $otherUnit){
+                    $dbUnit = $this->db->getUnit($otherUnit->id);
+                    if ($dbUnit && $otherUnit->hp<$dbUnit->hp){
+                        $this->db->updateUnitHP($otherUnit->id ,$otherUnit->hp);
+                        $isUpdate = true;
+                    }
             }
             if ($isUpdate) {
                 $this->db->setUnitsHash(md5(rand()));

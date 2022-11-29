@@ -23,7 +23,6 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.pointer = new UnitPointer(this);
         this.castle = this.scene.castlesGroup.getChildren().find(el => el.id === this.ownerId);
         scene.unitsGroup.add(this);
-
         this.direction = {
             angle: 0,
             sin: 1,
@@ -131,7 +130,9 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     damage(dmg) {
         console.log(this.hp);
         this.hp -= dmg;
-        this.scene.updateOtherUnitsGroup.add(this.target);
+        this.damaged = true;
+        this.scene.updateOtherUnitsGroup.add(this);
+        console.log(this.scene.updateOtherUnitsGroup.contains(this));
     }
 
     isMine() {
@@ -181,7 +182,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     rewriteData(unitData) {
-        this.hp = unitData.hp - 0;
+        if (!this.scene.updateOtherUnitsGroup.contains(this)) this.hp = unitData.hp - 0;
         if (this.type != "myUnit") {
             this._setUnitStatus(unitData.status);
             this._getDirection(unitData.direction);

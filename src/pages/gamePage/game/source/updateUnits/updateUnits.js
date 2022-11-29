@@ -6,7 +6,7 @@ export default function updateUnits(scene) {
     scene.updateOtherUnitsGroup = scene.add.group();
     const updateUnits = setInterval(
         async() => {
-            if (scene.updateMyUnitsGroup.getChildren()[0]) {
+            if (scene.updateMyUnitsGroup.getChildren()[0] || scene.updateOtherUnitsGroup.getChildren()[0]) {
                 let myUnits = scene.updateMyUnitsGroup.getChildren().map((unit) => {
                     return {
                         id: unit.id,
@@ -20,9 +20,10 @@ export default function updateUnits(scene) {
                 let otherUnits=scene.updateOtherUnitsGroup.getChildren().map((unit) => {
                     return {
                         id: unit.id,
-                        hp: unit.hp,
+                        hp: unit.hp
                     }
                 });
+                console.log(otherUnits);
                 let villages = [];
                 server.updateUnits({myUnits,otherUnits,villages});
                 scene.updateMyUnitsGroup.clear();
