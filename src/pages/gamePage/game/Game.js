@@ -30,10 +30,8 @@ export default function Game() {
             ]
         };
         const game = new Phaser.Game(config);
-        console.log(scene.getScene);
 
         return () => {
-            console.log(scene);
             clearInterval(scene.getScene)
             clearInterval(scene.updateUnits)
             clearInterval(scene.StoreData)

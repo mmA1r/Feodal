@@ -131,9 +131,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         console.log(this.hp);
         this.hp -= dmg;
         this.damaged = true;
-        this.scene.updateOtherUnitsGroup.add(this);
-        console.log(this.scene.updateOtherUnitsGroup.contains(this));
-    }
+        this.scene.updateOtherUnitsGroup.add(this);    }
 
     isMine() {
         if (this.ownerId === this.scene.player) return true;

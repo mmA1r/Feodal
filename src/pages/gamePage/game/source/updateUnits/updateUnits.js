@@ -23,7 +23,6 @@ export default function updateUnits(scene) {
                         hp: unit.hp
                     }
                 });
-                console.log(otherUnits);
                 let villages = [];
                 server.updateUnits({myUnits,otherUnits,villages});
                 scene.updateMyUnitsGroup.clear();

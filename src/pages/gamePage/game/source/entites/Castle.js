@@ -23,7 +23,6 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.pointer = new UnitPointer(this);
         this.pointer.x = this.x-150;
         this.pointer.y = this.y-150;
-        console.log(castleData);
         const name = this.scene.add.text(this.x, this.y+130,castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
         name.depth = 10000000;
         name.style.setFontSize(30);

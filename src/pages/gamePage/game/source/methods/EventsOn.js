@@ -51,7 +51,6 @@ export default function EventsOn(scene) {
         }
 
         if (pointer.button === 0 && !scene.CTRL && Scene.selectedObject && !gameObject.selected) {
-            console.log(Scene.selectedObject.id, gameObject);
             Scene.selectedObject.unSelect();
         }
     })

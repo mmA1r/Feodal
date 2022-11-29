@@ -17,7 +17,6 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
 
     _relocate() {
         let i = 0;
-        console.log(this.id,this.x, this.y)
         while (this.scene.unitsGroup.getChildren().find(el => (this.id != el.pointer.id) && (this.x === el.pointer.x) && (this.y === el.pointer.y))) {
             if (i < 5) {
                 this.x += 60;
@@ -28,7 +27,6 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
                 i = 0;
             }
         }
-        console.log(this.x, this.y);
     }
 
     moveTo(x, y) {
