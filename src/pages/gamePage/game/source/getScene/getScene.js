@@ -22,6 +22,9 @@ export default function getScene(scene) {
                 }) 
             }
             if (data?.units) {
+                scene.unitsGroup.getChildren().forEach((unit)=>{
+                    unit.onServer = false;
+                })
                 data.units.forEach((unit) => {
                     let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
                     if (unitOnScene) {
@@ -29,7 +32,10 @@ export default function getScene(scene) {
                     } else {
                         new Unit(scene,unit);
                     }
-                }) 
+                })
+                scene.unitsGroup.getChildren().forEach((unit)=>{
+                    if (!unit.onServer) setTimeout(()=>unit.killed(), 150);
+                })
             }
         }
         ,100
