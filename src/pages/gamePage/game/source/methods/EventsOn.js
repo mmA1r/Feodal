@@ -6,7 +6,7 @@ export default function EventsOn(scene) {
 
     //Выбор объекта ЛКМ
     Scene.input.on('gameobjectup', (pointer, gameObject) => {
-        if (pointer.button === 0) {
+        if (pointer.button === 0 && scene.selectorUnits.width===0 && scene.selectorUnits.height===0) {
             gameObject.select();
         }
     });
