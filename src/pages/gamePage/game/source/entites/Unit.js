@@ -30,8 +30,8 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         };
         this.setTexture('soldier');
         this.rewriteData(unitData);
-        this._addScene();
         this.addToDisplayList();
+        if (unitData.status !== "inCastle") this._addScene();
         this._setUnitStatus(unitData.status);
         this.lastDist = 0;
         this.activeRadius = 1600;
@@ -60,6 +60,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.body.enable = true;
         this.addedToScene();
         this.setInteractive()
+        
     }
 
     _removeScene() {
@@ -96,7 +97,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                     this.attack();
                     break;
                 };
-                //case "castle": true;
+                //case "castle": {};
                 //case "village": true;
                 case "myCastle": {
                     this.enterCastle();
@@ -181,19 +182,14 @@ export default class Unit extends Phaser.GameObjects.Sprite {
 
     rewriteData(unitData) {
         if (!this.scene.updateOtherUnitsGroup.contains(this)) this.hp = unitData.hp - 0;
-        if (this.type != "myUnit") {
+        if (this.type !== "myUnit") {
             this._setUnitStatus(unitData.status);
             this._getDirection(unitData.direction);
-            if (this.status === "move") this.moveTo({
+            this.moveTo({
                 x: unitData.posX * 64,
                 y: unitData.posY * 64,
                 activeRadius: 100,
             })
-            if (this.status === "stand") {
-                this.x = unitData.posX * 64;
-                this.y = unitData.posY * 64;
-            }
-
         }
     }
 
@@ -211,12 +207,12 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     _setUnitStatus(status) {
         if (status !== this.status) {
             if (status === "inCastle") {
+                this.status = status;
                 this._intoCastle();
                 this._removeScene();
             }
             else {
                 if (this.status === "inCastle") {
-
                     this._outCastle();
                     this._addScene();
                     this.pointer.moveTo(this.castle.pointer.x, this.castle.pointer.y);
@@ -227,7 +223,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                 }
             };
             this.status = status;
-            this.scene.updateMyUnitsGroup.add(this);
+            if (this.type ==="myUnit") this.scene.updateMyUnitsGroup.add(this);
         }
     }
 
