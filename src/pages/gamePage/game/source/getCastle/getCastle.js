@@ -8,6 +8,8 @@ export default async function getCastle(scene) {
     if (data) {
         scene.store.loadToStore({ money: data.money-0 },'gamer');
         scene.store.loadToStore({ level: data.level-0 },'gamer');
+        scene.store.loadToStore({ level: data.level-0 },'gamer');
+        scene.store.loadToStore({castleUpdateCost:data.castleUpgradeCost-0},'gamer');
         scene.player = data.id;
         scene.myCastle = {
             x: Math.round(data.posX * 64),
