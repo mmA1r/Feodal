@@ -32,6 +32,11 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     select() {
+        let unit = this.scene.selectedUnits.getChildren()[0];
+        while (unit) {
+            unit.unSelect();
+            unit = this.scene.selectedUnits.getChildren()[0];
+        }
         this.setTint(4234);
         this.selected = true;
         this.scene.selectedObject = this;
