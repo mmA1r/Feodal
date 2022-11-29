@@ -139,6 +139,7 @@ class Application {
                 $this->gamer->addCastle($user);
                 $gamer = $this->gamer->getGamer($user);
             }
+            $gamer->castleUpgradeCost = $this->gamer->getCastleLevelCost($gamer->level);
             return array(
                 'castle' => $gamer
             );

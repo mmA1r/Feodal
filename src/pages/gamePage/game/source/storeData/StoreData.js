@@ -4,7 +4,6 @@ import Phaser, { Cameras } from "phaser";
 
 export default function StoreData(scene) {
     let lastUI=false;
-
     const StoreData = setInterval(()=>{
         let units = store.getState().gamer.units;
         let ui = store.getState().interface.value.castle;
