@@ -1,0 +1,17 @@
+.manage-unit-buttons {
+    position: absolute;
+    width: max-content;
+    left: 75px;
+    height: 25px;
+}
+
+.attack-unit-button,
+.move-unit-button,
+.stop-unit-button {
+    box-sizing: border-box;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    width: 200px;
+    height: 20px;
+}

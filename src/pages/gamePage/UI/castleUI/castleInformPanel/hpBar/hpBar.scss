@@ -35,11 +35,10 @@ $hp-bar: url('../../../../../../assets/UI/CastleUI/hpBar.png');
         z-index: 1;
         background-color: red;
     }
-}
-
-progress[value]::-webkit-progress-bar {
-    background-color: rgb(48, 1, 1);
-}
-progress[value]::-webkit-progress-value {
-    background-color: rgb(136, 1, 19);
+    & > progress[value]::-webkit-progress-bar {
+        background-color: rgb(49, 4, 4);
+    }
+    & > progress[value]::-webkit-progress-value {
+        background-color: rgb(161, 3, 24);
+    }
 }

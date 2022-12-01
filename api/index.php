@@ -1,7 +1,13 @@
 <?php
-//ничего не меняем в этом файле
+/*header("Access-Control-Allow-Methods: ");
+header("Access-Control-Allow-Headers: *");*/
+//header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
+//header('Access-Control-Max-Age: 1728000');
+header("Access-Control-Allow-Headers: X-PINGOTHER, Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 require("application/Application.php");
+
 
 function router($params) {
     $method = $params['method'];

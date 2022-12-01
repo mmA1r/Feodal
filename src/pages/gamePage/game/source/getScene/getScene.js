@@ -4,28 +4,16 @@ import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
 
 
-export default function getScene(scene, groups) {
+export default function getScene(scene) {
     const server = store.getState().server.value;
-    let Scene = scene;
-    let data;
-    setInterval(
+    const Scene = scene;
+    const getScene = setInterval(
         async () => {
-            data = (await server.getScene());
-            if (data?.units) {
-                let units = data.units;
-                units.forEach((unit) => {
-                    let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
-                    if (unitOnScene) {
-                        unitOnScene.rewriteData(unit);
-                    } else {
-                        new Unit(Scene,unit);
-                    }
-                }) 
-            }
+            const data = (await server.getScene());
             if (data?.castles) {
                 let castles = data.castles;
                 castles.forEach((castle) => {
-                    let castleOnScene = Scene.castlesGroup.getChildren().find(el => el.id === castle.id)
+                    let castleOnScene = scene.castlesGroup.getChildren().find(el => el.id === castle.id);
                     if (castleOnScene) {
                         castleOnScene.rewriteData(castle);
                     } else {
@@ -33,7 +21,25 @@ export default function getScene(scene, groups) {
                     }
                 }) 
             }
+            if (data?.units) {
+                scene.unitsGroup.getChildren().forEach((unit)=>{
+                    unit.onServer = false;
+                })
+                data.units.forEach((unit) => {
+                    let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
+                    if (unitOnScene) {
+                        unitOnScene.rewriteData(unit);
+                    } else {
+                        new Unit(scene,unit);
+                    }
+                })
+                scene.unitsGroup.getChildren().forEach((unit)=>{
+                    if (!unit.onServer) setTimeout(()=>unit.killed(), 150);
+                })
+            }
         }
-        ,1000
-    ) 
+        ,90
+    )
+
+    return getScene;
 }

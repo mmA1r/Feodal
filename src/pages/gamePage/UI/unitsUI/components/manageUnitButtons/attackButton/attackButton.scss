@@ -1,0 +1,39 @@
+@import '../../../../../gameConst.scss';
+
+.attack-active,
+.attack-inactive {
+    width: 200px;
+    height: 20px;
+    fill: none;
+}
+
+.attack-inactive {
+    &:hover {
+        .attack-back-button {
+            fill: $glommy-wooden-background;
+        }
+        .red-shadow-attack-button {
+            fill: $icon-background-darker-color-active;
+        }
+        .red-shadow-attack-button-circle {
+            stroke: $icon-background-darker-color-active;
+        }
+    }
+}
+
+.attack-back-button {
+    fill: $attak-button-color;
+}
+
+.attack-active {
+    .attack-back-button {
+        fill: $trigger;
+    }
+    & > .target-cross-attack-button {
+        fill: $much-brighter-stone;
+    }
+    & > .target-cross-attack-button-circle {
+        stroke: $much-brighter-stone;
+    }
+
+}

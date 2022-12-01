@@ -7,8 +7,7 @@ require("game/Game.php");
 require("gamer/Gamer.php");
 require("map/Map.php");
 
-class Application
-{
+class Application {
     function __construct()
     {
         $config = json_decode(file_get_contents('./config/config.json'), true);
@@ -16,44 +15,47 @@ class Application
         $map = new Map($db);
         $this->user = new User($db);
         $this->chat = new Chat($db);
-        $this->game = new Game($db, $map);
+        $this->game = new Game($db, $map,$config["Game"]);
         $this->gamer = new Gamer($db, $map);
     }
 
     //функция проверки полученных значений в запросе
-    function validQuery($value, $type)
-    {
+    private function checkParams($params){
+        if (($params['token']) && !is_string($params['token'])) return false;
+        return true;
     }
-
 
     ////////////////////////////////////////
     //////////////forUser///////////////////
     ////////////////////////////////////////
 
-    public function login($params)
-    {
-        if ($params['login'] && $params['password']) {
-            return $this->user->login($params['login'], $params['password']);
+    public function login($params) {
+        if ($this->checkParams($params)) {
+            if ($params['login'] && $params['password']) {
+                return $this->user->login($params['login'], $params['password']);
+            }
         }
     }
 
-    public function registration($params)
-    {
-        [
-            'login' => $login,
-            'password' => $password,
-            'name' => $name
-        ] = $params;
-        if ($login && $password && $name) {
-            return $this->user->registration($login, $password, $name);
+    public function registration($params) {
+        if ($this->checkParams($params)) {
+            [
+                'login' => $login,
+                'password' => $password,
+                'name' => $name
+            ] = $params;
+            if ($login && $password && $name) {
+                return $this->user->registration($login, $password, $name);
+            }
         }
     }
 
-    public function logout($params)
-    {
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            return $this->user->logout($user);
+    public function logout($params) {
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                return $this->user->logout($user);
+            }
         }
     }
 
@@ -102,9 +104,11 @@ class Application
 
     public function getMap($params)
     {
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            return $this->game->getMap();
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                return $this->game->getMap();
+            }
         }
     }
 
@@ -123,17 +127,9 @@ class Application
             return $this->game->getScene($params['unitsHash'], $params['mapHash']);
         }
     }
-    public function updateMap()
-    {
-        $this->game->updateMap();
-    }
-
     ////////////////////////////////////////
     //////////////forGamer//////////////////
     ////////////////////////////////////////
-
-
-
     public function getCastle($params)
     {
         $user = $this->user->getUser($params['token']);
@@ -143,6 +139,7 @@ class Application
                 $this->gamer->addCastle($user);
                 $gamer = $this->gamer->getGamer($user);
             }
+            $gamer->castleUpgradeCost = $this->gamer->getCastleLevelCost($gamer->level);
             return array(
                 'castle' => $gamer
             );
@@ -210,20 +207,19 @@ class Application
         }
     }
 
-    public function updateUnits($params)
-    {
-        if ($params['units']) {
-            $userId = $this->user->getUser($params['token']);
-            if ($userId) {
+    public function updateUnits($params) {
+        $postBody = file_get_contents("php://input");
+        $data = json_decode($postBody);
+            $userId = $this->user->getUser($data->token); 
+            if  ($userId){
                 $gamer = $this->gamer->getGamer($userId);
                 if ($gamer) {
-                    $time = $this->gamer->updateUnits($gamer, $params['units']);
+                    $time = $this->gamer->updateUnits($gamer, $data->myUnits, $data->otherUnits, $params['villages']);
                     if ($time) {
                         $this->game->updateMap($time);
                     }
-                    return true;
-                }
-            }
+                return true;
+                } 
         }
     }
 }

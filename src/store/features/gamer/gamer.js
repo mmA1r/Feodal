@@ -7,33 +7,7 @@ export const gamerStore = createSlice({
         nextRentTime: 0,
         upadateLevelCost: 0,
         money: 0,
-        units: [
-            {
-                type: 1,
-                hp: 8,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'inCastle',
-            },
-            {
-                type: 1,
-                hp: 10,
-                status: 'walk',
-            },
-        ]
+        units: []
     },
     reducers: {
         gamer: (state, action) => {
@@ -48,6 +22,9 @@ export const gamerStore = createSlice({
             }
             if(action.payload.units) {
                 state.units = action.payload.units
+            }
+            if(action.payload.castleUpdateCost) {
+                state.upadateLevelCost = action.payload.castleUpdateCost;
             }
         },
         changeStatus: (state, action) => {
@@ -92,10 +69,17 @@ export const gamerStore = createSlice({
                     fullHpSoldiers[i].status = 'outOfCastle';
                 }
             }
+        },
+        outOfCastle : (state, action) => {
+            state.units.forEach(unit => {
+                if(unit.status === 'inCastle') {
+                    unit.status = action.payload;
+                }
+            });
         }
     }
 });
 
-export const { gamer, changeStatus } = gamerStore.actions;
+export const { gamer, changeStatus, outOfCastle } = gamerStore.actions;
 
 export default gamerStore.reducer;

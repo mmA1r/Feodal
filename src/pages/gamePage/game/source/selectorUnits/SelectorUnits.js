@@ -2,17 +2,14 @@ import Phaser from "phaser";
 
 export default function SelectorUnits(scene) {
     scene.selectorUnits = scene.add.rectangle(100, 100, 0, 0, 232323, 0.5);
-    scene.selectorUnits.addedToScene();
     scene.selectorUnits.setActive(true);
-    scene.selectorUnits.addToDisplayList();
     scene.selectorUnits.depth = 100000000;
-    scene.physics.add.existing(scene.selectorUnits, false);
-    scene.selectorUnits.body.onCollide = true;
 
 
     //Начало области выделения юнитов
     scene.input.on('pointerdown', (pointer, gameObject) => {
-        if (pointer.isDown && pointer.button === 0) {
+        if (pointer.button === 0) {
+            scene.selectorUnits.addedToScene();
             scene.selectorUnits.x = pointer.worldX;
             scene.selectorUnits.y = pointer.worldY;
         }
@@ -28,13 +25,28 @@ export default function SelectorUnits(scene) {
 
     //Конец области выделения юнитов
     scene.input.on('pointerup', (pointer, gameObject) => {
-        scene.selectorUnits.body.enable = true;
-        scene.selectorUnits.body.setSize(Math.abs(scene.selectorUnits.width), Math.abs(scene.selectorUnits.height), scene.selectorUnits.getCenter())
+            scene.unitsGroup.getChildren().forEach((unit)=>{
+                const x1 = scene.selectorUnits.x;
+                const x2 = scene.selectorUnits.x+scene.selectorUnits.width;
+                const y1 = scene.selectorUnits.y;
+                const y2 = scene.selectorUnits.y+scene.selectorUnits.height;
+                let left = (x1 <= x2) ? x1 : x2;
+                let right = (x1 >= x2) ? x1 : x2;
+                let top = (y1 <= y2) ? y1 : y2;
+                let bottom = (y1 >= y2) ? y1 : y2;
+                if (unit.x > left &&
+                    unit.x < right &&
+                    unit.y < bottom &&
+                    unit.y > top &&
+                    unit.status !== "inCastle") {
+                        unit.select();
+                    }
+            })
         scene.selectorUnits.height = 0;
         scene.selectorUnits.width = 0;
         setTimeout(() => {
-            scene.selectorUnits.body.enable = false;
-            scene.selectorUnits.body.setSize(Math.abs(scene.selectorUnits.width), Math.abs(scene.selectorUnits.height), scene.selectorUnits.getCenter())
+            scene.selectorUnits.removedFromScene();
         }, 100);
     });
+
 }

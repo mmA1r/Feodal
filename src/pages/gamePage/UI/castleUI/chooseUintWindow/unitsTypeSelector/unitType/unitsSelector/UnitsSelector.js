@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import ChangeValueButton from './changeValueButton/ChangeValueButton';
 import './unitsSelector.scss';
 
 export default function UnitsSelector(props) {
@@ -22,6 +23,20 @@ export default function UnitsSelector(props) {
         }
     }
 
+    function increase() {
+        if(numberInput.current.value < units.length) {
+            numberInput.current.value++;
+            rangeInput.current.value++;
+        }
+    }
+
+    function decrease() {
+        if(numberInput.current.value > 0) {
+            numberInput.current.value--;
+            rangeInput.current.value--;
+        }
+    }
+
     function onRangechange() {
         return numberInput.current.value = rangeInput.current?.value;
     }
@@ -37,12 +52,26 @@ export default function UnitsSelector(props) {
                 min={0} 
                 max={units.length}
             />
-            <input
-                className='units-selector-input'
-                ref={numberInput}
-                type={'number'}
-                onChange={() => onInputchange()}
-            />
+            <div className='units-selector-input-box'>
+                <button
+                    className='units-selector-input-button'
+                    onClick={() => decrease()} 
+                >
+                    <ChangeValueButton sign={'minus'}/>
+                </button>
+                <input
+                    className='units-selector-input'
+                    ref={numberInput}
+                    type={'number'}
+                    onChange={() => onInputchange()}
+                />
+                <button
+                    className='units-selector-input-button'
+                    onClick={() => increase()} 
+                >
+                    <ChangeValueButton sign={'plus'}/>
+                </button>
+            </div>
         </div>
     );
 }

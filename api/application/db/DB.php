@@ -132,17 +132,17 @@ class DB {
     //////////////forCastles////////////////
     ////////////////////////////////////////
 
-    public function addCastle($user, $castleX, $castleY) {
+    public function addCastle($userId, $castleColor, $castleX, $castleY, $nextRentTime) {
         $query = '
-                INSERT INTO gamers (userId, castleX, castleY) 
-                VALUES (' . $user . ', ' . $castleX . ',' . $castleY . ')
+                INSERT INTO gamers (userId, castleColor, castleX, castleY, nextRentTime) 
+                VALUES (' . $userId . ', "' . $castleColor . '", ' . $castleX . ',' . $castleY . ',' . $nextRentTime . ')
             ';
         $this->db->query($query);
         return true;
     }
 
     public function getCastle($id) {
-        $query = 'SELECT id, castleX as posX, castleY as posY, money FROM gamers WHERE id='.$id;
+        $query = 'SELECT id, castleX as posX, castleY as posY, money, nextTimeRent FROM gamers WHERE id='.$id;
         return $this->db->query($query)->fetchObject();
     }
 
@@ -292,15 +292,40 @@ class DB {
         return $this->getArray($query);
     }
 
+    public function getUnit($unitId) {
+        $query = '
+        SELECT hp
+        FROM units 
+        WHERE id=' . $unitId;
+    return $this->db->query($query)->fetchObject();
+    }
+
+    public function countUnitsGamer($gamerId){
+        $query ='SELECT count(*) FROM units WHERE gamerId='.$gamerId;
+        return $this->db->query($query)->fetchObject();
+
+    }
     // По id отдельного юнита меняет у него 
     // hp, posX, posY, status, direction в БД
-    public function updateUnit($unitId, $hp, $posX, $posY, $status, $direction){
+    public function updateUnit($gamerId, $unitId,$hp, $posX, $posY, $status, $direction){
         $query = '
-            UPDATE units
-            SET hp='. $hp. ',posX='. $posX. ',posY='. $posY. ',status='. $status. ',direction='. $direction. '
-            WHERE id=' .$unitId;
+            UPDATE units 
+            SET hp='. $hp. ',posX='. $posX. ',posY='. $posY. ',status="'. $status. '",direction='. $direction. ' 
+            WHERE id=' .$unitId. ' AND gamerId=' .$gamerId;
         $this->db->query($query);
         return $query;
+    }
+    public function updateUnitHP($unitId,$hp){
+        $query='UPDATE units
+            SET  hp='. $hp . ' WHERE id='. $unitId;
+        $this->db->query($query);
+        return true;
+    }
+
+    public function deadUnits (){
+        $query = 'DELETE FROM units WHERE hp <='. 0;
+        $this->db->query($query);
+        return true;
     }
 
     ////////////////////////////////////////
@@ -308,7 +333,7 @@ class DB {
     ////////////////////////////////////////
     public function getGamer($user) {
         $query = '
-            SELECT id, castleLevel as level, castleX as posX, castleY as posY, money
+            SELECT id, castleLevel as level, castleColor as color, castleX as posX, castleY as posY, money
             FROM gamers 
             WHERE userId=' . $user;
         return $this->db->query($query)->fetchObject();

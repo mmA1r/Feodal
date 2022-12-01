@@ -19,11 +19,10 @@ export default class Server {
     }
 
     async postSend(params = {}) {
-        params.method = 'updateUnits';
         if(this.token) {
             params.token = this.token;
         }
-        const responce = await fetch(`http://feodal/api`, {
+        const responce = await fetch(`http://feodal/api/?method=${params['method']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -152,10 +151,11 @@ export default class Server {
     }
 
     async upgradeCastle() {
+        console.log(await this.send({ method: 'upgradeCastle' }));
         return await this.send({ method: 'upgradeCastle' });
     }
 
     async updateUnits(params) {
-        return await this.postSend(params);
+        return await this.postSend({ method: 'updateUnits', ...params });
     }
 }

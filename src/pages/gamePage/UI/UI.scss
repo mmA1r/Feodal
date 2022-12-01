@@ -5,8 +5,11 @@
     left: 50%;
     z-index: 2;
 
-    width: 950px;
-    height: 250px;
+    height: max-content;
+    width: max-content;
+
+    max-width: 950px;
+    max-height: 250px;
 
     &.show-pop-up-interface {
         transform: translate(-50%, 0);

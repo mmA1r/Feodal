@@ -5,7 +5,7 @@ export const userInterface = createSlice({
     initialState: {
         value: {
             hide: false,
-            castle: true,
+            castle: false,
             enemyCastle: false,
             unit: false,
             enemyUnit: false,

@@ -1,8 +1,9 @@
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import StoreLoader from '../../../../../store/StoreLoader';
 
 import UnitsTypeSelector from './unitsTypeSelector/UnitsTypeSelector';
 import WithdrawButton from './withdrawButton/WithdrawButton';
+import WithdrawAllButton from './withdrawAllButton/withdrawAllButton';
 import CloseWindow from './closeWindow/CloseWindow';
 
 import './chooseUnitWindow.scss';
@@ -13,22 +14,34 @@ export default function ChooseUnitWindow() {
     const ui = useSelector((state) => state.interface.value.castle);
     const soldierFullHp = useSelector((state) => state.soldier.hp);
     const storeLoader = new StoreLoader();
-    const store = useStore();
 
     function closeUnitsInterface() {
         return storeLoader.loadToStore(false, 'withdrawUnits');
     }
 
     function withdrawUnits() {
-        const fullHpSoldiers = document.getElementsByClassName('soldier-full')[0]?.value-0;
-        const damagedSoldiers = document.getElementsByClassName('soldier-damaged')[0]?.value-0
+        let fullHpSoldiers = 0;
+        let damagedSoldiers = 0;
+        const fullSoldiers = document.getElementsByClassName('soldier-full')[0]?.value;
+        const soldiersDamaged = document.getElementsByClassName('soldier-damaged')[0]?.value
+        if(fullSoldiers && fullSoldiers-0 >= 0) {
+            fullHpSoldiers = fullSoldiers-0;
+        } 
+        if(soldiersDamaged && soldiersDamaged-0 >= 0) {
+            damagedSoldiers = soldiersDamaged-0;
+        }
         storeLoader.loadToStore({
             type: 1,
             fullHpNumber: fullHpSoldiers,
             damagedNumber: damagedSoldiers,
             fullHp: soldierFullHp
         }, 'changeUnitsStatus');
-        console.log(store.getState().gamer.units);
+        closeUnitsInterface();
+    }
+
+    function withdrawAllUnits() {
+        storeLoader.loadToStore('outOfCastle', 'outOfCastle');
+        closeUnitsInterface();
     }
 
     return (
@@ -45,6 +58,12 @@ export default function ChooseUnitWindow() {
                 onClick={() => withdrawUnits()}
             >
                 <WithdrawButton/>
+            </button>
+            <button
+                className='withdraw-all-units'
+                onClick={() => withdrawAllUnits()}
+            >
+                <WithdrawAllButton/>
             </button>
         </div>
     );

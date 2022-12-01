@@ -7,7 +7,7 @@ import WorldScene from "./scenes/WorldScene";
 export default function Game() {
     // eslint-disable-next-line 
     const server = useSelector((state) => state.server.value);
-
+    const scene = new WorldScene;
     useEffect(() => {
         const config = {
             type: Phaser.AUTO,
@@ -26,12 +26,15 @@ export default function Game() {
                 }
             },
             scene: [
-                WorldScene
+                scene
             ]
         };
         const game = new Phaser.Game(config);
 
         return () => {
+            clearInterval(scene.getScene)
+            clearInterval(scene.updateUnits)
+            clearInterval(scene.StoreData)
             game.destroy(true, false);
         }
     }, []);

@@ -6,7 +6,7 @@ export default function CastleMiniFrame() {
     const level = useSelector((state) => state.gamer.level);
 
     return (
-        <div>
+        <div key={level}>
             <div className={`castle-mini-frame castle-level-${level}`}/>
             <div className={`castle-mini-picture castle-level-${level}`}/>
         </div>
