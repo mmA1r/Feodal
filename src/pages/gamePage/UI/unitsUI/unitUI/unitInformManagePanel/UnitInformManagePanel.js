@@ -9,7 +9,6 @@ export default function UnitInformManagePanel() {
 
     const soldier = useSelector((state) => state.soldier);
     const type = useSelector((state) => state.currentUnit.type);
-    const hp = useSelector((state) => state.currentUnit.hp);
 
     function pushValues(value) {
         if(type === 1) {
@@ -31,7 +30,7 @@ export default function UnitInformManagePanel() {
                 <div className='unit-might'>{pushValues('might')}</div>
                 <div className='unit-speed'>{pushValues('speed')}</div>
             </div>
-            <UnitHpBar type={type} hp={hp} />
+            <UnitHpBar type={type}/>
         </div>
     );
 }

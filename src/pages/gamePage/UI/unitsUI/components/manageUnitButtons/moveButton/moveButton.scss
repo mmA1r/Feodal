@@ -1,20 +1,37 @@
+@import '../../../../../gameConst.scss';
+
 .move-active,
 .move-inactive {
-    width: 200px;
-    height: 20px;
+    width: 154px;
+    height: 21px;
     fill: none;
 }
 
-.move-inactive {
-    &:hover {
-        .move-back-button {
-            fill: rgb(18, 77, 37);
-        }
+.move-active {
+    & > .move-button-icon {
+        fill: $much-brighter-stone;
+    }
+    & > .move-button-background {
+        fill: $move-button-color-triggered;
+        stroke: $much-brighter-stone;
     }
 }
 
-.move-active {
-    .move-back-button {
-        fill: rgb(27, 209, 85);
+.move-inactive {
+    & > .move-button-icon {
+        fill: $brighter-stone;
+    }
+    & > .move-button-background {
+        fill: $wooden-background;
+        stroke: $brighter-stone;
+    }
+    &:hover {
+        & > .move-button-icon {
+            fill: $much-brighter-stone;
+        }
+        & > .move-button-background {
+            fill: $move-button-color;
+            stroke: $much-brighter-stone;
+        }
     }
 }

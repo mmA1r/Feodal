@@ -2,38 +2,45 @@
 
 .attack-active,
 .attack-inactive {
-    width: 200px;
-    height: 20px;
+    width: 155px;
+    height: 21px;
     fill: none;
 }
 
-.attack-inactive {
-    &:hover {
-        .attack-back-button {
-            fill: $glommy-wooden-background;
-        }
-        .red-shadow-attack-button {
-            fill: $icon-background-darker-color-active;
-        }
-        .red-shadow-attack-button-circle {
-            stroke: $icon-background-darker-color-active;
-        }
-    }
-}
-
-.attack-back-button {
-    fill: $attak-button-color;
-}
-
 .attack-active {
-    .attack-back-button {
-        fill: $trigger;
-    }
-    & > .target-cross-attack-button {
+    & > .attack-button-icon {
         fill: $much-brighter-stone;
     }
-    & > .target-cross-attack-button-circle {
+    & > .attack-button-icon-circle {
         stroke: $much-brighter-stone;
     }
+    & > .attack-button-background {
+        fill: $attak-button-color-triggered;
+        stroke: $much-brighter-stone;
+    }
+}
 
+.attack-inactive {
+    & > .attack-button-icon {
+        fill: $brighter-stone;
+    }
+    & > .attack-button-icon-circle {
+        stroke: $brighter-stone;
+    }
+    & > .attack-button-background {
+        fill: $wooden-background;
+        stroke: $brighter-stone;
+    }
+    &:hover {
+        & > .attack-button-icon {
+            fill: $much-brighter-stone;
+        }
+        & > .attack-button-icon-circle {
+            stroke: $much-brighter-stone;
+        }
+        & > .attack-button-background {
+            fill: $attak-button-color;
+            stroke: $much-brighter-stone;
+        }
+    }
 }

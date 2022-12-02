@@ -2,23 +2,10 @@
 
 .unit-hp-bar-frame {
     position: absolute;
-    left: 0px;
-    top: 9.5px;
-    width: 666px;
+    top: 10px;
+    left: 45px;
+    width: 646px;
     height: 11px;
     fill: none;
     z-index: 2;
-}
-
-.silver {
-    fill: $much-brighter-stone;
-} 
-.rect-silver {
-    stroke: $much-brighter-stone;
-}
-.stone {
-    fill: $brighter-stone;
-}
-.rect-stone {
-    stroke: $brighter-stone;
 }
