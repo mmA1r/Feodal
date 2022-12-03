@@ -1,10 +1,14 @@
+$hp-bar-background: url('../../../../../../assets/UI/units/unitHpPanel.png');
+
 .unit-hp-bar-box {
     position: absolute;
     bottom: 0;
     right: 0px;
-    width: 666px;
+    width: 700px;
     height: 30px;
     box-sizing: border-box;
+
+    background-image: $hp-bar-background;
 
     & > progress[value]::-webkit-progress-bar {
         background-color: rgb(49, 4, 4);
@@ -16,18 +20,19 @@
 
 .unit-hp-number {
     position: absolute;
-    left: 50%;
-    transform: translate(-50%, -30%);
+    left: 347px;
+    word-spacing: 13px;
     color: white;
+    font-size: 12px;
     z-index: 2;
 }
 
 .unit-hp-bar {
     position: absolute;
     top: 50%;
-    right: 10px;
+    left: 53px;
     transform: translateY(-50%);
-    width: 649px;
-    height: 7px;
+    width: 630px;
+    height: 6px;
     background-color: red;
 }

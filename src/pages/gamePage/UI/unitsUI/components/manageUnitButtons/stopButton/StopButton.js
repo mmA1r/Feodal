@@ -6,23 +6,13 @@ export default function StopButton() {
     const stop = useSelector((state) => state.action.stop);
 
     return (
-        <svg className={`${stop ? 'stop-active' : 'stop-inactive' }`} width="200" height="20" viewBox="0 0 200 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path className='stop-back-button' d="M1.76619 19L12.5662 1H187.434L198.234 19H1.76619Z" fill="#A77121" stroke="#A9A9A9" strokeWidth="2"/>
-            <path d="M186 1H188V3L184 5L186 1Z" fill="#A9A9A9"/>
-            <path d="M187.5 3L188 1L190 6L190.5 8L187.5 3Z" fill="#E6E6E6"/>
-            <path d="M188 1V3L184 5L188 1Z" fill="#E6E6E6"/>
-            <path d="M14 1H12V3L16 5L14 1Z" fill="#A9A9A9"/>
-            <path d="M12.5 3L12 1L10 6L9.5 8L12.5 3Z" fill="#E6E6E6"/>
-            <path d="M12 1V3L16 5L12 1Z" fill="#E6E6E6"/>
-            <path d="M191 18H196V19H193L191 18Z" fill="#E6E6E6"/>
-            <path d="M195 19H197V17L193 15L195 19Z" fill="#E6E6E6"/>
-            <path d="M196 18L197 19V17L193 15L196 18Z" fill="#A9A9A9"/>
-            <path d="M9 18H4V19H7L9 18Z" fill="#E6E6E6"/>
-            <path d="M5 19H3V17L7 15L5 19Z" fill="#E6E6E6"/>
-            <path d="M4 18L3 19V17L7 15L4 18Z" fill="#A9A9A9"/>
-            <path d="M7 19H193L192 18H8L7 19Z" fill="#E6E6E6"/>
-            <circle cx="100" cy="10" r="6.5" stroke="#E6E6E6"/>
-            <path d="M95 6L96 5L105 14L104 15L95 6Z" fill="#E6E6E6"/>
+        <svg className={`${stop ? 'stop-active' : 'stop-inactive' }`} width="155" height="21" viewBox="0 0 155 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path className='stop-button-background' d="M145.237 7.53524L145.129 7.56479L145.029 7.61765L137.529 11.6176L137.248 11.7677L137.106 12.0528L135.106 16.0528L135 16.2639V16.5V20H20.8022L19.9762 16.2831L19.9495 16.1629L19.8944 16.0528L17.8944 12.0528L17.7519 11.7677L17.4706 11.6176L9.97059 7.61765L9.87148 7.56479L9.76312 7.53524L4.69447 6.15288L2.11803 1H152.882L150.306 6.15288L145.237 7.53524Z" fill="#411F1B" stroke="#AAAAAA" stroke-width="2"/>
+            <path className='stop-button-shadow' d="M76.5 13.8044L84.0307 6.27371L84.7378 6.98082L77.2071 14.5115L76.5 13.8044Z" fill="black" fillOpacity="0.3"/>
+            <path className='stop-button-shadow' d="M86 10.5C86 13.5376 83.5376 16 80.5 16C77.4624 16 75 13.5376 75 10.5C75 7.46243 77.4624 5 80.5 5C83.5376 5 86 7.46243 86 10.5Z" stroke="black" strokeOpacity="0.3"/>
+            <rect className='stop-button-icon' x="74.0219" y="13.771" width="10.65" height="1" transform="rotate(-45 74.0219 13.771)" fill="#AAAAAA"/>
+            <path className='stop-button-icon-circle' d="M83.5233 10.4679C83.5233 13.5055 81.0608 15.9679 78.0233 15.9679C74.9857 15.9679 72.5233 13.5055 72.5233 10.4679C72.5233 7.43033 74.9857 4.9679 78.0233 4.9679C81.0608 4.9679 83.5233 7.43033 83.5233 10.4679Z" stroke="#AAAAAA"/>
         </svg>
+
     );
 }

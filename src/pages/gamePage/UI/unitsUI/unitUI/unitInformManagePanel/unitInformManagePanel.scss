@@ -1,4 +1,4 @@
-$stats-panel: url('../../../../../../assets/UI/units/unitStatsPanle.png');
+$stats-panel: url('../../../../../../assets/UI/units/unitStatsPanel.png');
 
 .unit-inform-manage-panel {
     position: relative;
@@ -12,9 +12,9 @@ $stats-panel: url('../../../../../../assets/UI/units/unitStatsPanle.png');
 
 .unit-stats-panel {
     position: absolute;
-    top: 20px;
+    top: 25px;
     width: 100%;
-    height: 75px;
+    height: 45px;
     background-image: $stats-panel;
 }
 

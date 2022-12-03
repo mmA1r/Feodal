@@ -1,8 +1,28 @@
+$unit-ui-manage-buttons-background: url('../../../../../../assets/UI/units/unitUIManageButtonBackground.png');
+
 .manage-unit-buttons {
     position: absolute;
-    width: max-content;
-    left: 75px;
+    width: 700px;
     height: 25px;
+    background-image: $unit-ui-manage-buttons-background;
+}
+
+.attack-unit-button {
+    position: absolute;
+    bottom: 1px;
+    left: 90px;
+}
+
+.move-unit-button {
+    position: absolute;
+    bottom: 1px;
+    left: 303px;
+}
+
+.stop-unit-button {
+    position: absolute;
+    bottom: 1px;
+    left: 516px;
 }
 
 .attack-unit-button,
@@ -12,6 +32,8 @@
     background-color: transparent;
     border: none;
     padding: 0;
-    width: 200px;
-    height: 20px;
+    width: 155px;
+    height: 21px;
+
+    outline: none;
 }
