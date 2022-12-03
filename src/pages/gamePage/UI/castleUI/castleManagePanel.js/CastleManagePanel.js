@@ -13,6 +13,7 @@ import './castleManagePanel.scss';
 export default function CastleManagePanel() {
     const server = useSelector((state) => state.server.value);
     const upgradeCastleCost = useSelector((state) => state.gamer.upadateLevelCost);
+    const gamerLevel = useSelector((state) => state.gamer.level);
     const soldierCost = useSelector((state) => state.soldier.cost);
 
     const store = new StoreLoader();
@@ -27,11 +28,15 @@ export default function CastleManagePanel() {
     }
 
     async function upgradeCastle() {
-        await server.upgradeCastle();
+        const response = await server.upgradeCastle();
         const castle = await server.getCastle();
         const castleMoney = castle.money-0;
         const castleUpgradeCost = castle?.castleUpgradeCost-0;
-        store.loadToStore({ money: castleMoney, castleUpdateCost: castleUpgradeCost }, 'gamer');
+        if(response) {
+            store.loadToStore({ money: castleMoney, castleUpdateCost: castleUpgradeCost, level: gamerLevel+1 }, 'gamer');
+
+        }
+        setUnitPrice(castleUpgradeCost);
     }
 
     function showCost(unitName) {
