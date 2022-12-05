@@ -10,13 +10,19 @@ export default function Physics(scene) {
 
     /*physics.add.collider(scene.unitsGroup, scene.treesGroup, (u, tree) => {
         if (u) {
-            u.move();
+            //u.moveTo(u.target.x,u.target.y);
         }
     })*/
 
     physics.add.collider(scene.unitsGroup, scene.castlesGroup, (u, castle) => {
         if (u) {
-            u.pointer.moveTo(u.pointer.x,u.pointer.y);
+            u._getDirection();
+        }
+    });
+
+    physics.add.collider(scene.unitsGroup, scene.villagesGroup, (u, villages) => {
+        if (u) {
+            u._getDirection();
         }
     });
 }

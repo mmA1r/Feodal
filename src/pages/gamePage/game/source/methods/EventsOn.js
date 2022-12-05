@@ -11,6 +11,14 @@ export default function EventsOn(scene) {
         }
     });
 
+    Scene.input.on('gameobjectover', (pointer, gameObject) => {
+            if (!pointer.isDown) gameObject.selector.setVisible(true);
+    });
+
+    Scene.input.on('gameobjectout', (pointer, gameObject) => {
+        if (!gameObject.selected) gameObject.selector.setVisible(false);
+});
+
     scene.input.on('gameobjectdown', (pointer, gameObject) => {
         if (pointer.button === 2 && Scene.selectedUnits.getChildren()[0]) {
             Scene.selectedUnits.getChildren().forEach(el => {

@@ -13,7 +13,7 @@ export default class Server {
         const query = Object.keys(params).map(key =>
             `${key}=${params[key]}`
         ).join("&");
-        const responce = await fetch(`http://feodal/api/?${query}`);
+        const responce = await fetch(`http://feodal-1/api/?${query}`);
         const answer = await responce.json();
         return answer?.result === 'ok' ? answer?.data : null;
     }
@@ -22,7 +22,7 @@ export default class Server {
         if(this.token) {
             params.token = this.token;
         }
-        const responce = await fetch(`http://feodal/api/?method=${params['method']}`, {
+        const responce = await fetch(`http://feodal-1/api/?method=${params['method']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -156,5 +156,12 @@ export default class Server {
 
     async updateUnits(params) {
         return await this.postSend({ method: 'updateUnits', ...params });
+    }
+
+    async destroyCastle(castleId) {
+        return await this.send({
+            method: 'destroyCastle',
+            victimId: castleId
+        });
     }
 }
