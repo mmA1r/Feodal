@@ -24,27 +24,65 @@
             $this->db->createVillage($subname.' '.$name, $posX, $posY);
         }
 
-        public function getMap() {
-            $map = $this->db->getMap(1);
-            return array(
-                'map'=>array(
-                    'ground'=>json_decode($map->ground),
-                    'plants'=>json_decode($map->plants),
-                    'trees'=>json_decode($map->trees)
-                ));
-        }
-
-        public function getUnitsTypes() {
-            return $this->db->getUnitsTypes();
-        }
-
         public function getVillage($villageId) {
             return $this->db->getVillage($villageId);
+        }
+
+        public function robVillage($gamer, $village) {
+            $lootedMoney = (int)($village->money / 10);
+            if (!$lootedMoney) {
+                return $this->destroyVillage($gamer, $village);
+            }
+            $this->db->robVillage($village->id, $lootedMoney);
+            $this->db->updateMoney($gamer->id, $lootedMoney);
+            $hash = md5(rand());
+            $this->db->setMapHash($hash);
+            return array (
+                'money'=>$this->db->getMoney($gamer->id)
+            );
+        }
+
+        public function destroyVillage($gamer, $village) {
+            $this->db->destroyVillage($village->id);
+            $this->db->updateMoney($gamer->id, $village->money);
+            return array (
+                'money'=>$this->db->getMoney($gamer->id)
+            );
+        }
+
+        public function addCastle($userId) {
+            $castleX = rand(10000,80000) / 1000;
+            $castleY = rand(10000,80000) / 1000;
+
+            $nextRentTime = microtime(true) + 7200000;
+
+            $castleColor = '#' . substr(md5(mt_rand()), 0, 6);
+
+            $this->db->addCastle($userId, $castleColor, $castleX, $castleY, $nextRentTime);
+
+            $gamer = $this->db->getGamer($userId);
+            $unitTypeData = $this->db->getUnitTypeData(1);
+            $this->db->addUnit($gamer->id, 1, $unitTypeData->hp, $gamer->posX, $gamer->posY, microtime(true));
+
+            $hash = md5(rand());
+            $this->db->setMapHash($hash);
+            $this->db->setUnitsHash($hash);
+            return true;
         }
 
         public function getCastle($castleId) {
             if ($castleId) {
                 return $this->db->getCastle($castleId);
+            }
+        }
+
+        public function destroyCastle($gamer, $castle) {
+            if ($gamer->id != $castle->id) {
+                $this->db->destroyCastle($castle->id);
+                $this->db->updateMoney($gamer->id, $castle->money);
+                return array(
+                    'money'=>$this->db->getMoney($gamer->id),
+                );
             }
         }
 
@@ -73,6 +111,26 @@
             return $result;
         }
 
+        public function getUnitsTypes() {
+            return $this->db->getUnitsTypes();
+        }
+
+        public function getUnitsInCastle($gamerId) {
+            if ($gamerId) {
+                return $this->db->getUnitsInCastle($gamerId);
+            }
+        }
+
+        public function getMap() {
+            $map = $this->db->getMap(1);
+            return array(
+                'map'=>array(
+                    'ground'=>json_decode($map->ground),
+                    'plants'=>json_decode($map->plants),
+                    'trees'=>json_decode($map->trees)
+                ));
+        }
+        
         public function updateMap($time) {
             // обновить все деревни
             $isUpdated = false;

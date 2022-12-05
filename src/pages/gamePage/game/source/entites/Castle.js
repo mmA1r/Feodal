@@ -21,9 +21,15 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.body.isCircle = true;
         this.units = this.scene.add.group();
         this.pointer = new UnitPointer(this);
-        this.pointer.x = this.x-150;
-        this.pointer.y = this.y-150;
-        const name = this.scene.add.text(this.x, this.y+130,castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
+        this.pointer.x = this.x - 150;
+        this.pointer.y = this.y - 150;
+        this.onServer = true;
+        this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
+        this.selector.isStroked = true;
+        this.selector.strokeColor = (this.type === "myCastle") ? 0x00FF00 : 0xFF0000;
+        this.selector.lineWidth = 2;
+        this.selector.setVisible(false);
+        const name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
         name.depth = 10000000;
         name.style.setFontSize(30);
         name.style.setAlign('center')
@@ -37,26 +43,52 @@ export default class Castle extends Phaser.GameObjects.Image {
             unit.unSelect();
             unit = this.scene.selectedUnits.getChildren()[0];
         }
-        this.setTint(4234);
+        this.selector.setVisible(true);
         this.selected = true;
         this.scene.selectedObject = this;
         this.updateUI();
-        (this.id === this.scene.player)
-            ? this.scene.store.loadToStore('castle', 'ui')
-            : this.scene.store.loadToStore('enemyCastle', 'ui');
-        this.pointer.setVisible(true);
+        if (this.type === "myCastle") {
+            this.scene.store.loadToStore('castle', 'ui');
+            this.pointer.setVisible(true);
+        }
+        else {
+            this.scene.store.loadToStore('enemyCastle', 'ui');
+        }
     }
 
     unSelect() {
         this.setTint();
         this.selected = false;
+        this.selector.setVisible(false);
         this.scene.selectedObject = null;
         this.scene.store.loadToStore('hide', 'ui');
         this.pointer.setVisible(false);
     }
 
+    killed() {
+        if (!this.onServer && this.hp <= 0) {
+            this.selector.destroy();
+            this.pointer.destroy();
+            this.unSelect();
+            this.scene.unitsGroup.remove(this);
+            this.destroy();
+        }
+    }
+
     rewriteData(castleData) {
+        this.onServer = true;
         this.level = castleData.level;
+    }
+
+    damage(dmg) {
+        if (this.units.getChildren()[0]) {
+            this.units.getChildren()[0].damage(dmg);
+        }
+        else {
+            this.destroy();
+        }
+        this.damaged = true;
+        if (this.selected) this._updateUI();
     }
 
     updateUI() {
