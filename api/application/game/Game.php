@@ -83,6 +83,7 @@
                 if ($victim && !$unitsInCastle) {
                     $this->db->destroyCastle($victim->id);
                     $this->db->updateMoney($killer->id, $victim->money);
+                    $this->db->setMapHash($hash);
                     return array(
                         'money'=>$this->db->getMoney($killer->id)
                     );

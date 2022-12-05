@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import UnitPointer from "./UnitPointer";
+import DestroyCastle from "../destroyCastle/DestroyCastle";
 
 export default class Castle extends Phaser.GameObjects.Image {
     constructor(scene, castleData) {
@@ -29,12 +30,12 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.selector.strokeColor = (this.type === "myCastle") ? 0x00FF00 : 0xFF0000;
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
-        const name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
-        name.depth = 10000000;
-        name.style.setFontSize(30);
-        name.style.setAlign('center')
-        name.scrollFactorX = 1;
-        name.scrollFactorY = 1;
+        this.name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
+        this.name.depth = 10000000;
+        this.name.style.setFontSize(30);
+        this.name.style.setAlign('center')
+        this.name.scrollFactorX = 1;
+        this.name.scrollFactorY = 1;
     }
 
     select() {
@@ -66,13 +67,12 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     killed() {
-        if (!this.onServer && this.hp <= 0) {
             this.selector.destroy();
             this.pointer.destroy();
+            this.name.destroy();
             this.unSelect();
             this.scene.unitsGroup.remove(this);
             this.destroy();
-        }
     }
 
     rewriteData(castleData) {
@@ -83,12 +83,12 @@ export default class Castle extends Phaser.GameObjects.Image {
     damage(dmg) {
         if (this.units.getChildren()[0]) {
             this.units.getChildren()[0].damage(dmg);
+            if (this.selected) this._updateUI();
         }
         else {
-            this.destroy();
+            DestroyCastle(this);
         }
         this.damaged = true;
-        if (this.selected) this._updateUI();
     }
 
     updateUI() {

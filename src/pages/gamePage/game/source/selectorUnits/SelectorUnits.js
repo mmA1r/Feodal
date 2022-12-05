@@ -10,6 +10,7 @@ export default function SelectorUnits(scene) {
             scene.selectorUnits.addedToScene();
             scene.selectorUnits.x = pointer.worldX;
             scene.selectorUnits.y = pointer.worldY;
+            scene.selectorUnits.isMine = false;
         }
     });
 
@@ -23,11 +24,12 @@ export default function SelectorUnits(scene) {
 
     //Конец области выделения юнитов
     scene.input.on('pointerup', (pointer, gameObject) => {
-            scene.unitsGroup.getChildren().forEach((unit)=>{
+        if (pointer.button === 0) {
+            scene.unitsGroup.getChildren().forEach((unit) => {
                 const x1 = scene.selectorUnits.x;
-                const x2 = scene.selectorUnits.x+scene.selectorUnits.width;
+                const x2 = scene.selectorUnits.x + scene.selectorUnits.width;
                 const y1 = scene.selectorUnits.y;
-                const y2 = scene.selectorUnits.y+scene.selectorUnits.height;
+                const y2 = scene.selectorUnits.y + scene.selectorUnits.height;
                 let left = (x1 <= x2) ? x1 : x2;
                 let right = (x1 >= x2) ? x1 : x2;
                 let top = (y1 <= y2) ? y1 : y2;
@@ -37,27 +39,33 @@ export default function SelectorUnits(scene) {
                     unit.y < bottom &&
                     unit.y > top &&
                     unit.status !== "inCastle") {
-                        if (unit.type ==="myUnit") {
-                            scene.selectorUnits.isMine=true;
-                        }
-                        unit.select();
+                    if (unit.type === "myUnit") {
+                        scene.selectorUnits.isMine = true;
                     }
-            })
-        scene.selectorUnits.height = 0;
-        scene.selectorUnits.width = 0;
-        setTimeout(() => {
-            scene.selectorUnits.removedFromScene();
-            /*if (scene.selectedUnits.getChildren()[1]) {
-                if (scene.selectorUnits.isMine) {
-                    scene.selectedUnits.getChildren().forEach((unit)=>{
-                        if (unit.type === "unit") scene.selectedUnits.remove(unit);
-                    })
+                    unit.select();
                 }
-                (scene.selectorUnits.isMine) ? scene.store.loadToStore('army','ui'): scene.store.loadToStore('enemyArmy','ui');
-
-                scene.selectorUnits.isMine = false;
-            }*/
-        }, 100);
+            })
+            scene.selectorUnits.height = 0;
+            scene.selectorUnits.width = 0;
+            setTimeout(() => {
+                scene.selectorUnits.removedFromScene();
+                if (scene.selectedUnits.getLength() > 1) {
+                    if (scene.selectorUnits.isMine) {
+                        scene.selectedUnits.getChildren().forEach((unit) => {
+                            if (unit.type === "unit") scene.selectedUnits.remove(unit);
+                        })
+                    }
+                    (scene.selectorUnits.isMine) ? scene.store.loadToStore('army', 'ui') : scene.store.loadToStore('enemyArmy', 'ui');
+                    let soldiers = {
+                        fullHp: 100,
+                        currentHp: 100,
+                        might: 100,
+                        num: scene.selectedUnits.getLength()
+                    }
+                    scene.store.loadToStore(soldiers, 'currentArmy')
+                }
+            }, 100);
+        }
     });
 
 }
