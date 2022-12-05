@@ -8,6 +8,8 @@ import VillageMiniFrame from "./villageUI/villageMiniFrame/VillageMiniFrame";
 import ChooseUnitWindow from "./castleUI/chooseUintWindow/ChooseUnitWindow";
 import UnitMiniFrame from "./unitsUI/unitUI/unitMiniFrame/UnitMiniFrame";
 import UnitInformManagePanel from "./unitsUI/unitUI/unitInformManagePanel/UnitInformManagePanel";
+import ArmyInfoManagePanel from "./unitsUI/armyUI/armyInfoManagePanel/ArmyInfoManagePanel";
+import ArmyNum from "./unitsUI/armyUI/armyNum/ArmyNum";
 
 import './UI.scss';
 
@@ -40,7 +42,8 @@ export default function UI() {
                     </div>
                 : UI.army ?
                     <div className={'army-UI'}>
-
+                        <ArmyNum/>
+                        <ArmyInfoManagePanel/>
                     </div>
                 : UI.enemyArmy ?
                     <div className={'enemy-army-UI'}>

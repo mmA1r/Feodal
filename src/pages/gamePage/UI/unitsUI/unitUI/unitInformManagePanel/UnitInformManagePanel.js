@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import UnitHpBar from '../../components/hpBar/UnitHpBar';
+import UnitHpBar from '../hpBar/UnitHpBar';
 import ManageUnitButtons from '../../components/manageUnitButtons/ManageUnitButtons';
 
 import './unitInformManagePanel.scss';

@@ -3,7 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 export const army = createSlice({
     name: 'army',
     initialState: {
-        soldiers: []
+        soldiers: {
+            fullHp: 0,
+            currentHp: 0,
+            might: 0,
+            num: 0
+        }
     },
     reducers: {
         currentArmy: (state, action) => {

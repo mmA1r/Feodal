@@ -1,0 +1,67 @@
+$army-might: url('../../../../../../assets/UI/army/totalArmyMight.png');
+$army-list: url('../../../../../../assets/UI/army/armyList.png');
+$army-total-num: url('../../../../../../assets/UI/army/totalArmyNum.png');
+
+.army-num-panel {
+    position: relative;
+    box-sizing: border-box;
+    width: 150px;
+    height: 250px;
+}
+
+.army-might {
+    position: relative;
+    box-sizing: border-box;
+    height: 25px;
+    width: 100%;
+    border: none;
+
+    background-image: $army-might;
+    text-align: end;
+
+    & > .army-might-num {
+        font-size: 12px;
+        position: relative;
+        color: white;
+        top: 5px;
+        right: 25px;
+    }
+}
+
+.army-list {
+    position: relative;
+    box-sizing: border-box;
+    height: 195px;
+    width: 100%;
+    border: none;
+
+    background-image: $army-list;
+
+    & > .soldiers-num {
+        position: relative;
+        padding: 10px;
+        color: white;
+        font-size: 13px;
+        & > .army-number {
+            padding-left: 60px;
+        }
+    }
+}
+
+.army-total-number {
+    position: relative;
+    box-sizing: border-box;
+    height: 30px;
+    width: 100%;
+    border: none;
+
+    background-image: $army-total-num;
+
+    text-align: end;
+    & >.army-num {
+        position: relative;
+        top: 7px;
+        right: 25px;
+        color: white;
+    }
+}
