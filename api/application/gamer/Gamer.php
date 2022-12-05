@@ -65,12 +65,12 @@
             $isUpdate = false;
             foreach($myUnits as $myUnit){
                 $dbUnit = $this->db->getUnit($myUnit->id);
-                if ($dbUnit) {
-                    if ($myUnit->hp > $dbUnit->hp) $myUnit->hp = $dbUnit->hp;
+                if($dbUnit){
+                    if($myUnit->hp>$dbUnit->hp)$myUnit->hp=$dbUnit->hp;      
                     $this->db->updateUnit($gamer->id,$myUnit->id,$myUnit->hp,$myUnit->posX,$myUnit->posY,$myUnit->status,$myUnit->direction);
                     $isUpdate = true;
-                    }
                 }
+            }  
             if ($isUpdate) {
                 $this->db->setUnitsHash(md5(rand()));
             }

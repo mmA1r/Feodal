@@ -164,4 +164,12 @@ export default class Server {
             victimId: castleId
         });
     }
+
+    async destroyVillage(villageId) {
+        return await this.send({
+            method: 'destroyVillage',
+            villageId: villageId
+        });
+    }
+
 }

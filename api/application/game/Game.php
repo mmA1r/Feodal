@@ -6,9 +6,9 @@
             $this->config=$config;
         }
 
-        public function addVillage(){
-            $posX = rand(0,160000) / 1000;
-            $posY = rand(0,160000) / 1000;
+        private function addVillage(){
+            $posX = rand(10000,80000) / 1000;
+            $posY = rand(10000,80000) / 1000;
             switch (rand(1,4)) {
                 case 1: $subname="Верхние"; break;
                 case 2: $subname="Нижние"; break;
@@ -35,8 +35,7 @@
             }
             $this->db->robVillage($village->id, $lootedMoney);
             $this->db->updateMoney($gamer->id, $lootedMoney);
-            $hash = md5(rand());
-            $this->db->setMapHash($hash);
+            $this->db->setMapHash(md5(rand()));
             return array (
                 'money'=>$this->db->getMoney($gamer->id)
             );
@@ -45,6 +44,7 @@
         public function destroyVillage($gamer, $village) {
             $this->db->destroyVillage($village->id);
             $this->db->updateMoney($gamer->id, $village->money);
+            $this->db->setMapHash(md5(rand()));
             return array (
                 'money'=>$this->db->getMoney($gamer->id)
             );
@@ -83,7 +83,7 @@
                 if ($victim && !$unitsInCastle) {
                     $this->db->destroyCastle($victim->id);
                     $this->db->updateMoney($killer->id, $victim->money);
-                    $this->db->setMapHash($hash);
+                    $this->db->setMapHash(md5(rand()));
                     return array(
                         'money'=>$this->db->getMoney($killer->id)
                     );
@@ -154,11 +154,13 @@
                         $money = $village->money - $cost;
                     } else{$level= $village->level;};
             // записать в БД
-            $this->db->updateVillage($id,$money,$level,$population,$time+rand(60*$this->config->intervalUpdateVillage,60*$this->config->intervalUpdateVillage+100-10*$village->level));
-            $isUpdate = true;
+                $this->db->updateVillage($id,$money,$level,$population,$time+rand(60000*$this->config->intervalUpdateVillage,60000*$this->config->intervalUpdateVillage+100000-10000*$village->level));
+                $isUpdate = true;
+                }
             }
+            if (!$villages || count($villages)<11) {
+                $this->addVillage();
             }
-            
             // обновить все замки
             //...
             /*$castles = $this->db->getCastles();

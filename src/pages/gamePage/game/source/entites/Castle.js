@@ -58,7 +58,6 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     unSelect() {
-        this.setTint();
         this.selected = false;
         this.selector.setVisible(false);
         this.scene.selectedObject = null;
@@ -71,7 +70,7 @@ export default class Castle extends Phaser.GameObjects.Image {
             this.pointer.destroy();
             this.name.destroy();
             this.unSelect();
-            this.scene.unitsGroup.remove(this);
+            this.scene.castlesGroup.remove(this);
             this.destroy();
     }
 
