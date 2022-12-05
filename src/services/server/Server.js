@@ -168,7 +168,7 @@ export default class Server {
     async destroyVillage(villageId) {
         return await this.send({
             method: 'destroyVillage',
-            villageId: villageId
+            village: villageId
         });
     }
 

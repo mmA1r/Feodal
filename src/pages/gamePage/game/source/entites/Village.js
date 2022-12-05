@@ -8,7 +8,7 @@ export default class Village extends Phaser.GameObjects.Image {
         this.y = Math.round(serverData.posY * 64);
         this.depth = 1;
         this.activeRadius = 40000;
-        this.id = serverData.id-0;
+        this.id = serverData.id;
         this.scene.villagesGroup.add(this);
         this.setTexture('village');
         this.rewriteData(serverData);
@@ -37,7 +37,7 @@ export default class Village extends Phaser.GameObjects.Image {
         this.selected = true;
         this.scene.selectedObject = this;
         this.scene.store.loadToStore('village', 'ui');
-        this.updateUI();
+        this._updateUI();
     }
 
     unSelect() {

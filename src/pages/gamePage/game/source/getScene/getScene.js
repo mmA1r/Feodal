@@ -60,7 +60,7 @@ export default function getScene(scene) {
                         unit.rewriteData(unitOnServer);
                     }
                     else {
-                        unit.rewriteData({hp: 0})
+                        unit.killed()
                     }
                     
                 })
