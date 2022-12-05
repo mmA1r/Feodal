@@ -21,7 +21,38 @@ class Application {
 
     //функция проверки полученных значений в запросе
     private function checkParams($params){
-        if (($params['token']) && !is_string($params['token'])) return false;
+        foreach($params as $param=>$value){
+            if($param == 'token' && !is_string($value) && strlen($value) > 16){
+                return false;
+            }
+            if($param == 'login' && !is_string($value) && strlen($value) > 16){
+                return false;
+            }
+            if($param == 'password' && !is_string($value) && strlen($value) > 16){
+                return false;
+            }
+            if($param == 'name' && !is_string($value) && strlen($value) > 16){
+                return false;
+            }
+            if($param == 'message' && !is_string($value) && strlen($value) > 256 ){
+                return false;
+            }
+            if($param == 'messageTo' && !is_numeric($value)){
+                return false;
+            }
+            if($param == 'hash' && !is_string($value) && !(strlen($value) == 32) ){
+                return false;
+            }
+            if($param == 'mapHash' && !is_string($value) && !(strlen($value) == 32) ){
+                return false;
+            }
+            if($param == 'unitsHash' && !is_string($value) && !(strlen($value) == 32) ){
+                return false;
+            }
+            if($param == 'unitType' && !is_numeric($value)){
+                return false;
+            }
+        }
         return true;
     }
 
@@ -63,8 +94,7 @@ class Application {
     //////////////forChat///////////////////
     ////////////////////////////////////////
 
-    public function sendMessage($params, $type)
-    {
+    public function sendMessage($params, $type){
         [
             'token' => $token,
             'message' => $message,
@@ -79,8 +109,7 @@ class Application {
         }
     }
 
-    public function getMessages($params)
-    {
+    public function getMessages($params){
         if ($params['hash']) {
             $user = $this->user->getUser($params['token']);
             if ($user) {
@@ -89,8 +118,7 @@ class Application {
         }
     }
 
-    public function getLoggedUsers($params)
-    {
+    public function getLoggedUsers($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
             return $this->chat->getLoggedUsers();
@@ -101,9 +129,7 @@ class Application {
     //////////////forGame///////////////////
     ////////////////////////////////////////
 
-
-    public function getMap($params)
-    {
+    public function getMap($params){
         if ($this->checkParams($params)) {
             $user = $this->user->getUser($params['token']);
             if ($user) {
@@ -112,16 +138,14 @@ class Application {
         }
     }
 
-    public function getUnitsTypes($params)
-    {
+    public function getUnitsTypes($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
             return $this->game->getUnitsTypes();
         }
     }
 
-    public function getScene($params)
-    {
+    public function getScene($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
             return $this->game->getScene($params['unitsHash'], $params['mapHash']);
@@ -130,13 +154,12 @@ class Application {
     ////////////////////////////////////////
     //////////////forGamer//////////////////
     ////////////////////////////////////////
-    public function getCastle($params)
-    {
+    public function getCastle($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
             $gamer = $this->gamer->getGamer($user);
             if (!$gamer) {
-                $this->gamer->addCastle($user);
+                $this->game->addCastle($user);
                 $gamer = $this->gamer->getGamer($user);
             }
             $gamer->castleUpgradeCost = $this->gamer->getCastleLevelCost($gamer->level);
@@ -146,8 +169,7 @@ class Application {
         }
     }
 
-    public function upgradeCastle($params)
-    {
+    public function upgradeCastle($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
             $gamer = $this->gamer->getGamer($user);
@@ -157,8 +179,7 @@ class Application {
         }
     }
 
-    public function buyUnit($params)
-    {
+    public function buyUnit($params){
         if ($params['unitType']){
             $user = $this->user->getUser($params['token']);
             if ($user) {
@@ -170,39 +191,36 @@ class Application {
         }
     }
 
-    public function robVillage($params)
-    {
+    public function robVillage($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
             $gamer = $this->gamer->getGamer($user);
             $village = $this->game->getVillage($params['village']);
             if ($gamer && $village) {
-                return $this->gamer->robVillage($gamer, $village);
+                return $this->game->robVillage($gamer, $village);
             }
         }
     }
 
-    public function destroyVillage($params)
-    {
+    public function destroyVillage($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
             $gamer = $this->gamer->getGamer($user);
             $village = $this->game->getVillage($params['village']);
             if ($gamer && $village) {
-                return $this->gamer->destroyVillage($gamer, $village);
+                return $this->game->destroyVillage($gamer, $village);
             }
         }
     }
 
-    public function destroyCastle($params)
-    {
+    public function destroyCastle($params){
         $userId = $this->user->getUser($params['token']);
         if ($userId && $params['castle']) {
             $castle = $this->game->getCastle($params['castle']);
-            $unitsInCastle = $this->gamer->getUnitsinCastle($params['castle']);
+            $unitsInCastle = $this->game->getUnitsinCastle($params['castle']);
             $gamer = $this->gamer->getGamer($userId);
             if ($gamer && $castle && !$unitsInCastle) {
-                return $this->gamer->destroyCastle($gamer, $castle);
+                return $this->game->destroyCastle($gamer, $castle);
             }
         }
     }

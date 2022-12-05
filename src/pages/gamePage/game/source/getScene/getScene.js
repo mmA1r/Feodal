@@ -1,7 +1,7 @@
-import Phaser from "phaser";
 import Unit from '../entites/Unit'
 import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
+import Village from "../entites/Village";
 
 
 export default function getScene(scene) {
@@ -10,31 +10,52 @@ export default function getScene(scene) {
     const getScene = setInterval(
         async () => {
             const data = (await server.getScene());
-            if (data?.castles) {
-                let castles = data.castles;
-                castles.forEach((castle) => {
-                    let castleOnScene = scene.castlesGroup.getChildren().find(el => el.id === castle.id);
-                    if (castleOnScene) {
-                        castleOnScene.rewriteData(castle);
+            if (data?.castles[0]) {
+                data.castles.forEach((castleData) => {
+                    if (!scene.castlesGroup.getChildren().find(el => el.id === castleData.id)) {
+                        new Castle(scene,castleData);
+                    }
+                })
+                scene.castlesGroup.getChildren().forEach((castle)=>{
+                    const castleOnServer = data.castles.find((c) => {
+                        return c.id === castle.id;
+                    })
+                    if (castleOnServer) {
+                        castle.rewriteData(castleOnServer);
+                    }
+                    else {
+                        castle.killed();
+                    }
+                })
+            }
+            if (data?.villages) {
+                let villages = data.villages;
+                villages.forEach((village) => {
+                    let villageOnScene = scene.villagesGroup.getChildren().find(el => el.id === village.id);
+                    if (villageOnScene) {
+                        villageOnScene.rewriteData(village);
                     } else {
-                        new Castle(Scene,castle);
+                        new Village(Scene,village);
                     }
                 }) 
             }
-            if (data?.units) {
-                scene.unitsGroup.getChildren().forEach((unit)=>{
-                    unit.onServer = false;
-                })
-                data.units.forEach((unit) => {
-                    let unitOnScene = Scene.unitsGroup.getChildren().find(el => el.id === unit.id)
-                    if (unitOnScene) {
-                        unitOnScene.rewriteData(unit);
-                    } else {
-                        new Unit(scene,unit);
+            if (data?.units[0]) {
+                data.units.forEach((unitData) => {
+                    if (!scene.unitsGroup.getChildren().find(el => el.id === unitData.id)) {
+                        new Unit(scene,unitData);
                     }
                 })
                 scene.unitsGroup.getChildren().forEach((unit)=>{
-                    if (!unit.onServer) setTimeout(()=>unit.killed(), 150);
+                    const unitOnServer = data.units.find((u) => {
+                        return u.id === unit.id;
+                    })
+                    if (unitOnServer) {
+                        unit.rewriteData(unitOnServer);
+                    }
+                    else {
+                        unit.rewriteData({hp: 0})
+                    }
+                    
                 })
             }
         }

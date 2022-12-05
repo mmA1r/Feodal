@@ -157,4 +157,11 @@ export default class Server {
     async updateUnits(params) {
         return await this.postSend({ method: 'updateUnits', ...params });
     }
+
+    async destroyCastle(castleId) {
+        return await this.send({
+            method: 'destroyCastle',
+            victimId: castleId
+        });
+    }
 }

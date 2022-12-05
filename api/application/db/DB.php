@@ -142,7 +142,7 @@ class DB {
     }
 
     public function getCastle($id) {
-        $query = 'SELECT id, castleX as posX, castleY as posY, money, nextTimeRent FROM gamers WHERE id='.$id;
+        $query = 'SELECT id, castleX as posX, castleY as posY, money, nextRentTime FROM gamers WHERE id='.$id;
         return $this->db->query($query)->fetchObject();
     }
 
