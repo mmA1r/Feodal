@@ -76,13 +76,17 @@
             }
         }
 
-        public function destroyCastle($gamer, $castle) {
-            if ($gamer->id != $castle->id) {
-                $this->db->destroyCastle($castle->id);
-                $this->db->updateMoney($gamer->id, $castle->money);
-                return array(
-                    'money'=>$this->db->getMoney($gamer->id),
-                );
+        public function destroyCastle($killer, $victimId) {
+            if ($killer->id != $victimId) {
+                $victim = $this->getCastle($victimId);
+                $unitsInCastle = $this->getUnitsinCastle($victim->id);
+                if ($victim && !$unitsInCastle) {
+                    $this->db->destroyCastle($victim->id);
+                    $this->db->updateMoney($killer->id, $victim->money);
+                    return array(
+                        'money'=>$this->db->getMoney($killer->id)
+                    );
+                }
             }
         }
 

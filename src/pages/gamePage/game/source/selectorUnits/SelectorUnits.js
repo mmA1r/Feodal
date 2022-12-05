@@ -1,10 +1,8 @@
-import Phaser from "phaser";
-
 export default function SelectorUnits(scene) {
     scene.selectorUnits = scene.add.rectangle(100, 100, 0, 0, 232323, 0.5);
     scene.selectorUnits.setActive(true);
     scene.selectorUnits.depth = 100000000;
-
+    scene.selectorUnits.isMine = false;
 
     //Начало области выделения юнитов
     scene.input.on('pointerdown', (pointer, gameObject) => {
@@ -39,6 +37,9 @@ export default function SelectorUnits(scene) {
                     unit.y < bottom &&
                     unit.y > top &&
                     unit.status !== "inCastle") {
+                        if (unit.type ==="myUnit") {
+                            scene.selectorUnits.isMine=true;
+                        }
                         unit.select();
                     }
             })
@@ -46,6 +47,16 @@ export default function SelectorUnits(scene) {
         scene.selectorUnits.width = 0;
         setTimeout(() => {
             scene.selectorUnits.removedFromScene();
+            /*if (scene.selectedUnits.getChildren()[1]) {
+                if (scene.selectorUnits.isMine) {
+                    scene.selectedUnits.getChildren().forEach((unit)=>{
+                        if (unit.type === "unit") scene.selectedUnits.remove(unit);
+                    })
+                }
+                (scene.selectorUnits.isMine) ? scene.store.loadToStore('army','ui'): scene.store.loadToStore('enemyArmy','ui');
+
+                scene.selectorUnits.isMine = false;
+            }*/
         }, 100);
     });
 
