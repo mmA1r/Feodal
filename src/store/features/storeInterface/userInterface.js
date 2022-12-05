@@ -9,7 +9,7 @@ export const userInterface = createSlice({
             enemyCastle: false,
             unit: false,
             enemyUnit: false,
-            army: true,
+            army: false,
             enemyArmy: false,
             village: false
         }
