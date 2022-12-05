@@ -40,7 +40,8 @@ export default function GamePage() {
                     hp: type.hp,
                     cost: type.cost,
                     damage: type.damage,
-                    speed: type.speed
+                    speed: type.speed,
+                    might: type.might
                 }, 'soldier');
             });
         }
