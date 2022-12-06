@@ -1,13 +1,33 @@
-$inform-border: url('../../../../../assets/UI/villageUI/villageInform.png');
+$inform-border: url('../../../../../assets/UI/villageUI/villageInfo.png');
 
 .village-inform-panel {
+    position: relative;
     box-sizing: border-box;
-    width: 650px;
-    height: 150px;
+    width: 500px;
+    height: 100px;
 
     background-image: $inform-border;
-    background-position: center;
-    background-size: cover;
+    & > progress[value]::-webkit-progress-bar {
+        background-color: rgb(43, 33, 19);
+    }
+    & > progress[value]::-webkit-progress-value {
+        background-color: rgb(113, 190, 12);
+    }
+}
 
-    z-index: 2;
+.village-population {
+    position: absolute;
+    color: white;
+    top: 17px;
+    left: 45px;
+    font-size: 16px;
+}
+
+.village-hp-bar {
+    position: absolute;
+    width: 492px;
+    height: 11px;
+    background-color: red;
+    bottom: 4px;
+    left: 4px;
 }

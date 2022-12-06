@@ -1,11 +1,14 @@
+import { useSelector } from 'react-redux';
 import './villageMiniFrame.scss';
 
 export default function VillageMiniFrame() {
 
+    const villageLevel = useSelector((state) => state.village.villageLevel);
+
     return (
-        <div>
-            <div className={`village-mini-frame village-level-1`}/>
-            <div className={'village-mini-picture village-level-1'}/>
+        <div className='village-mini'>
+            <div className={`village-mini-frame-${villageLevel}`}/>
+            <div className={`village-mini-picture-${villageLevel}`}/>
         </div>
     );
 }
