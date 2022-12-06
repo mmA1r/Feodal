@@ -1,0 +1,19 @@
+$enemy-army-background: url('../../../../../assets/UI/army/enemyArmyUI.png');
+
+.enemy-army-num-panel {
+    position: absolute;
+    width: 210px;
+    height: 70px;
+    border: none;
+
+    background-image: $enemy-army-background;
+}
+
+.enemy-soldiers-num {
+    color: white;
+    padding: 10px;
+}
+
+.army-number {
+    padding-left: 100px;
+}

@@ -1,0 +1,45 @@
+$inform-panel-back: url('../../../../../../assets/UI/units/enemyWarriorInformPanel.png');
+.enemy-unit-inform-panel {
+    position: relative;
+    left: 40px;
+    box-sizing: border-box;
+    width: 500px;
+    height: 55px;
+
+    border: none;
+
+    background-image: $inform-panel-back;
+
+    & > progress[value]::-webkit-progress-bar {
+        background-color: rgb(75, 75, 75);
+    }
+    & > progress[value]::-webkit-progress-value {
+        background-color: rgb(99, 74, 207);
+    }
+}
+
+.enemy-unit-hp-bar {
+    position: absolute;
+    top: 44px;
+    left: 77px;
+    width: 346px;
+    height: 9px;
+    background-color: red;
+}
+
+.enemy-unit-damage {
+    top: 5px;
+    left: 130px;
+}
+
+.enemy-unit-speed {
+    top: 23px;
+    left: 130px;
+}
+
+.enemy-unit-damage,
+.enemy-unit-speed {
+    position: absolute;
+    color:  white;
+    z-index: 2;
+}

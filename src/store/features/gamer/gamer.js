@@ -7,7 +7,8 @@ export const gamerStore = createSlice({
         nextRentTime: 0,
         upadateLevelCost: 0,
         money: 0,
-        units: []
+        units: [],
+        might: 0
     },
     reducers: {
         gamer: (state, action) => {
@@ -25,6 +26,9 @@ export const gamerStore = createSlice({
             }
             if(action.payload.castleUpdateCost) {
                 state.upadateLevelCost = action.payload.castleUpdateCost;
+            }
+            if(action.payload.might) {
+                state.might = action.payload.might;
             }
         },
         changeStatus: (state, action) => {
