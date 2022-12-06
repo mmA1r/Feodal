@@ -8,6 +8,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.body.isCircle = true;
         this.selected = false;
         this.id = unitData.id;
+        this.might = 5;
         this.ownerId = unitData.ownerId;
         this.x = unitData.posX * 64;
         this.y = unitData.posY * 64;
@@ -45,6 +46,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
         this.setDisplaySize(40, 70);
+        if (this.type === "myUnit") this.updateArmyMight();
     }
 
     _addScene() {
@@ -127,6 +129,10 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this._setUnitStatus('attack');
     }
 
+    updateArmyMight(){
+        this.scene.store.loadToStore({might: this.scene.unitsGroup.getChildren().reduce((sumM,unit)=> (unit.type === "myUnit") ?sumM+unit.might: sumM+0, 0)},'gamer')
+    }
+
     damage(dmg) {
             if (this.status === "inCastle") {
                 this.castle.setTint(0xFF5545);
@@ -145,9 +151,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                 }, 300);
             }
             this.hp -= dmg;
+            //if (this.hp<0) this.hp = 0;
             this.damaged = true;
             if (this.selected) this._updateUI();
-        this.scene.updateOtherUnitsGroup.add(this);
+        if (this.type === "unit") this.scene.updateOtherUnitsGroup.add(this);
+        if (this.type === "myUnit") this.scene.updateMyUnitsGroup.add(this);
     }
 
     isMine() {
@@ -156,33 +164,41 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     _updateUI() {
-        this.scene.store.loadToStore({
-            hp: this.hp - 0,
-            type: 1
-        }, 'currentUnit')
+        if (this.scene.selectedUnits.getLength() === 1){
+            this.scene.store.loadToStore({
+                hp: this.hp - 0,
+                type: 1
+            }, 'currentUnit')
+        }
+        if (this.scene.selectedUnits.getLength() > 1){
+            let soldiers = {
+                fullHp: this.scene.selectedUnits.getLength()*100,
+                currentHp: this.scene.selectedUnits.getChildren().reduce((sumHp,unit)=> sumHp+unit.hp, 0),
+                num: this.scene.selectedUnits.getLength()
+            }
+            this.scene.store.loadToStore({soldiers: soldiers}, 'currentArmy')
+        }
     }
 
     select() {
         this.selector.setVisible(true);
-        //this.setTint(4234);
         this.selected = true;
         this.scene.selectedUnits.add(this);
-        //this.pointer.setVisible(true);
         if (this.scene.selectedUnits.getLength() === 1) {
             (this.type === "myUnit") ? this.scene.store.loadToStore('unit', 'ui') : this.scene.store.loadToStore('enemyUnit', 'ui');
-            this._updateUI();
         } else {
             this.scene.store.loadToStore('hide', 'ui');
         }
+        this._updateUI();
     }
 
     unSelect() {
         if (!this.scene.selectedObject) {
             this.selector.setVisible(false);
-            this.selected = false;
             this.scene.selectedUnits.remove(this);
             this.pointer.setVisible(false);
-            this.scene.store.loadToStore('hide', 'ui');
+            if (this.scene.selectedUnits.getLength()===1 && this.selected) this.scene.store.loadToStore('hide', 'ui');
+            this.selected = false;
         }
     }
 
@@ -224,11 +240,15 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     killed() {
-        console.log(this.id);
         this.selector.destroy();
         this.pointer.destroy();
-        this.unSelect();
         this.scene.unitsGroup.remove(this);
+        this.scene.selectedUnits.remove(this);
+        if (this.selected) this._updateUI();
+        this.unSelect();
+        if (this.type === "myUnit") {
+            this.updateArmyMight();
+        }
         this.destroy();
     }
 
