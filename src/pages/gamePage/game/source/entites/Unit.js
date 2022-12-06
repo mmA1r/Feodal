@@ -151,7 +151,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                 }, 300);
             }
             this.hp -= dmg;
-            //if (this.hp<0) this.hp = 0;
+            if (this.hp<0) this.hp = 0;
             this.damaged = true;
             if (this.selected) this._updateUI();
         if (this.type === "unit") this.scene.updateOtherUnitsGroup.add(this);
@@ -193,11 +193,12 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     unSelect() {
-        if (!this.scene.selectedObject) {
+        if (!this.scene.selectedObject && this.selected) {
             this.selector.setVisible(false);
+            if (this.scene.selectedUnits.getLength()===1) this.scene.store.loadToStore('hide', 'ui');
             this.scene.selectedUnits.remove(this);
+            this._updateUI();
             this.pointer.setVisible(false);
-            if (this.scene.selectedUnits.getLength()===1 && this.selected) this.scene.store.loadToStore('hide', 'ui');
             this.selected = false;
         }
     }
@@ -243,8 +244,6 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.selector.destroy();
         this.pointer.destroy();
         this.scene.unitsGroup.remove(this);
-        this.scene.selectedUnits.remove(this);
-        if (this.selected) this._updateUI();
         this.unSelect();
         if (this.type === "myUnit") {
             this.updateArmyMight();
