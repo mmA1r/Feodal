@@ -13,6 +13,8 @@ import ArmyNum from "./unitsUI/armyUI/armyNum/ArmyNum";
 import EnemyUnitInformPanel from "./unitsUI/enemyUnitUI/enemyUnitInformPanel/EnemyUnitInformPanel";
 import EnemyUnitMiniFrame from "./unitsUI/enemyUnitUI/enemyUnitMiniFrame/EnemyUnitMiniFrame"
 import EnemyArmyUI from "./unitsUI/enemyArmyUI/EnemyArmyUI";
+import EnemyCastleInform from "./enemyCastleUI/enemyCastleInform/EnemyCastleInform";
+import EnemyCastleMini from "./enemyCastleUI/enemyCastleMini/EnemyCastleMini";
 
 import './UI.scss';
 
@@ -32,7 +34,8 @@ export default function UI() {
                     </div>
                 : UI.enemyCastle ? 
                     <div className={'enemy-castle-UI'}>
-
+                        <EnemyCastleMini/>
+                        <EnemyCastleInform/>
                     </div>
                 : UI.unit ?
                     <div className={'unit-UI'}>
@@ -53,7 +56,7 @@ export default function UI() {
                     <div className={'enemy-army-UI'}>
                         <EnemyArmyUI/>
                     </div>
-                : UI.village === 'village' ?
+                : UI.village ?
                     <div className={'village-UI'}>
                         <VillageMiniFrame/>
                         <VillageInformPanel/>

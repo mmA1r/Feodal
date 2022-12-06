@@ -9,6 +9,8 @@ import gamer from "./features/gamer/gamer";
 import unit from "./features/currentUnit/currentUnit";
 import army from "./features/currentArmy/currentArmy";
 import action from "./features/buttonAction/buttonAction";
+import village from './features/village/village';
+import enemyCastle from "./features/enemyCastle/enemyCastle";
 
 export default configureStore({
     reducer: {
@@ -21,6 +23,8 @@ export default configureStore({
         currentUnit: unit,
         currentArmy: army,
         action: action,
+        village: village,
+        enemyCastle: enemyCastle
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

@@ -1,57 +1,27 @@
 $village_frame_1: url('../../../../../assets/UI/villageUI/villageFrameLevel1.png');
 $village_frame_2: url('../../../../../assets/UI/villageUI/villageFrameLevel2.png');
 $village_frame_3: url('../../../../../assets/UI/villageUI/villageFrameLevel3.png');
-$village_frame_4: url('../../../../../assets/UI/villageUI/villageFrameLevel4.png');
-$village_frame_5: url('../../../../../assets/UI/villageUI/villageFrameLevel5.png');
 
-// $village_mini_1: url('../../../../../assets/UI/');
 
-.village-mini-frame {
+.village-mini {
     position: relative;
     box-sizing: border-box;
     width: 120px;
     height: 120px;
-    background-image: $village_frame_1 ;
-    background-position: center;
-    background-size: cover;
-    &.castle-level-1 {
+
+    & > .village-mini-frame-1 {
+        width: 100%;
+        height: 100%;
         background-image: $village_frame_1 ;
-        background-position: center;
-        background-size: cover;
     }
-    &.castle-level-2 {
+    & > .village-mini-frame-2 {
+        width: 100%;
+        height: 100%;
         background-image: $village_frame_2 ;
-        background-position: center;
-        background-size: cover;
     }
-    &.castle-level-3 {
+    & > .village-mini-frame-3 {
+        width: 100%;
+        height: 100%;
         background-image: $village_frame_3 ;
-        background-position: center;
-        background-size: cover;
     }
-    &.castle-level-4 {
-        background-image: $village_frame_4 ;
-        background-position: center;
-        background-size: cover;
-    }
-    &.castle-level-5 {
-        background-image: $village_frame_5 ;
-        background-position: center;
-        background-size: cover;
-    }
-    z-index: 3;
 }
-
-// .village-mini-picture {
-//     box-sizing: border-box;
-//     position: absolute;
-//     top: 55px;
-//     left: 25px;
-//     height: 155px;
-//     width: 150px;
-
-//     background-image: $castle_mini_1;
-//     background-position: center;
-//     background-size: cover;
-//     z-index: 2;
-// }

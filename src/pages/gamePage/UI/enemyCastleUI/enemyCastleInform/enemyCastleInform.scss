@@ -1,0 +1,45 @@
+$info-panel: url('../../../../../assets/UI/enemyCastleUI/infoPanel.png');
+
+.enemy-castle-inform-panel {
+    position: relative;
+    height: 100px;
+    width: 500px;
+
+    background-image: $info-panel;
+
+    box-sizing: border-box;
+    border: none;
+
+    & > progress[value]::-webkit-progress-bar {
+        background-color: rgb(35, 34, 39);
+    }
+    & > progress[value]::-webkit-progress-value {
+        background-color: rgb(133, 7, 165);
+    }
+}
+
+.can-be-captured-state {
+    position: absolute;
+    color: white;
+    font-size: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.army-length {
+    position: absolute;
+    color: white;
+    font-size: 18px;
+    top: 20px;
+    left: 60px;
+}
+
+.enemy-castle-hp-bar {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    width: 492px;
+    height: 11px;
+    background-color: red;
+}
