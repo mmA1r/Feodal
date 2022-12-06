@@ -52,7 +52,7 @@ export default function SelectorUnits(scene) {
                 if (scene.selectedUnits.getLength() > 1) {
                     if (scene.selectorUnits.isMine) {
                         scene.selectedUnits.getChildren().forEach((unit) => {
-                            if (unit.type === "unit") scene.selectedUnits.remove(unit);
+                            if (unit.type !== "myUnit") unit.unSelect();
                         })
                     }
                     (scene.selectorUnits.isMine) ? scene.store.loadToStore('army', 'ui') : scene.store.loadToStore('enemyArmy', 'ui');
