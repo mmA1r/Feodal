@@ -13,7 +13,18 @@ export const army = createSlice({
     reducers: {
         currentArmy: (state, action) => {
             if('soldiers' in action.payload) {
-                state.soldiers = action.payload.soldiers;
+                if('fullHp' in action.payload.soldiers) {
+                    state.soldiers.fullHp = action.payload.soldiers.fullHp;
+                }
+                if('currentHp' in action.payload.soldiers) {
+                    state.soldiers.currentHp = action.payload.soldiers.currentHp;
+                }
+                if('might' in action.payload.soldiers) {
+                    state.soldiers.might = action.payload.soldiers.might;
+                }
+                if('num' in action.payload.soldiers) {
+                    state.soldiers.num = action.payload.soldiers.num;
+                }
             }
         }
     }
