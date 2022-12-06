@@ -30,11 +30,11 @@ export default class Village extends Phaser.GameObjects.Image {
         this.selector.strokeColor = 0x0000FF;
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
-        this.attackArea = this.scene.add.ellipse(this.x -10, this.y + 45, 500, 500,0x0000ff,0.1);
+        this.attackArea = this.scene.add.ellipse(this.x -10, this.y + 45, 500, 500,0xffff00,0.1);
         this.scene.physics.add.existing(this.attackArea, true);
         this.attackArea.body.onCollide = true;
         this.attackArea.isStroked = true;
-        this.attackArea.strokeColor = 0x0000FF;
+        this.attackArea.strokeColor = 0xffff00;
         this.attackArea.lineWidth = 2;
         this.attackArea.setVisible(false);
         this.canAttack = true;
@@ -74,7 +74,6 @@ export default class Village extends Phaser.GameObjects.Image {
     damage(dmg) {
         if (this.population>0) {
             this.currentHp -= dmg;
-            console.log(this.currentHp, this.population)
             if (this.currentHp<=0) {
                 this.currentHp = 100;
                 this.population--;
@@ -83,7 +82,6 @@ export default class Village extends Phaser.GameObjects.Image {
             if (this.selected) this._updateUI();
         }
         this.status = "attack";
-        this.attackArea.setVisible(true);
         this.setTint(0xFF5545);
         this.damaged = true;
         setTimeout(() => {
@@ -113,16 +111,16 @@ export default class Village extends Phaser.GameObjects.Image {
         if (this.canAttack) {
             setTimeout(() => { this.canAttack = true }, 4000);
             setTimeout(() => { 
-                this.attackArea.fillColor = 0xffff00;
-                this.attackArea.strokeColor = 0xffff00;
+                this.attackArea.setVisible(true);
              }, 2100);
             setTimeout(() => { 
                 this.attackArea.fillColor = 0xff0000;
                 this.attackArea.strokeColor = 0xff0000;
              }, 3700);
             setTimeout(() => {
-                this.attackArea.fillColor = 0x0000ff;
-                this.attackArea.strokeColor = 0x0000ff;
+                this.attackArea.fillColor = 0xffff00;
+                this.attackArea.strokeColor = 0xffff00;
+                this.attackArea.setVisible(false);
              }, 4300);
              let i = 0;
             this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{

@@ -6,10 +6,12 @@ export default function updateUnits(scene) {
     scene.updateMyUnitsGroup = scene.add.group();
     scene.updateOtherUnitsGroup = scene.add.group();
     scene.updateVillagesGroup = scene.add.group();
+    scene.deadUnitsGroup = scene.add.group();
     const updateUnits = setInterval(
         async() => {
             if (scene.updateMyUnitsGroup.getChildren()[0] || scene.updateOtherUnitsGroup.getChildren()[0] || scene.updateVillagesGroup.getChildren()[0]) {
                 let myUnits = scene.updateMyUnitsGroup.getChildren().map((unit) => {
+                    if (unit.hp<=0) scene.deadUnitsGroup.add(unit);
                     return {
                         id: unit.id,
                         hp: unit.hp,
@@ -20,6 +22,7 @@ export default function updateUnits(scene) {
                     }
                 });
                 let otherUnits=scene.updateOtherUnitsGroup.getChildren().map((unit) => {
+                    if (unit.hp<=0) scene.deadUnitsGroup.add(unit);
                     return {
                         id: unit.id,
                         hp: unit.hp
@@ -32,7 +35,12 @@ export default function updateUnits(scene) {
                     }
                 });
                 server.updateUnits({myUnits,otherUnits,villages});
-                let deadUnit = scene.updateMyUnitsGroup.getChildren().find(el => el.hp <= 0);
+                let deadUnit = scene.deadUnitsGroup.getChildren()[0];
+                while (deadUnit) {
+                    deadUnit.killed();
+                    deadUnit = scene.deadUnitsGroup.getChildren()[0];
+                }
+                /*let deadUnit = scene.updateMyUnitsGroup.getChildren().find(el => el.hp <= 0);
                 while (deadUnit) {
                     deadUnit.killed();
                     deadUnit = scene.updateMyUnitsGroup.getChildren().find(el => el.hp <= 0);
@@ -41,7 +49,7 @@ export default function updateUnits(scene) {
                 while (deadUnit) {
                     deadUnit.killed();
                     deadUnit = scene.updateOtherUnitsGroup.getChildren().find(el => el.hp <= 0);
-                }
+                }*/
                 scene.updateMyUnitsGroup.clear();
                 scene.updateOtherUnitsGroup.clear();
                 scene.updateVillagesGroup.clear();
