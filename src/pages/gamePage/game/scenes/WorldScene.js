@@ -52,6 +52,9 @@ export default class WorldScene extends Phaser.Scene {
         this.unitsGroup.getChildren().forEach((el) => {
             el.update();
         });
+        this.villagesGroup.getChildren().forEach((el) => {
+            el.update();
+        });
         if (this.cameras.main.isMoved) {
             this.cameras.main.move();
         }

@@ -30,6 +30,15 @@ export default class Village extends Phaser.GameObjects.Image {
         this.selector.strokeColor = 0x0000FF;
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
+        this.attackArea = this.scene.add.ellipse(this.x -10, this.y + 45, 500, 500,0x0000ff,0.1);
+        this.scene.physics.add.existing(this.attackArea, true);
+        this.attackArea.body.onCollide = true;
+        this.attackArea.isStroked = true;
+        this.attackArea.strokeColor = 0x0000FF;
+        this.attackArea.lineWidth = 2;
+        this.attackArea.setVisible(false);
+        this.canAttack = true;
+        this.status = "wait"
     }
 
     select() {
@@ -55,6 +64,7 @@ export default class Village extends Phaser.GameObjects.Image {
 
     killed() {
         this.selector.destroy();
+        this.attackArea.destroy();
         this.name.destroy();
         this.unSelect();
         this.scene.villagesGroup.remove(this);
@@ -72,6 +82,8 @@ export default class Village extends Phaser.GameObjects.Image {
             }
             if (this.selected) this._updateUI();
         }
+        this.status = "attack";
+        this.attackArea.setVisible(true);
         this.setTint(0xFF5545);
         this.damaged = true;
         setTimeout(() => {
@@ -95,5 +107,37 @@ export default class Village extends Phaser.GameObjects.Image {
             });
             this.scene.store.loadToStore({ units: array }, 'gamer');*/
         //}
+    }
+
+    attack() {
+        if (this.canAttack) {
+            setTimeout(() => { this.canAttack = true }, 4000);
+            setTimeout(() => { 
+                this.attackArea.fillColor = 0xff0000;
+                this.attackArea.strokeColor = 0xff0000;
+             }, 3500);
+            setTimeout(() => {
+                this.attackArea.fillColor = 0x0000ff;
+                this.attackArea.strokeColor = 0x0000ff;
+             }, 4500);
+             let i = 0;
+            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
+                i ++;
+            })
+            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
+                unit.damage(Math.round(this.population/i));
+            })
+            if (i === 0) {
+                this.status="wait"
+                this.attackArea.setVisible(false);
+            };
+            this.canAttack = false;
+        }
+    }
+
+    update(){
+        if (this.status === "attack") {
+            this.attack();
+        }
     }
 }

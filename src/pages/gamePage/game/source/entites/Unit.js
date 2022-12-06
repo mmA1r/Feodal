@@ -149,7 +149,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             this.damaged = true;
             if (this.selected) this._updateUI();
             console.log(this.hp);
-            if (this.type === 'unit') this.scene.updateOtherUnitsGroup.add(this);
+            (this.type === 'unit') ? this.scene.updateOtherUnitsGroup.add(this) : this.scene.updateMyUnitsGroup.add(this);
         }
     }
 
@@ -280,5 +280,6 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     update() {
         if (this.status === 'move') this._move();
         if (this.status === 'attack') this._move();
+        if(this.hp<=0) this.killed();
     }
 }

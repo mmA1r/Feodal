@@ -155,7 +155,7 @@
                         $money = $village->money - $cost;
                     } else{$level= $village->level;};
             // записать в БД
-                $this->db->updateVillage($id,$money,$level,$population,$time+rand(60*$this->config->intervalUpdateVillage,60*$this->config->intervalUpdateVillage+100-10*$village->level));
+                $this->db->updateVillage($id,$money,$level,$population,$time+rand(300,350));//60*$this->config->intervalUpdateVillage,60*$this->config->intervalUpdateVillage+100-10*$village->level));
                 $isUpdate = true;
                 }
             }

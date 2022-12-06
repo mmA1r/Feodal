@@ -55,7 +55,7 @@
             $statuses = $this->db->getStatuses();
             $time = microtime(true);
             $this->db->deadUnits();
-            if ($time - $statuses->mapTimeStamp >= 0.3) {
+            if ($time - $statuses->mapTimeStamp >= 0.15) {
                 $this->db->setMapTimeStamp($time);
                 return $time;
             }
