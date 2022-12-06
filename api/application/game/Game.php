@@ -7,8 +7,9 @@
         }
 
         private function addVillage(){
-            $posX = rand(10000,80000) / 1000;
-            $posY = rand(10000,80000) / 1000;
+            //$posX = rand(10000,80000) / 1000;
+            //$posY = rand(10000,80000) / 1000;
+            $coor = $this->map->generationPos();
             switch (rand(1,4)) {
                 case 1: $subname="Верхние"; break;
                 case 2: $subname="Нижние"; break;
@@ -21,7 +22,7 @@
                 case 3: $name="Разгромки"; break;
                 case 4: $name="Удалёнки"; break;
             }
-            $this->db->createVillage($subname.' '.$name, $posX, $posY);
+            $this->db->createVillage($subname.' '.$name, $coor->posX, $coor->posY);
         }
 
         public function getVillage($villageId) {
@@ -51,14 +52,14 @@
         }
 
         public function addCastle($userId) {
-            $castleX = rand(10000,80000) / 1000;
-            $castleY = rand(10000,80000) / 1000;
-
+            /*$castleX = rand(10000,80000) / 1000;
+            $castleY = rand(10000,80000) / 1000;*/
+            $coor = $this->map->generationPos();
             $nextRentTime = microtime(true) + 7200000;
 
             $castleColor = '#' . substr(md5(mt_rand()), 0, 6);
 
-            $this->db->addCastle($userId, $castleColor, $castleX, $castleY, $nextRentTime);
+            $this->db->addCastle($userId, $castleColor, $coor->posX, $coor->posY, $nextRentTime);
 
             $gamer = $this->db->getGamer($userId);
             $unitTypeData = $this->db->getUnitTypeData(1);
@@ -154,7 +155,7 @@
                         $money = $village->money - $cost;
                     } else{$level= $village->level;};
             // записать в БД
-                $this->db->updateVillage($id,$money,$level,$population,$time+rand(60000*$this->config->intervalUpdateVillage,60000*$this->config->intervalUpdateVillage+100000-10000*$village->level));
+                $this->db->updateVillage($id,$money,$level,$population,$time+rand(60*$this->config->intervalUpdateVillage,60*$this->config->intervalUpdateVillage+100-10*$village->level));
                 $isUpdate = true;
                 }
             }
