@@ -45,25 +45,28 @@ export default function SelectorUnits(scene) {
                     unit.select();
                 }
             })
+            if (scene.selectorUnits.isMine) {
+                let enemyUnit = scene.selectedUnits.getChildren().find(el => el.type === "unit");
+                while (enemyUnit) {
+                    enemyUnit.unSelect();
+                    enemyUnit = scene.selectedUnits.getChildren().find(el => el.type === "unit"); 
+                }
+            }
             scene.selectorUnits.height = 0;
             scene.selectorUnits.width = 0;
             setTimeout(() => {
                 scene.selectorUnits.removedFromScene();
                 if (scene.selectedUnits.getLength() > 1) {
-                    if (scene.selectorUnits.isMine) {
-                        scene.selectedUnits.getChildren().forEach((unit) => {
-                            if (unit.type !== "myUnit") unit.unSelect();
-                        })
-                    }
+
                     (scene.selectorUnits.isMine) ? scene.store.loadToStore('army', 'ui') : scene.store.loadToStore('enemyArmy', 'ui');
                     let soldiers = {
-                        fullHp: 100,
-                        currentHp: 100,
-                        might: 100,
+                        fullHp: scene.selectedUnits.getLength()*100,
+                        currentHp: scene.selectedUnits.getChildren().reduce((sumHp,unit)=> sumHp+unit.hp, 0),
                         num: scene.selectedUnits.getLength()
                     }
-                    scene.store.loadToStore(soldiers, 'currentArmy')
+                    scene.store.loadToStore({soldiers: soldiers}, 'currentArmy')
                 }
+                if (scene.selectedUnits.getLength() === 1) scene.selectedUnits.getChildren()[0].select();
             }, 100);
         }
     });

@@ -171,8 +171,8 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.selected = true;
         this.scene.selectedUnits.add(this);
         //this.pointer.setVisible(true);
-        if (this.type === "myUnit" && this.scene.selectedUnits.getLength() === 1) {
-            this.scene.store.loadToStore('unit', 'ui');
+        if (this.scene.selectedUnits.getLength() === 1) {
+            (this.type === "myUnit") ? this.scene.store.loadToStore('unit', 'ui') : this.scene.store.loadToStore('enemyUnit', 'ui');
             this._updateUI();
         } else {
             this.scene.store.loadToStore('hide', 'ui');
