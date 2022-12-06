@@ -1,0 +1,23 @@
+$might-icon: url('../../../assets/UI/CastleUI/mightIcon.png');
+
+.gamer-might-icon {
+    position: absolute;
+    width: 100px;
+    height: 18px;
+    top: 12px;
+    left: 100px;
+}
+
+.might-icon{
+    position: absolute;
+    height: 18px;
+    width: 15px;
+
+    background-image: $might-icon;
+}
+
+.gamer-might-num {
+    color: white;
+    position: absolute;
+    padding-left: 30px;
+}

@@ -1,0 +1,42 @@
+$soldier-level1: url('../../../../../../assets/UI/units/enemyWarriorMiniLevel1.png');
+$soldier-level2: url('../../../../../../assets/UI/units/enemyWarriorMiniLevel2.png');
+$soldier-level3: url('../../../../../../assets/UI/units/enemyWarriorMiniLevel3.png');
+
+.enemy-unit-frame-panel1-1 {
+    position: absolute;
+    left: -15px;
+    box-sizing: border-box;
+    width: 110px;
+    height: 110px;
+
+    background-image: $soldier-level1;
+
+    border: none;
+    border-radius: 50%;
+}
+
+.enemy-unit-frame-panel2-1 {
+    position: absolute;
+    left: -15px;
+    box-sizing: border-box;
+    width: 110px;
+    height: 110px;
+
+    background-image: $soldier-level2;
+
+    border: none;
+    border-radius: 50%;
+}
+
+.enemy-unit-frame-panel3-1 {
+    position: absolute;
+    left: -15px;
+    box-sizing: border-box;
+    width: 110px;
+    height: 110px;
+
+    background-image: $soldier-level3;
+
+    border: none;
+    border-radius: 50%;
+}

@@ -16,7 +16,8 @@ $bookshelf: url('../../../assets/UI/bookshelf.png');
 }
 
 .gamer-money-icon {
-    position: relative;
+    position: absolute;
+    width: 100px;
     top: 12px;
     left: 10px;
 }
@@ -24,5 +25,5 @@ $bookshelf: url('../../../assets/UI/bookshelf.png');
 .gamer-money-num {
     color: white;
     position: relative;
-    padding-left: 20px;
+    padding-left: 10px;
 }

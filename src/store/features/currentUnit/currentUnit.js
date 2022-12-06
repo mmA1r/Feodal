@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const unit = createSlice({
     name: 'unit',
     initialState: {
-        hp: 0,
+        hp: 100,
         type: 1,
         level: 1
     },

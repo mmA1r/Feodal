@@ -6,7 +6,6 @@ export const army = createSlice({
         soldiers: {
             fullHp: 0,
             currentHp: 0,
-            might: 0,
             num: 0
         }
     },
@@ -18,9 +17,6 @@ export const army = createSlice({
                 }
                 if('currentHp' in action.payload.soldiers) {
                     state.soldiers.currentHp = action.payload.soldiers.currentHp;
-                }
-                if('might' in action.payload.soldiers) {
-                    state.soldiers.might = action.payload.soldiers.might;
                 }
                 if('num' in action.payload.soldiers) {
                     state.soldiers.num = action.payload.soldiers.num;
