@@ -32,6 +32,16 @@ export default function updateUnits(scene) {
                     }
                 });
                 server.updateUnits({myUnits,otherUnits,villages});
+                let deadUnit = scene.updateMyUnitsGroup.getChildren().find(el => el.hp <= 0);
+                while (deadUnit) {
+                    deadUnit.killed();
+                    deadUnit = scene.updateMyUnitsGroup.getChildren().find(el => el.hp <= 0);
+                }
+                deadUnit = scene.updateOtherUnitsGroup.getChildren().find(el => el.hp <= 0);
+                while (deadUnit) {
+                    deadUnit.killed();
+                    deadUnit = scene.updateOtherUnitsGroup.getChildren().find(el => el.hp <= 0);
+                }
                 scene.updateMyUnitsGroup.clear();
                 scene.updateOtherUnitsGroup.clear();
                 scene.updateVillagesGroup.clear();

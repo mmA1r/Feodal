@@ -113,13 +113,17 @@ export default class Village extends Phaser.GameObjects.Image {
         if (this.canAttack) {
             setTimeout(() => { this.canAttack = true }, 4000);
             setTimeout(() => { 
+                this.attackArea.fillColor = 0xffff00;
+                this.attackArea.strokeColor = 0xffff00;
+             }, 2100);
+            setTimeout(() => { 
                 this.attackArea.fillColor = 0xff0000;
                 this.attackArea.strokeColor = 0xff0000;
-             }, 3500);
+             }, 3700);
             setTimeout(() => {
                 this.attackArea.fillColor = 0x0000ff;
                 this.attackArea.strokeColor = 0x0000ff;
-             }, 4500);
+             }, 4300);
              let i = 0;
             this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
                 i ++;
