@@ -82,7 +82,7 @@ export default class Castle extends Phaser.GameObjects.Image {
     damage(dmg) {
         if (this.units.getChildren()[0]) {
             this.units.getChildren()[0].damage(dmg);
-            if (this.selected) this._updateUI();
+            if (this.selected) this.updateUI();
         }
         else {
             DestroyCastle(this);
