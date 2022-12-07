@@ -75,7 +75,7 @@ export default class Village extends Phaser.GameObjects.Image {
         if (this.population>0) {
             this.currentHp -= dmg;
             if (this.currentHp<=0) {
-                this.currentHp = 100;
+                this.currentHp = 50;
                 this.population--;
                 this.scene.updateVillagesGroup.add(this);
             }
@@ -95,16 +95,16 @@ export default class Village extends Phaser.GameObjects.Image {
     }
 
     _updateUI() {
-        //if (this.selected) {
-            /*const array = this.units.getChildren().map((el) => {
-                return {
-                    type: el.unitType,
-                    status: 'inCastle',
-                    hp: el.hp
+        if (this.selected) {
+            let village = {
+                    currentHp: this.currentHp,
+                    fullHp: 50,
+                    population: this.population,
+                    villageLevel: this.level,
+                    id: this.id
                 }
-            });
-            this.scene.store.loadToStore({ units: array }, 'gamer');*/
-        //}
+            this.scene.store.loadToStore(village, 'village');
+        }
     }
 
     attack() {

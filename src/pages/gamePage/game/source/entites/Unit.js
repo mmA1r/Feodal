@@ -122,9 +122,9 @@ export default class Unit extends Phaser.GameObjects.Sprite {
 
     attack() {
         if (this.canAttack && this.target) {
+            this.canAttack = false;
             setTimeout(() => { this.canAttack = true }, 2000);
             this.target.damage(this.atk);
-            this.canAttack = false;
         }
         this._setUnitStatus('attack');
     }

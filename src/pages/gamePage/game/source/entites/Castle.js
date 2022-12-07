@@ -92,14 +92,26 @@ export default class Castle extends Phaser.GameObjects.Image {
 
     updateUI() {
         if (this.selected) {
-            const array = this.units.getChildren().map((el) => {
-                return {
-                    type: el.unitType,
-                    status: 'inCastle',
-                    hp: el.hp
+            if (this.type === "myCastle") {
+                const array = this.units.getChildren().map((el) => {
+                    return {
+                        type: el.unitType,
+                        status: 'inCastle',
+                        hp: el.hp
+                    }
+                });
+                this.scene.store.loadToStore({ units: array }, 'gamer');
+            }
+            if (this.type ==="castle") {
+                let castle = {
+                    fullHp: this.units.getLength()*100,
+                    currentHp: this.units.getChildren().reduce((sumHp,unit)=> sumHp+unit.hp, 0),
+                    armyLength: this.units.getLength(),
+                    castleLevel: this.level
                 }
-            });
-            this.scene.store.loadToStore({ units: array }, 'gamer');
+                this.scene.store.loadToStore(castle, 'enemyCastle');
+            }
+
         }
     }
 }
