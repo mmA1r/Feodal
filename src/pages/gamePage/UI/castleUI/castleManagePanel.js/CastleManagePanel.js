@@ -41,7 +41,11 @@ export default function CastleManagePanel() {
 
     function showCost(unitName) {
         if(unitName === 'castle') {
-            setUnitPrice(upgradeCastleCost);
+            if(gamerLevel === 5) {
+                setUnitPrice('max');
+            } else {
+                setUnitPrice(upgradeCastleCost);
+            }
         } else if(unitName === 'soldier') {
             setUnitPrice(soldierCost);
         } else {

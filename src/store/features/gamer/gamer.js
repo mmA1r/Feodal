@@ -4,7 +4,7 @@ export const gamerStore = createSlice({
     name: 'gamer',
     initialState: {
         level: 1,
-        nextRentTime: 300,
+        nextRentTime: 0,
         upadateLevelCost: 0,
         money: 0,
         units: [],

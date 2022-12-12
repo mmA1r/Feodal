@@ -45,5 +45,6 @@ export default class StoreLoader {
         store.dispatch(ui('hide'));
         store.dispatch(buttonAction('inactive'));
         store.dispatch(openUnitUI(false));
+        store.dispatch(currentVillage({ attacked: false }));
     }
 }
