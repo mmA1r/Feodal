@@ -164,4 +164,10 @@ export default class Server {
             victimId: castleId
         });
     }
+
+    async robVillage() {
+        return await this.send({
+            method: 'robVillage',
+        });
+    }
 }

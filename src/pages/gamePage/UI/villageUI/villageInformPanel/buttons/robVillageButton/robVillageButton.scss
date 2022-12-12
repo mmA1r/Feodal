@@ -1,0 +1,15 @@
+.beauty-rob-village-button {
+    width: 100px;
+    height: 25px;
+    fill: none;
+    &:hover {
+        & > rect {
+            fill: #3f2d00;
+        }
+    }
+    &:active {
+        & > rect {
+            fill: #9b6f00;
+        }
+    }
+}

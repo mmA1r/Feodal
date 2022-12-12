@@ -31,3 +31,21 @@ $inform-border: url('../../../../../assets/UI/villageUI/villageInfo.png');
     bottom: 4px;
     left: 4px;
 }
+
+.rob-village-button, .attack-village-button {
+    position: absolute;
+    top: 8px;
+    width: 100px;
+    height: 25px;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0;
+}
+
+.rob-village-button {
+    left: 129px;
+}
+.attack-village-button {
+    left: 271px;
+}

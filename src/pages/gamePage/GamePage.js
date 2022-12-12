@@ -63,7 +63,7 @@ export default function GamePage() {
                 >
                     <CastleButton></CastleButton>
                 </button>
-                <MiniMapFrame></MiniMapFrame>
+                <MiniMapFrame/>
             </div>
             <UI/>
             <Logout></Logout>
