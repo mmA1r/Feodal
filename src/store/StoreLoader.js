@@ -39,4 +39,11 @@ export default class StoreLoader {
             default: return true;
         }
     }
+
+    restore() {
+        store.dispatch(gamer({ level: 1, nextRentTime: 0, upadateLevelCost: 0, money: 0, units: [], might: 0 }));
+        store.dispatch(ui('hide'));
+        store.dispatch(buttonAction('inactive'));
+        store.dispatch(openUnitUI(false));
+    }
 }

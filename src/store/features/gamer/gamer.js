@@ -30,6 +30,9 @@ export const gamerStore = createSlice({
             if(action.payload.might) {
                 state.might = action.payload.might;
             }
+            if(action.payload.nextRentTime) {
+                state.nextRentTime = action.payload.nextRentTime;
+            }
         },
         changeStatus: (state, action) => {
             const soldiers = state.units.map(unit => {
