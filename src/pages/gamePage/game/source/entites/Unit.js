@@ -33,17 +33,17 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.setTexture('soldier', 0);
         this.anims.create({
             key: "move",
-            frames: [{
-                key: 'soldier',
-                frame: 0,
-                duration: 150
-            },
-            {
+            frames: [            {
                 key: 'soldier',
                 frame: 1,
                 duration: 200
+            },
+            {
+                key: 'soldier',
+                frame: 0,
+                duration: 150
             }],
-            frameRate: 6,
+            duration: 350,
             repeat: -1
         });
         this.rewriteData(unitData);
