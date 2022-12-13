@@ -3,8 +3,10 @@ import { useSelector, useStore } from "react-redux";
 
 import Money from "./money/Money";
 import WarriorButton from "./manageButtons/warriorButton/WarriorButton";
+import AssassinWarriorButton from "./manageButtons/assassinWarriorButton/AssassinWarriorButton";
 import CastleUpgradeButton from "./manageButtons/castleUpgradeButton/CastleUpgradeButton";
 import UnitsOutButton from "./manageButtons/unitsOutButton/UnitsOutButton";
+import LockedButton from "./manageButtons/lockedButton/LockedButton";
 import StoreLoader from "../../../../../store/StoreLoader";
 
 
@@ -23,6 +25,12 @@ export default function CastleManagePanel() {
 
     async function buySoldier() {
         await server.buyUnit(1);
+        const castleMoney = (await server.getCastle()).money-0;
+        store.loadToStore({ money: castleMoney }, 'gamer');
+    }
+
+    async function buyAssassin() {
+        await server.buyUnit(2);
         const castleMoney = (await server.getCastle()).money-0;
         store.loadToStore({ money: castleMoney }, 'gamer');
     }
@@ -72,6 +80,26 @@ export default function CastleManagePanel() {
             >
                 <WarriorButton/>
             </button>
+            { gamerLevel < 2 ? 
+                <button
+                    className="assassin-warrior-button"
+                    onMouseEnter={() => showCost('assassin')}
+                    onMouseLeave={() => hideCost()}
+                    onClick={() => buyAssassin()}
+                    disabled
+                >
+                    <LockedButton/>
+                </button>
+            : 
+                <button
+                    className="assassin-warrior-button"
+                    onMouseEnter={() => showCost('assassin')}
+                    onMouseLeave={() => hideCost()}
+                    onClick={() => buyAssassin()}
+                >
+                    <AssassinWarriorButton/>
+                </button>
+            }
             <UnitsOutButton/>
             <button 
                 className="upgrade-castle-button"
