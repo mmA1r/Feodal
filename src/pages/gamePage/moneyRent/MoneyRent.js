@@ -1,25 +1,35 @@
 import { useEffect, useState } from "react";
-import { useSelector, useStore } from "react-redux";
+import StoreLoader from "../../../store/StoreLoader";
 
 import './moneyRent.scss'
 
-export default function MoneyRent() {
+export default function MoneyRent(props) {
+    const { time } = props;
+    const [timeToRent, setTimeToRent] = useState(time);
+    const store = new StoreLoader()
 
-    const store = useStore();
+    const minutes = Math.floor(timeToRent / 60);
+    const seconds = Math.floor(timeToRent - minutes * 60);
 
-    const time = store.getState().gamer.nextRentTime;
-
-    const [timeToRentCounter, setTimeToRentCounter] = useState(time);
-
-    // useEffect(() => {
-    //     setInterval(() => {
-    //         setTimeToRentCounter(-1);
-    //     }, 1000);
-    // }, [])
+    useEffect(() => {
+        let timer;
+        if(time > 0) {
+            timer = setTimeout(() => {
+                setTimeToRent(timeToRent - 1);
+                store.loadToStore({ nextRentTime: timeToRent-1 }, 'gamer');
+            }, 1000);
+            if(timeToRent <= 0) {
+                clearTimeout(timer);
+            }
+        }
+        return () => {
+            clearTimeout(timer);
+        }
+    });
 
     return(
         <div className="money-rent-box">
-            ( {timeToRentCounter} )
+            ( - {minutes} : {seconds} )
         </div>
     );
 }
