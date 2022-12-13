@@ -55,7 +55,7 @@
             $statuses = $this->db->getStatuses();
             $time = microtime(true);
             $this->db->deadUnits();
-            if ($time - $statuses->mapTimeStamp >= 0.3) {
+            if ($time - $statuses->mapTimeStamp >= 0.15) {
                 $this->db->setMapTimeStamp($time);
                 return $time;
             }
@@ -65,11 +65,12 @@
             $isUpdate = false;
             foreach($myUnits as $myUnit){
                 $dbUnit = $this->db->getUnit($myUnit->id);
-                if($myUnit && $myUnit->hp<$dbUnit->hp){
-                        $this->db->updateUnit($gamer->id,$myUnit->id,$myUnit->hp,$myUnit->posX,$myUnit->posY,$myUnit->status,$myUnit->direction);
-                        $isUpdate = true;
+                if($dbUnit){
+                    if($myUnit->hp>$dbUnit->hp)$myUnit->hp=$dbUnit->hp;      
+                    $this->db->updateUnit($gamer->id,$myUnit->id,$myUnit->hp,$myUnit->posX,$myUnit->posY,$myUnit->status,$myUnit->direction);
+                    $isUpdate = true;
                 }
-            }
+            }  
             if ($isUpdate) {
                 $this->db->setUnitsHash(md5(rand()));
             }
@@ -92,13 +93,11 @@
         private function damageVillages($villages){
             $isUpdate = false;
             foreach($villages as $village){
-                if($village){
                     $dbVillage=$this->db->getVillage($village->id);
-                    if($village->population<$dbVillage->population){
-                        $this->db->updateVillage($village->population);
+                    if($dbVillage && $village->population<$dbVillage->population){
+                        $this->db->updateVillagePopulations($village->id, $village->population);
                         $isUpdate = true;
                     }
-                }
             }
             if ($isUpdate){
                 $this->db->setMapHash(md5(rand()));

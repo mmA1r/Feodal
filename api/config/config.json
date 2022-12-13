@@ -7,7 +7,7 @@
 	"password":""
 	},
 	"Game": {
-		"intervalUpdateVillage": 5,
+		"intervalUpdateVillage": 15,
 		"intervalRentMinutes": 60
 	}
 }

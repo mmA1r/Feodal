@@ -20,12 +20,14 @@ export default class WorldScene extends Phaser.Scene {
 
     preload() {
         uploadSources(this);
+        this.store = new StoreLoader;
         this.unitsGroup = this.add.group();
         this.castlesGroup = this.add.group();
         this.villagesGroup = this.add.group();
         this.selectedUnits = this.add.group();
         this.treesGroup = this.add.group();
         this.unitsInCastleGroup = this.add.group();
+        this.player = new Player(this);
     }
 
     async create() {
@@ -33,14 +35,21 @@ export default class WorldScene extends Phaser.Scene {
         const map = this.map;
         const tiles = map.addTilesetImage('spriteTileSet', 'spriteMap');
         this.grass = map.createLayer('grass', tiles, 0, 0);
+        this.grass.forEachTile((tile)=>{
+            tile.setVisible(false);
+        });
         this.bushes = map.createLayer('bushes', tiles, 0, 0);
+        this.bushes.forEachTile((tile)=>{
+            tile.setVisible(false);
+        });
         this.trees = map.createLayer('trees', tiles, 0, 0);
-        this.store = new StoreLoader;
-        Player(this);
+        this.trees.forEachTile((tile)=>{
+            tile.setVisible(false);
+        });
+        Trees(this);
         SelectorUnits(this);
         EventsOn(this);
         Camera(this);
-        Trees(this);
         Physics(this);
         this.updateUnits = updateUnits(this);
         this.getScene = getScene(this);
@@ -50,6 +59,12 @@ export default class WorldScene extends Phaser.Scene {
 
     async update() {
         this.unitsGroup.getChildren().forEach((el) => {
+            if (el.status != "inCastle") el.update();
+        });
+        this.villagesGroup.getChildren().forEach((el) => {
+            el.update();
+        });
+        this.castlesGroup.getChildren().forEach((el) => {
             el.update();
         });
         if (this.cameras.main.isMoved) {

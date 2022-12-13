@@ -13,7 +13,7 @@ export default class Server {
         const query = Object.keys(params).map(key =>
             `${key}=${params[key]}`
         ).join("&");
-        const responce = await fetch(`http://feodal/api/?${query}`);
+        const responce = await fetch(`http://feodal-1/api/?${query}`);
         const answer = await responce.json();
         return answer?.result === 'ok' ? answer?.data : null;
     }
@@ -22,7 +22,7 @@ export default class Server {
         if(this.token) {
             params.token = this.token;
         }
-        const responce = await fetch(`http://feodal/api/?method=${params['method']}`, {
+        const responce = await fetch(`http://feodal-1/api/?method=${params['method']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -165,9 +165,17 @@ export default class Server {
         });
     }
 
-    async robVillage() {
+    async destroyVillage(villageId) {
+        return await this.send({
+            method: 'destroyVillage',
+            village: villageId
+        });
+    }
+
+    async robVillage(villageId) {
         return await this.send({
             method: 'robVillage',
+            village: villageId
         });
     }
 }

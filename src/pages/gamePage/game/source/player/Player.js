@@ -1,21 +1,31 @@
+import Camera from '../camera/Camera';
 import getCastle from '../getCastle/getCastle'
 
-export default function Player(scene){
-    const data = getCastle(scene);
-    scene.player = {
-        id: data.id,
-        color: data.color,
-        units: scene.add.group(),
-        castle: {},
-        selectedObj: []
-    };
+export default class Player {
+    constructor(scene) {
+        this.scene = scene;
+        this.id = 0;
+        console.log(this.id);
+        this.units = scene.add.group();
+        this.castle = {};
+        this.selectedObj = [];
+        this.might = 0;
+        getCastle(this);
+    }
 
-    scene.player.select = function(selector){
-        scene.player.unselect();
+    updateMight() {
+        this.might = this.units.getChildren().reduce((sumM, unit) => sumM += unit.might, 0);
+        this.scene.store.loadToStore({ might: this.might }, 'gamer');
+        this.scene.villagesGroup.getChildren().forEach((v) => v.updateResistLevel());
+    }
+
+    select(selector) {
+        this.unselect();
         selector.forEach(el => el.select);
     };
 
-    scene.player.unselect = function() {
-        scene.player.selectedObj.forEach(el => el.unselect);
+    unselect() {
+        this.selectedObj.forEach(el => el.unselect);
+        this.selectedObj = [];
     }
 }

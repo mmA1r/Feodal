@@ -3,38 +3,28 @@ import Phaser from "phaser";
 export default function Camera(scene) {
     const Scene = scene;
     const camera = Scene.cameras.main;
-    camera.scrollSpeed = 30;
+    camera.scrollSpeed = 20;
+    let viewTiles = [];
     camera.viewScreenUpdate = function(){
-        scene.trees.forEachTile((tile) => {
-            if (tile.x*64< scene.cameras.main.midPoint.x-scene.cameras.main.width/camera.zoom 
-                || tile.x*64 > scene.cameras.main.midPoint.x+scene.cameras.main.width/camera.zoom 
-                || tile.y*64 < scene.cameras.main.midPoint.y-scene.cameras.main.height/camera.zoom 
-                || tile.y*64 > scene.cameras.main.midPoint.y+scene.cameras.main.height/camera.zoom ) {
-                    tile.setVisible(false);
-            } else {
+        let cameraWidth = (scene.cameras.main.width*1.5)/camera.zoom;
+        let cameraHeight = (scene.cameras.main.height*1.5)/camera.zoom;
+        let cameraX = scene.cameras.main.midPoint.x-cameraWidth/2;
+        let cameraY = scene.cameras.main.midPoint.y-cameraHeight/2;
+        viewTiles.forEach((tile)=>
+        tile.setVisible(false));
+        viewTiles = [];
+        scene.grass.getTilesWithinWorldXY(cameraX,cameraY, cameraWidth,cameraHeight).forEach((tile) => {
                 tile.setVisible(true);
-            }
+                viewTiles.push(tile);
         })
-        scene.grass.forEachTile((tile) => {
-            if (tile.x*64< scene.cameras.main.midPoint.x-scene.cameras.main.width/camera.zoom  
-                || tile.x*64 > scene.cameras.main.midPoint.x+scene.cameras.main.width/camera.zoom 
-                || tile.y*64 < scene.cameras.main.midPoint.y-scene.cameras.main.height/camera.zoom  
-                || tile.y*64 > scene.cameras.main.midPoint.y+scene.cameras.main.height/camera.zoom ) {
-                    tile.setVisible(false);
-            } else {
-                tile.setVisible(true);
-            }
+        scene.bushes.getTilesWithinWorldXY(cameraX,cameraY, cameraWidth,cameraHeight).forEach((tile) => {
+            tile.setVisible(true);
+            viewTiles.push(tile);
         })
-        scene.bushes.forEachTile((tile) => {
-            if (tile.x*64< scene.cameras.main.midPoint.x-scene.cameras.main.width/camera.zoom 
-                || tile.x*64 > scene.cameras.main.midPoint.x+scene.cameras.main.width/camera.zoom 
-                || tile.y*64 < scene.cameras.main.midPoint.y-scene.cameras.main.height/camera.zoom  
-                || tile.y*64 > scene.cameras.main.midPoint.y+scene.cameras.main.height/camera.zoom ) {
-                    tile.setVisible(false);
-            } else {
-                tile.setVisible(true);
-            }
-        })
+        /*scene.trees.getTilesWithinWorldXY(cameraX,cameraY, cameraWidth,cameraHeight).forEach((tile) => {
+            tile.setVisible(true);
+            viewTiles.push(tile);
+        })*/
         scene.treesGroup.getChildren().forEach((tree) => {
             if (tree.x < scene.cameras.main.midPoint.x-scene.cameras.main.width/camera.zoom   
                 || tree.x > scene.cameras.main.midPoint.x+scene.cameras.main.width/camera.zoom  
@@ -47,7 +37,9 @@ export default function Camera(scene) {
         })
     }
     //Начальная настройка камеры
+    camera.viewScreenUpdate();
     camera.setBounds(0, 0, Scene.map.widthInPixels, Scene.map.heightInPixels);
+
     camera.move = function () {
             let x = camera.dX*camera.scrollSpeed+camera.midPoint.x;
             let y = camera.dY*camera.scrollSpeed+camera.midPoint.y
@@ -58,9 +50,10 @@ export default function Camera(scene) {
     //Зум камеры
     Scene.input.on('wheel', (event) => {
             let zoom = camera.zoom;
-            if (event.deltaY > 0 && zoom > 0.5) camera.setZoom(zoom * 0.9);
-            if (event.deltaY < 0 && zoom < 5) camera.setZoom(zoom * 1.1);
+            if (event.deltaY > 0 && zoom > 0.65) camera.setZoom(zoom * 0.9);
+            if (event.deltaY < 0 && zoom < 3) camera.setZoom(zoom * 1.1);
             camera.viewScreenUpdate();
+            camera.scrollSpeed = 20/camera.zoom;
     });
 
     window.addEventListener('mousemove',(pointer) =>{
@@ -74,10 +67,6 @@ export default function Camera(scene) {
             camera.dY = dy;
             camera.isMoved = true;
         }
-    })
-
-    window.addEventListener('mousemove', (event)=>{
-
     })
 
     Scene.input.on('gameout',()=>{

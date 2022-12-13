@@ -8,12 +8,13 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.body.isCircle = true;
         this.selected = false;
         this.id = unitData.id;
+        this.might = 5;
         this.ownerId = unitData.ownerId;
         this.x = unitData.posX * 64;
         this.y = unitData.posY * 64;
         this.depth = this.y;
         this.unitType = unitData.type - 0;
-        this.type = (this.ownerId === this.scene.player) ? 'myUnit' : "unit";
+        this.type = (this.ownerId === this.scene.player.id) ? 'myUnit' : "unit";
         this.speed = 5;//unitData.speed;
         this.target = {
             x: unitData.posX * 64,
@@ -36,7 +37,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this._setUnitStatus(unitData.status);
         this.lastDist = 0;
         this.activeRadius = 1600;
-        this.atk = 10;
+        this.atk = 10-0;
         this.canAttack = true;
         this.onServer = true;
         this.selector = this.scene.add.ellipse(this.x - 8, this.y + 30, 35, 25);
@@ -45,6 +46,10 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
         this.setDisplaySize(40, 70);
+        if (this.type === "myUnit") {
+            this.scene.player.units.add(this);
+            this.scene.player.updateMight();
+        }
     }
 
     _addScene() {
@@ -119,71 +124,83 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     attack() {
-        if (this.canAttack) {
+        if (this.canAttack && this.target) {
+            this.canAttack = false;
             setTimeout(() => { this.canAttack = true }, 2000);
             this.target.damage(this.atk);
-            this.canAttack = false;
         }
         this._setUnitStatus('attack');
     }
 
+
+
     damage(dmg) {
-        if (this.status === "inCastle") {
-            this.castle.setTint(0xFF5545);
-            this.castle.damaged = true;
-            setTimeout(() => {
-                this.castle.setTint();
-                this.castle.damaged = false;
-            }, 300);
-        }
-        else {
-            this.setTint(0xFF5545);
+            if (this.status === "inCastle") {
+                this.castle.setTint(0xFF5545);
+                this.castle.damaged = true;
+                setTimeout(() => {
+                    this.castle.setTint();
+                    this.castle.damaged = false;
+                }, 300);
+            }
+            else {
+                this.setTint(0xFF5545);
+                this.damaged = true;
+                setTimeout(() => {
+                    this.setTint();
+                    this.damaged = false;
+                }, 300);
+            }
+            this.hp -= dmg;
+            if (this.hp<0) this.hp = 0;
             this.damaged = true;
-            setTimeout(() => {
-                this.setTint();
-                this.damaged = false;
-            }, 300);
-        }
-        this.hp -= dmg;
-        this.damaged = true;
-        if (this.selected) this._updateUI();
-        if (this.type != 'myUnit') this.scene.updateOtherUnitsGroup.add(this);
+            if (this.selected) this._updateUI();
+        if (this.type === "unit") this.scene.updateOtherUnitsGroup.add(this);
+        if (this.type === "myUnit") this.scene.updateMyUnitsGroup.add(this);
     }
 
     isMine() {
-        if (this.ownerId === this.scene.player) return true;
+        if (this.ownerId === this.scene.player.id) return true;
         return false;
     }
 
     _updateUI() {
-        this.scene.store.loadToStore({
-            hp: this.hp - 0,
-            type: 1
-        }, 'currentUnit')
+        if (this.scene.selectedUnits.getLength() === 1){
+            this.scene.store.loadToStore({
+                hp: this.hp - 0,
+                type: 1
+            }, 'currentUnit')
+        }
+        if (this.scene.selectedUnits.getLength() > 1){
+            let soldiers = {
+                fullHp: this.scene.selectedUnits.getLength()*100,
+                currentHp: this.scene.selectedUnits.getChildren().reduce((sumHp,unit)=> sumHp+unit.hp, 0),
+                num: this.scene.selectedUnits.getLength()
+            }
+            this.scene.store.loadToStore({soldiers: soldiers}, 'currentArmy')
+        }
     }
 
     select() {
         this.selector.setVisible(true);
-        //this.setTint(4234);
         this.selected = true;
         this.scene.selectedUnits.add(this);
-        //this.pointer.setVisible(true);
-        if (/*this.type="myUnit" &&*/this.scene.selectedUnits.getLength() === 1) {
-            this.scene.store.loadToStore('unit', 'ui');
-            this._updateUI();
+        if (this.scene.selectedUnits.getLength() === 1) {
+            (this.type === "myUnit") ? this.scene.store.loadToStore('unit', 'ui') : this.scene.store.loadToStore('enemyUnit', 'ui');
         } else {
             this.scene.store.loadToStore('hide', 'ui');
         }
+        this._updateUI();
     }
 
     unSelect() {
-        if (!this.scene.selectedObject) {
+        if (!this.scene.selectedObject && this.selected) {
             this.selector.setVisible(false);
-            //this.setTint();
-            this.selected = false;
+            if (this.scene.selectedUnits.getLength()===1) this.scene.store.loadToStore('hide', 'ui');
             this.scene.selectedUnits.remove(this);
+            this._updateUI();
             this.pointer.setVisible(false);
-            this.scene.store.loadToStore('hide', 'ui');
+            this.selected = false;
         }
     }
 
@@ -210,7 +227,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
 
     rewriteData(unitData) {
         unitData.hp = unitData.hp - 0;
-        if (unitData.hp<=0) return this.killed();
+        this.hp = unitData.hp;
         const dmg = this.hp - unitData.hp;
         (dmg > 0) ? this.damage(dmg) : this.hp = unitData.hp;
         if (this.type !== "myUnit") {
@@ -225,11 +242,15 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     killed() {
-            this.selector.destroy();
-            this.pointer.destroy();
-            this.unSelect();
-            this.scene.unitsGroup.remove(this);
-            this.destroy();
+        this.selector.destroy();
+        this.pointer.destroy();
+        this.scene.unitsGroup.remove(this);
+        this.unSelect();
+        if (this.type === "myUnit") {
+            this.scene.player.units.remove(this);
+            this.updateArmyMight();
+        }
+        this.destroy();
     }
 
     _intoCastle() {
@@ -258,7 +279,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                     setTimeout(() => this.moveTo(this.pointer), 100);
                 }
                 if (status === "stand") {
-                    //this.pointer.moveTo(this.x, this.y)
+                    this.pointer.moveTo(this.x, this.y)
                 }
             };
             this.status = status;

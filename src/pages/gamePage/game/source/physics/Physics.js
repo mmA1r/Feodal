@@ -5,7 +5,8 @@ export default function Physics(scene) {
     physics.world.bounds.width = scene.map.widthInPixels;
     physics.world.bounds.height = scene.map.heightInPixels;
 
-    physics.add.collider(scene.unitsGroup, scene.unitGroup, (unit1, unit2) => {
+    physics.add.collider(scene.unitsGroup, scene.unitsGroup, (unit1, unit2) => {
+        if (unit1 != unit2){}
     });
 
     /*physics.add.collider(scene.unitsGroup, scene.treesGroup, (u, tree) => {

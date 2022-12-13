@@ -22,7 +22,7 @@ export default function StoreData(scene) {
         }
         units.forEach((unit) => {
             if(unit.status==="outOfCastle") {
-                let castle = scene.castlesGroup.getChildren().find(el => el.id === scene.player);
+                let castle = scene.castlesGroup.getChildren().find(el => el.id === scene.player.id);
                 let unitInGame = castle.units.getChildren().find(el => el.hp === unit.hp);
                 if (unitInGame) {
                     unitInGame.outCastle();

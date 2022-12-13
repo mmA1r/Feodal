@@ -1,11 +1,12 @@
 import Phaser from "phaser";
 import UnitPointer from "./UnitPointer";
+import DestroyCastle from "../destroyCastle/DestroyCastle";
 
 export default class Castle extends Phaser.GameObjects.Image {
     constructor(scene, castleData) {
         super(scene);
-        this.x = Math.round(castleData.posX * 64);
-        this.y = Math.round(castleData.posY * 64);;
+        this.x = castleData.posX * 64;
+        this.y = castleData.posY * 64;
         this.depth = this.y;
         this.activeRadius = 40000;
         this.id = castleData.id;
@@ -16,7 +17,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.addToDisplayList();
         this.setInteractive();
         this.selected = false;
-        this.type = (this.id === this.scene.player) ? 'myCastle' : "castle";
+        this.type = (this.id === this.scene.player.id) ? 'myCastle' : "castle";
         this.scene.physics.add.existing(this, true);
         this.body.isCircle = true;
         this.units = this.scene.add.group();
@@ -29,12 +30,20 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.selector.strokeColor = (this.type === "myCastle") ? 0x00FF00 : 0xFF0000;
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
-        const name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
-        name.depth = 10000000;
-        name.style.setFontSize(30);
-        name.style.setAlign('center')
-        name.scrollFactorX = 1;
-        name.scrollFactorY = 1;
+        this.name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
+        this.name.depth = 10000000;
+        this.name.style.setFontSize(30);
+        this.name.style.setAlign('center')
+        this.name.scrollFactorX = 1;
+        this.name.scrollFactorY = 1;
+        this.attackArea = this.scene.add.ellipse(this.x -10, this.y + 45, 500, 500,0xffff00,0.1);
+        this.scene.physics.add.existing(this.attackArea, true);
+        this.attackArea.body.onCollide = true;
+        this.attackArea.isStroked = true;
+        this.attackArea.strokeColor = 0xffff00;
+        this.attackArea.lineWidth = 2;
+        this.attackArea.setVisible(false);
+        this.canAttack = true;
     }
 
     select() {
@@ -57,7 +66,6 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     unSelect() {
-        this.setTint();
         this.selected = false;
         this.selector.setVisible(false);
         this.scene.selectedObject = null;
@@ -66,13 +74,12 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     killed() {
-        if (!this.onServer && this.hp <= 0) {
             this.selector.destroy();
             this.pointer.destroy();
+            this.name.destroy();
             this.unSelect();
-            this.scene.unitsGroup.remove(this);
+            this.scene.castlesGroup.remove(this);
             this.destroy();
-        }
     }
 
     rewriteData(castleData) {
@@ -83,24 +90,74 @@ export default class Castle extends Phaser.GameObjects.Image {
     damage(dmg) {
         if (this.units.getChildren()[0]) {
             this.units.getChildren()[0].damage(dmg);
+            if (this.selected) this.updateUI();
         }
         else {
-            this.destroy();
+            DestroyCastle(this);
         }
         this.damaged = true;
-        if (this.selected) this._updateUI();
+        this.status = "attack"
     }
 
     updateUI() {
         if (this.selected) {
-            const array = this.units.getChildren().map((el) => {
-                return {
-                    type: el.unitType,
-                    status: 'inCastle',
-                    hp: el.hp
+            if (this.type === "myCastle") {
+                const array = this.units.getChildren().map((el) => {
+                    return {
+                        type: el.unitType,
+                        status: 'inCastle',
+                        hp: el.hp
+                    }
+                });
+                this.scene.store.loadToStore({ units: array }, 'gamer');
+            }
+            if (this.type ==="castle") {
+                let castle = {
+                    fullHp: this.units.getLength()*100,
+                    currentHp: this.units.getChildren().reduce((sumHp,unit)=> sumHp+unit.hp, 0),
+                    armyLength: this.units.getLength(),
+                    castleLevel: this.level
                 }
-            });
-            this.scene.store.loadToStore({ units: array }, 'gamer');
+                this.scene.store.loadToStore(castle, 'enemyCastle');
+            }
+
+        }
+    }
+
+    attack() {
+        if (this.canAttack) {
+            setTimeout(() => { this.canAttack = true }, 4000);
+            setTimeout(() => { 
+                this.attackArea.setVisible(true);
+             }, 2100);
+            setTimeout(() => { 
+                this.attackArea.fillColor = 0xff0000;
+                this.attackArea.strokeColor = 0xff0000;
+             }, 3700);
+            setTimeout(() => {
+                this.attackArea.fillColor = 0xffff00;
+                this.attackArea.strokeColor = 0xffff00;
+                this.attackArea.setVisible(false);
+             }, 4300);
+             let i = 0;
+            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
+                i ++;
+            })
+            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
+                console.log(this.units.getChildren().reduce((damage,unit)=> damage += unit.atk,0))
+                unit.damage(Math.round(this.units.getChildren().reduce((damage,unit)=> damage += unit.atk,0)/i));
+            })
+            if (i === 0) {
+                this.status="wait"
+                this.attackArea.setVisible(false);
+            };
+            this.canAttack = false;
+        }
+    }
+
+    update(){
+        if (this.status === "attack") {
+            this.attack();
         }
     }
 }

@@ -28,16 +28,23 @@ export default function getScene(scene) {
                     }
                 })
             }
-            if (data?.villages) {
-                let villages = data.villages;
-                villages.forEach((village) => {
-                    let villageOnScene = scene.villagesGroup.getChildren().find(el => el.id === village.id);
-                    if (villageOnScene) {
-                        villageOnScene.rewriteData(village);
-                    } else {
-                        new Village(Scene,village);
+            if (data?.villages[0]) {
+                data.villages.forEach((villageData) => {
+                    if (!scene.villagesGroup.getChildren().find(el => el.id === villageData.id)) {
+                        new Village(scene,villageData);
                     }
-                }) 
+                })
+                scene.villagesGroup.getChildren().forEach((village)=>{
+                    const villageOnServer = data.villages.find((v) => {
+                        return v.id === village.id;
+                    })
+                    if (villageOnServer) {
+                        village.rewriteData(villageOnServer);
+                    }
+                    else {
+                        village.killed();
+                    }
+                })
             }
             if (data?.units[0]) {
                 data.units.forEach((unitData) => {
@@ -53,7 +60,7 @@ export default function getScene(scene) {
                         unit.rewriteData(unitOnServer);
                     }
                     else {
-                        unit.rewriteData({hp: 0})
+                        unit.killed()
                     }
                     
                 })
