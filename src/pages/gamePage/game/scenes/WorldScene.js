@@ -20,12 +20,14 @@ export default class WorldScene extends Phaser.Scene {
 
     preload() {
         uploadSources(this);
+        this.store = new StoreLoader;
         this.unitsGroup = this.add.group();
         this.castlesGroup = this.add.group();
         this.villagesGroup = this.add.group();
         this.selectedUnits = this.add.group();
         this.treesGroup = this.add.group();
         this.unitsInCastleGroup = this.add.group();
+        this.player = new Player(this);
     }
 
     async create() {
@@ -44,12 +46,10 @@ export default class WorldScene extends Phaser.Scene {
         this.trees.forEachTile((tile)=>{
             tile.setVisible(false);
         });
-        this.store = new StoreLoader;
-        Player(this);
+        Trees(this);
         SelectorUnits(this);
         EventsOn(this);
         Camera(this);
-        Trees(this);
         Physics(this);
         this.updateUnits = updateUnits(this);
         this.getScene = getScene(this);

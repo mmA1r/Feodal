@@ -14,7 +14,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.y = unitData.posY * 64;
         this.depth = this.y;
         this.unitType = unitData.type - 0;
-        this.type = (this.ownerId === this.scene.player) ? 'myUnit' : "unit";
+        this.type = (this.ownerId === this.scene.player.id) ? 'myUnit' : "unit";
         this.speed = 5;//unitData.speed;
         this.target = {
             x: unitData.posX * 64,
@@ -46,7 +46,10 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
         this.setDisplaySize(40, 70);
-        if (this.type === "myUnit") this.updateArmyMight();
+        if (this.type === "myUnit") {
+            this.scene.player.units.add(this);
+            this.scene.player.updateMight();
+        }
     }
 
     _addScene() {
@@ -129,12 +132,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this._setUnitStatus('attack');
     }
 
-    updateArmyMight(){
-        const might = this.scene.unitsGroup.getChildren().reduce((sumM,unit)=> (unit.type === "myUnit") ?sumM+unit.might: sumM+0, 0);
-        this.scene.might = might;
-        this.scene.store.loadToStore({might: might},'gamer');
-        this.scene.villagesGroup.getChildren().forEach((v) => v.updateResistLevel());
-    }
+
 
     damage(dmg) {
             if (this.status === "inCastle") {
@@ -162,7 +160,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     isMine() {
-        if (this.ownerId === this.scene.player) return true;
+        if (this.ownerId === this.scene.player.id) return true;
         return false;
     }
 
@@ -249,6 +247,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.scene.unitsGroup.remove(this);
         this.unSelect();
         if (this.type === "myUnit") {
+            this.scene.player.units.remove(this);
             this.updateArmyMight();
         }
         this.destroy();

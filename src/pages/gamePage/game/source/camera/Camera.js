@@ -6,8 +6,8 @@ export default function Camera(scene) {
     camera.scrollSpeed = 40;
     let viewTiles = [];
     camera.viewScreenUpdate = function(){
-        let cameraWidth = (scene.cameras.main.width)/camera.zoom;
-        let cameraHeight = (scene.cameras.main.height)/camera.zoom;
+        let cameraWidth = (scene.cameras.main.width*1.5)/camera.zoom;
+        let cameraHeight = (scene.cameras.main.height*1.5)/camera.zoom;
         let cameraX = scene.cameras.main.midPoint.x-cameraWidth/2;
         let cameraY = scene.cameras.main.midPoint.y-cameraHeight/2;
         viewTiles.forEach((tile)=>
@@ -37,6 +37,7 @@ export default function Camera(scene) {
         })
     }
     //Начальная настройка камеры
+    camera.viewScreenUpdate();
     camera.setBounds(0, 0, Scene.map.widthInPixels, Scene.map.heightInPixels);
 
     camera.move = function () {
