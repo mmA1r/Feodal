@@ -5,12 +5,12 @@ export const userInterface = createSlice({
     initialState: {
         value: {
             hide: false,
-            castle: true,
+            castle: false,
             enemyCastle: false,
             unit: false,
             enemyUnit: false,
             army: false,
-            enemyArmy: false,
+            enemyArmy: true,
             village: false
         }
     },

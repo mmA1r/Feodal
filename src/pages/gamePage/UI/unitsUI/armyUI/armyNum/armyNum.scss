@@ -18,14 +18,6 @@ $army-total-num: url('../../../../../../assets/UI/army/totalArmyNum.png');
 
     background-image: $army-might;
     text-align: end;
-
-    & > .army-might-num {
-        font-size: 12px;
-        position: relative;
-        color: white;
-        top: 5px;
-        right: 25px;
-    }
 }
 
 .army-list {
@@ -38,6 +30,15 @@ $army-total-num: url('../../../../../../assets/UI/army/totalArmyNum.png');
     background-image: $army-list;
 
     & > .soldiers-num {
+        position: relative;
+        padding: 10px;
+        color: white;
+        font-size: 13px;
+        & > .army-number {
+            padding-left: 60px;
+        }
+    }
+    & > .assassins-num {
         position: relative;
         padding: 10px;
         color: white;
