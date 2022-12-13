@@ -7,20 +7,23 @@
         }
 
         private function addVillage(){
-            //$posX = rand(10000,80000) / 1000;
-            //$posY = rand(10000,80000) / 1000;
             $coor = $this->map->generationPos();
-            switch (rand(1,4)) {
+            switch (rand(1,7)) {
                 case 1: $subname="Верхние"; break;
                 case 2: $subname="Нижние"; break;
                 case 3: $subname="Болотистые"; break;
                 case 4: $subname="Далёкие"; break;
+                case 5: $subname="Старые"; break;
+                case 6: $subname="Средние"; break;
+                case 7: $subname="Новые"; break;
             }
-            switch (rand(1,4)) {
+            switch (rand(1,6)) {
                 case 1: $name="Потёмки"; break;
                 case 2: $name="Свистульки"; break;
                 case 3: $name="Разгромки"; break;
                 case 4: $name="Удалёнки"; break;
+                case 5: $name="Полёнки"; break;
+                case 6: $name="Бубрёнки"; break;
             }
             $this->db->createVillage($subname.' '.$name, $coor->posX, $coor->posY);
         }
@@ -52,10 +55,8 @@
         }
 
         public function addCastle($userId) {
-            /*$castleX = rand(10000,80000) / 1000;
-            $castleY = rand(10000,80000) / 1000;*/
             $coor = $this->map->generationPos();
-            $nextRentTime = microtime(true) + 7200000;
+            $nextRentTime = microtime(true) + 300;
 
             $castleColor = '#' . substr(md5(mt_rand()), 0, 6);
 
@@ -159,7 +160,7 @@
                 $isUpdate = true;
                 }
             }
-            if (!$villages || count($villages)<11) {
+            if (!$villages || count($villages)<26) {
                 $this->addVillage();
             }
             // обновить все замки

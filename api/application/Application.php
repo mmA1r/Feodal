@@ -22,7 +22,7 @@ class Application {
     //функция проверки полученных значений в запросе
     private function checkParams($params){
         foreach($params as $param=>$value){
-            if($param == 'token' && !is_string($value) && strlen($value) > 16){
+            if($param == 'token' && !is_string($value) && strlen($value) > 32){
                 return false;
             }
             if($param == 'login' && !is_string($value) && strlen($value) > 16){

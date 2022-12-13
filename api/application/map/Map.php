@@ -38,11 +38,11 @@ class Map{
         $map = $this->getMap(1);
         $castles = $this->db->getCastles();
         $villages = $this->db->getVillages();
-        $posX = rand(10000,80000) / 1000;
-        $posY = rand(10000,80000) / 1000;
+        $posX = rand(15000,150000) / 1000;
+        $posY = rand(15000,150000) / 1000;
         while(!$this->validPosObject(1,$posX,$posY,1, $map, $castles,$villages)){
-            $posX = rand(10000,80000) / 1000;
-            $posY = rand(10000,80000) / 1000;
+            $posX = rand(15000,145000) / 1000;
+            $posY = rand(15000,145000) / 1000;
         };
         $coor->posX = $posX;
         $coor->posY = $posY;
