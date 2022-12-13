@@ -1,0 +1,7 @@
+$locked-button: url('../../../../../../../assets/UI/CastleUI/lockedButton.png');
+
+.locked-buy-button {
+    width: 56px;
+    height: 56px;
+    background-image: $locked-button;
+}

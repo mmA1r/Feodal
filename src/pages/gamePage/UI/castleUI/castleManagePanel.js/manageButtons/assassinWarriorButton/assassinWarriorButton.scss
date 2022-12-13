@@ -1,0 +1,38 @@
+@import '../../../../../gameConst.scss';
+
+.assassin-buy {
+    width: 56px;
+    height: 56px;
+    fill: none;
+
+    &:hover {
+        .assassin-buy-icon-frame {
+            fill: $jewerly-border-color;
+        }
+        .assassin-buy-icon-frame2 {
+            stroke: $jewerly-border-color;
+        }
+        .assassin-buy-icon-back {
+            fill: #300000;
+        }
+    }
+    &:active {
+        .assassin-buy-icon {
+            transform: scale(0.95);
+            transform-origin: 15px;
+        }
+    }
+}
+
+.assassin-buy-icon-back {
+    fill: #460000;
+}
+.assassin-buy-icon {
+    fill:  $icon-inside-color;
+}
+.assassin-buy-icon-frame {
+    fill: $icon-border-color;
+}
+.assassin-buy-icon-frame2 {
+    stroke: $icon-border-color;
+}

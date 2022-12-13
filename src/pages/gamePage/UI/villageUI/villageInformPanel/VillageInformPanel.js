@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import StoreLoader from '../../../../../store/StoreLoader';
 
 import AttackVillageButton from './buttons/attackVillageButton/AttackVillageButton';
 import RobVillageButton from './buttons/robVillageButton/RobVillageButton';
@@ -11,15 +12,16 @@ export default function VillageInformPanel() {
     const fullHp = useSelector((state) => state.village.fullHp);
     const population = useSelector((state) => state.village.population);
     const might = useSelector((state) => state.gamer.might);
+    const store = new StoreLoader()
 
     const server = useSelector((state) => state.server.value);
 
-    function robVillage() {
-        
+    async function robVillage() {
+        return await server.robVillage();
     }
 
     function attackVillage() {
-
+        return store.loadToStore({ attacked: true }, 'village');
     }
     
     return (

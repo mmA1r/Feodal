@@ -21,7 +21,7 @@ $manage-panel: url('../../../../../assets/UI/CastleUI/castleManagePanel.png');
     background-position: center;
 }
 
-.buy-warrior-unit-button, .upgrade-castle-button, .units-out-button {
+.buy-warrior-unit-button, .upgrade-castle-button, .units-out-button, .assassin-warrior-button {
     position: absolute;
     width: 56px;
     height: 56px;
@@ -36,6 +36,11 @@ $manage-panel: url('../../../../../assets/UI/CastleUI/castleManagePanel.png');
 
 .buy-warrior-unit-button {
     left: 8px;
+    top: 42px;
+}
+
+.assassin-warrior-button {
+    left: 66px;
     top: 42px;
 }
 

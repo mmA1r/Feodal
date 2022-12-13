@@ -7,7 +7,8 @@ export const village = createSlice({
         fullHp: 0,
         population: 0,
         villageLevel: 1,
-        id: 0
+        id: 0,
+        attacked: false
     },
     reducers: {
         currentVillage: (state, action) => {
@@ -25,6 +26,9 @@ export const village = createSlice({
             }
             if('id' in action.payload) {
                 state.id = action.payload.id;
+            }
+            if('attacked' in action.payload) {
+                state.attacked = action.payload.attacked;
             }
         }
     }

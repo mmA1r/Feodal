@@ -29,7 +29,7 @@ export default function MoneyRent(props) {
 
     return(
         <div className="money-rent-box">
-            ( - {minutes} : {seconds} )
+            ( {minutes} : {seconds} )
         </div>
     );
 }
