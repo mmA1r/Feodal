@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import DestroyVillage from "../destroyVillage/DestroyVillage";
 
-export default class Village extends Phaser.GameObjects.Image {
+export default class Village extends Phaser.GameObjects.Sprite {
     constructor(scene, serverData) {
         super(scene);
         this.x = Math.round(serverData.posX * 64);
@@ -9,8 +9,44 @@ export default class Village extends Phaser.GameObjects.Image {
         this.depth = 1;
         this.activeRadius = 40000;
         this.id = serverData.id;
+        this.level = serverData.level-0;
         this.scene.villagesGroup.add(this);
-        this.setTexture('village', 0);
+        switch (this.level){
+            case 1:
+                this.setTexture('villageFirstLevel', 0);
+                this.attackTexture = 1;
+                break;
+            case 2:
+                this.anims.create({
+                    key: "mill",
+                    frames: [            {
+                        key: 'villageSecondLevel',
+                        frame: 0,
+                        duration: 80
+                    },
+                    {
+                        key: 'villageSecondLevel',
+                        frame: 1,
+                        duration: 80
+                    },
+                    {
+                        key: 'villageSecondLevel',
+                        frame: 2,
+                        duration: 80
+                    },
+                    {
+                        key: 'villageSecondLevel',
+                        frame: 3,
+                        duration: 80
+                    }],
+                    duration: 320,
+                    repeat: -1
+                });
+                this.anims.play("mill", true)
+                this.attackTexture = 4;
+                break;
+
+        }
         this.resistBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0xff0000);
         this.resistBar.depth = 99999991;
         this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
