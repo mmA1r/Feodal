@@ -47,6 +47,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             this.scene.player.units.add(this);
             this.scene.player.updateMight();
         }
+        
     }
 
     _addScene() {
@@ -163,7 +164,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         if (this.scene.selectedUnits.getLength() === 1) {
             this.scene.store.loadToStore({
                 hp: this.hp - 0,
-                type: 1
+                type: this.unitType
             }, 'currentUnit')
         }
         if (this.scene.selectedUnits.getLength() > 1) {

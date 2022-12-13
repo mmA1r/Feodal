@@ -25,5 +25,6 @@ export default class Soldier extends Unit {
             repeat: -1
         });
         this.setDisplaySize(40, 70);
+        
     }
 }
