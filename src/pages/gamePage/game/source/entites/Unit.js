@@ -30,22 +30,6 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             sin: 1,
             cos: 0
         };
-        this.setTexture('soldier', 0);
-        this.anims.create({
-            key: "move",
-            frames: [            {
-                key: 'soldier',
-                frame: 1,
-                duration: 200
-            },
-            {
-                key: 'soldier',
-                frame: 0,
-                duration: 150
-            }],
-            duration: 350,
-            repeat: -1
-        });
         this.rewriteData(unitData);
         this.addToDisplayList();
         if (unitData.status !== "inCastle") this._addScene();
@@ -54,13 +38,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.activeRadius = 1600;
         this.atk = 10 - 0;
         this.canAttack = true;
-        this.onServer = true;
         this.selector = this.scene.add.ellipse(this.x - 8, this.y + 30, 35, 25);
         this.selector.isStroked = true;
         this.selector.strokeColor = (this.type === "myUnit") ? 0x00FF00 : 0xFF0000;
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
-        this.setDisplaySize(40, 70);
         if (this.type === "myUnit") {
             this.scene.player.units.add(this);
             this.scene.player.updateMight();
