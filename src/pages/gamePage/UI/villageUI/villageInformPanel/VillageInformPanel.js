@@ -11,13 +11,15 @@ export default function VillageInformPanel() {
     const currentHp = useSelector((state) => state.village.currentHp);
     const fullHp = useSelector((state) => state.village.fullHp);
     const population = useSelector((state) => state.village.population);
+    const villageId = useSelector((state) => state.village.id);
     const might = useSelector((state) => state.gamer.might);
     const store = new StoreLoader()
 
     const server = useSelector((state) => state.server.value);
 
     async function robVillage() {
-        return await server.robVillage();
+        const money = (await server.robVillage(villageId)).money-0;
+        store.loadToStore({ money: money }, 'gamer');
     }
 
     function attackVillage() {

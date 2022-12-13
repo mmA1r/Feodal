@@ -17,6 +17,7 @@ export default function CastleManagePanel() {
     const upgradeCastleCost = useSelector((state) => state.gamer.upadateLevelCost);
     const gamerLevel = useSelector((state) => state.gamer.level);
     const soldierCost = useSelector((state) => state.soldier.cost);
+    const assassinCost = useSelector((state) => state.assassin.cost);
 
     const store = new StoreLoader();
 
@@ -56,6 +57,8 @@ export default function CastleManagePanel() {
             }
         } else if(unitName === 'soldier') {
             setUnitPrice(soldierCost);
+        } else if(unitName === 'assassin') {
+            setUnitPrice(assassinCost);
         } else {
             setUnitPrice(0);
         }

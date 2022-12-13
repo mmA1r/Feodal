@@ -45,7 +45,7 @@ export default class StoreLoader {
 
     restore() {
         store.dispatch(gamer({ level: 1, nextRentTime: 0, upadateLevelCost: 0, money: 0, units: [], might: 0 }));
-        store.dispatch(ui('castle'));
+        store.dispatch(ui('true'));
         store.dispatch(buttonAction('inactive'));
         store.dispatch(openUnitUI(false));
         store.dispatch(currentVillage({ attacked: false }));
