@@ -9,11 +9,17 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.selected = false;
         this.id = unitData.id;
         this.might = 5;
+        this.unitType = unitData.type - 0;
+        switch (this.unitType) {
+            case 1: 
+            this.setTexture('soldier', 0);
+            this.setDisplaySize(40, 70);
+            break;
+        }
         this.ownerId = unitData.ownerId;
         this.x = unitData.posX * 64;
         this.y = unitData.posY * 64;
         this.depth = this.y;
-        this.unitType = unitData.type - 0;
         this.type = (this.ownerId === this.scene.player.id) ? 'myUnit' : "unit";
         this.speed = 5;//unitData.speed;
         this.target = {
@@ -47,14 +53,13 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             this.scene.player.units.add(this);
             this.scene.player.updateMight();
         }
-        
     }
 
     _addScene() {
         this.setVisible(true);
         this.body.enable = true;
         this.addedToScene();
-        this.setInteractive()
+        this.setInteractive();
 
     }
 
