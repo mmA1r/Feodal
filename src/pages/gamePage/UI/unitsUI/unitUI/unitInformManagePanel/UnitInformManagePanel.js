@@ -8,6 +8,7 @@ export default function UnitInformManagePanel() {
 
 
     const soldier = useSelector((state) => state.soldier);
+    const assassin = useSelector((state) => state.assassin);
     const type = useSelector((state) => state.currentUnit.type);
 
     function pushValues(value) {
@@ -18,6 +19,15 @@ export default function UnitInformManagePanel() {
                 return soldier.speed;
             } else if(value === 'might') {
                 return soldier.might;
+            }
+        }
+        if(type === 2) {
+            if(value === 'damage') {
+                return assassin.damage;
+            } else if(value === 'speed') {
+                return assassin.speed;
+            } else if(value === 'might') {
+                return assassin.might;
             }
         }
     }

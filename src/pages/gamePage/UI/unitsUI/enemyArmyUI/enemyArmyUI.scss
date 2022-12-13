@@ -11,9 +11,15 @@ $enemy-army-background: url('../../../../../assets/UI/army/enemyArmyUI.png');
 
 .enemy-soldiers-num {
     color: white;
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
+    & > .army-number {
+        padding-left: 100px;
+    }
 }
-
-.army-number {
-    padding-left: 100px;
+.enemy-assassins-num {
+    color: white;
+    padding: 10px 10px 0px 10px;
+    & > .army-number {
+        padding-left: 90px;
+    }
 }

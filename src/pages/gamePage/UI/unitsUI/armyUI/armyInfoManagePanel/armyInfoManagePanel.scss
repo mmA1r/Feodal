@@ -1,6 +1,7 @@
 $hp-bar-back: url('../../../../../../assets/UI/army/hpBar.png');
 $units-icon-frame: url('../../../../../../assets/UI/army/unitsIconFrame.png');
 $soldiers-icon: url('../../../../../../assets/UI/army/soldiersIconFrame.png');
+$assassins-icon: url('../../../../../../assets/UI/army/armyList.png');
 
 .army-inform-manage-panel {
     position: relative;
@@ -34,6 +35,34 @@ $soldiers-icon: url('../../../../../../assets/UI/army/soldiersIconFrame.png');
         transform: translateY(-50%);
 
         background-image: $soldiers-icon;
+
+        & > progress[value]::-webkit-progress-bar {
+            background-color: rgb(177, 0, 0);
+        }
+        & > progress[value]::-webkit-progress-value {
+            background-color: rgb(40, 219, 4);
+        }
+
+        & > .army-icons-hp {
+            position: absolute;
+            width: 88px;
+            height: 2px;
+            left: 50%;
+            top: 169px;
+            transform: translateX(-50%);
+            background-color: red;
+        }
+    }
+    & > .army-assassins-army {
+        box-sizing: border-box;
+        position: absolute;
+        width: 130px;
+        height: calc(100% - 6px);
+        top: 50%;
+        right: 134px;
+        transform: translateY(-50%);
+
+        background-image: $assassins-icon;
 
         & > progress[value]::-webkit-progress-bar {
             background-color: rgb(177, 0, 0);

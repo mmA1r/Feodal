@@ -7,8 +7,8 @@ export default function VillageMiniFrame() {
 
     return (
         <div className='village-mini'>
-            <div className={`village-mini-frame-${villageLevel}`}/>
-            <div className={`village-mini-picture-${villageLevel}`}/>
+            <div className={`village-mini-frame-${villageLevel > 3 ? 3 : villageLevel}`}/>
+            <div className={`village-mini-picture-${villageLevel > 3 ? 3 : villageLevel}`}/>
         </div>
     );
 }

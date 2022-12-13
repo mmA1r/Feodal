@@ -6,8 +6,9 @@ export default function HpBar(props) {
 
     const castleUnits = useSelector((state) => state.gamer.units);
     const soldierTypeHp = useSelector((state) => state.soldier.hp);
+    const assassinTypeHp = useSelector((state) => state.assassin.hp)
 
-    const fullHp = units.soldiers * soldierTypeHp;
+    const fullHp = units.soldiers * soldierTypeHp + units.assassins * assassinTypeHp;
 
     const currentHp = castleUnits.reduce((previousValue, currentValue) => {
         return previousValue + currentValue.hp-0;

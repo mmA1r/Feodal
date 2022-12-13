@@ -6,11 +6,14 @@ export default function UnitHpBar(props) {
     const { type} = props;
 
     const soldierHp = useSelector((state) => state.soldier.hp);
+    const assassinHp = useSelector((state) => state.assassin.hp);
     const hp = useSelector((state) => state.currentUnit.hp);
 
     function fullHp() {
         if(type === 1) {
             return soldierHp;
+        } else if(type === 2) {
+            return assassinHp;
         }
     }
 
