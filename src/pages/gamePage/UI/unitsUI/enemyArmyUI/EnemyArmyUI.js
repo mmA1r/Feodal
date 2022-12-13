@@ -8,12 +8,16 @@ export default function EnemyArmyUI() {
 
     return (
         <div className='enemy-army-num-panel'>
-            <div className='enemy-soldiers-num'>
-                <span>ВОИНЫ:</span> <span className='army-number'>{soldiersNum}</span>
-            </div>
-            <div className='enemy-assassins-num'>
-                <span>УБИЙЦЫ:</span> <span className='army-number'>{assassinsNum}</span>
-            </div>
+            { soldiersNum > 0 ? 
+                <div className='enemy-soldiers-num'>
+                    <span>ВОИНЫ:</span> <span className='army-number'>{soldiersNum}</span>
+                </div>
+            : ''}
+            { assassinsNum > 0 ? 
+                <div className='enemy-assassins-num'>
+                    <span>УБИЙЦЫ:</span> <span className='army-number'>{assassinsNum}</span>
+                </div>
+            : ''}
         </div>
     );
 }
