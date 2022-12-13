@@ -10,7 +10,8 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.depth = this.y;
         this.activeRadius = 40000;
         this.id = castleData.id;
-        this.level = castleData.level;
+        this.level = castleData.Level;
+        console.log(this.level);
         this.scene.castlesGroup.add(this);
         this.setTexture('castleFirstLevel');
         this.rewriteData(castleData);
@@ -84,8 +85,7 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     rewriteData(castleData) {
-        this.onServer = true;
-        this.level = castleData.level;
+        this.level = castleData.Level-0;
     }
 
     damage(dmg) {
