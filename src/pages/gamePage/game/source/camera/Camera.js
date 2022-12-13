@@ -3,7 +3,7 @@ import Phaser from "phaser";
 export default function Camera(scene) {
     const Scene = scene;
     const camera = Scene.cameras.main;
-    camera.scrollSpeed = 40;
+    camera.scrollSpeed = 20;
     let viewTiles = [];
     camera.viewScreenUpdate = function(){
         let cameraWidth = (scene.cameras.main.width*1.5)/camera.zoom;
@@ -50,9 +50,10 @@ export default function Camera(scene) {
     //Зум камеры
     Scene.input.on('wheel', (event) => {
             let zoom = camera.zoom;
-            if (event.deltaY > 0 && zoom > 0.85) camera.setZoom(zoom * 0.9);
+            if (event.deltaY > 0 && zoom > 0.65) camera.setZoom(zoom * 0.9);
             if (event.deltaY < 0 && zoom < 3) camera.setZoom(zoom * 1.1);
             camera.viewScreenUpdate();
+            camera.scrollSpeed = 20/camera.zoom;
     });
 
     window.addEventListener('mousemove',(pointer) =>{

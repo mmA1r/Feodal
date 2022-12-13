@@ -6,10 +6,10 @@ class Map{
         $this->db = $db;
     }
     public function getMap($mapId) {
-        $map = $this->db->getMap();
-        $ground = array_chunk(json_decode($map->layer1),160); //превращаем строку в двумерный массив чисел
-        $plants = array_chunk(json_decode($map->layer2),160);
-        $trees = array_chunk(json_decode($map->layer3),160);
+        $map = $this->db->getMap(1);
+        $ground = array_chunk(json_decode($map->ground),160); //превращаем строку в двумерный массив чисел
+        $plants = array_chunk(json_decode($map->plants),160);
+        $trees = array_chunk(json_decode($map->trees),160);
         return array(
             'map' => array(
                 'ground' => $ground,
@@ -34,7 +34,8 @@ class Map{
     }
 
     public function generationPos(){
-        $map = $this->getMap($mapId);
+        $coor = new StdClass;
+        $map = $this->getMap(1);
         $castles = $this->db->getCastles();
         $villages = $this->db->getVillages();
         $posX = rand(10000,80000) / 1000;
