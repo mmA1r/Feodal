@@ -7,8 +7,8 @@ export default function EnemyCastleMini() {
 
     return (
         <div className={`enemy-castle-mini`}>
-            <div className={`enemy-castle-inform-mini-${castleLevel}`}/>
-            <div className={`enemy-castle-mini-picture-${castleLevel}`}/>
+            <div className={`enemy-castle-inform-mini-${castleLevel ? castleLevel : 1}`}/>
+            <div className={`enemy-castle-mini-picture-${castleLevel ? castleLevel : 1}`}/>
         </div>
     );
 }
