@@ -33,8 +33,17 @@ export default class WorldScene extends Phaser.Scene {
         const map = this.map;
         const tiles = map.addTilesetImage('spriteTileSet', 'spriteMap');
         this.grass = map.createLayer('grass', tiles, 0, 0);
+        this.grass.forEachTile((tile)=>{
+            tile.setVisible(false);
+        });
         this.bushes = map.createLayer('bushes', tiles, 0, 0);
+        this.bushes.forEachTile((tile)=>{
+            tile.setVisible(false);
+        });
         this.trees = map.createLayer('trees', tiles, 0, 0);
+        this.trees.forEachTile((tile)=>{
+            tile.setVisible(false);
+        });
         this.store = new StoreLoader;
         Player(this);
         SelectorUnits(this);
@@ -50,9 +59,12 @@ export default class WorldScene extends Phaser.Scene {
 
     async update() {
         this.unitsGroup.getChildren().forEach((el) => {
-            el.update();
+            if (el.status != "inCastle") el.update();
         });
         this.villagesGroup.getChildren().forEach((el) => {
+            el.update();
+        });
+        this.castlesGroup.getChildren().forEach((el) => {
             el.update();
         });
         if (this.cameras.main.isMoved) {

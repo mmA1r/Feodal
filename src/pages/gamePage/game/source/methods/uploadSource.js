@@ -1,4 +1,4 @@
-import tileMap from "../../tileMap/tileMap";
+import tileMap from "../../tileMap/extra/spriteTileSet.json";
 import tileMapSheet from '../../../../../assets/gameSprites/spriteMap.png';
 import castleSprite from '../../../../../assets/gameSprites/castle.png';
 import villageSprite from '../../../../../assets/gameSprites/village.png';

@@ -7,7 +7,8 @@ export default function Player(scene){
         color: data.color,
         units: scene.add.group(),
         castle: {},
-        selectedObj: []
+        selectedObj: [],
+        might: 0
     };
 
     scene.player.select = function(selector){

@@ -14,6 +14,7 @@ export default async function getCastle(scene) {
             y: Math.round(data.posY * 64),
             level: data.level
         };
+        scene.might = 0;
         scene.cameras.main.centerOn(scene.myCastle.x, scene.myCastle.y);
         
     }

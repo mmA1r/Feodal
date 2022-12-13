@@ -60,4 +60,6 @@ export default function Trees(scene) {
         el.body.setCircle(15);
         el.body.setOffset(32, 76)
     })
+
+    scene.treesGroup.getChildren().forEach((tree) => tree.setVisible(false))
 }

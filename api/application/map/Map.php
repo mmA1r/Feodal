@@ -19,16 +19,13 @@ class Map{
         );
     }
 
-    private function validPosObject($mapId, $posX, $posY, $type){
-        //$map = $this->getMap($mapId);
-        $posX = (int)$posX;
-        $posY = (int)$posY;
+    private function validPosObject($mapId, $posX, $posY, $type, $map, $castles, $villages){
+        
         $isValid = true;
-        $castles = $this->db->getCastles();
+        
         foreach($castles as $castle){
             if (abs($castle->posX-$posX)+abs($castle->posY-$posY) <15) $isValid = false;
         }
-        $villages = $this->db->getVillages();
         foreach($villages as $village){
             if (abs($village->posX-$posX)+abs($village->posY-$posY) <15) $isValid = false;
         }
@@ -37,9 +34,12 @@ class Map{
     }
 
     public function generationPos(){
+        $map = $this->getMap($mapId);
+        $castles = $this->db->getCastles();
+        $villages = $this->db->getVillages();
         $posX = rand(10000,80000) / 1000;
         $posY = rand(10000,80000) / 1000;
-        while(!$this->validPosObject(1,$posX,$posY,1)){
+        while(!$this->validPosObject(1,$posX,$posY,1, $map, $castles,$villages)){
             $posX = rand(10000,80000) / 1000;
             $posY = rand(10000,80000) / 1000;
         };

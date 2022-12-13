@@ -10,15 +10,18 @@ export default function Game() {
     const scene = new WorldScene;
     useEffect(() => {
         const config = {
-            type: Phaser.AUTO,
+            type: Phaser.CANVAS,
             width: '100%',
             height: '100%',
             parent: 'game',
             fps: {
-                target: 60,
-                forceSetTimeOut: true
+                target: 40,
+                forceSetTimeOut: false
             },
-            pixelArt: true,
+            render: {
+                pixelArt: false,
+                clearBeforeRender: false
+            },
             physics: {
                 default: 'arcade',
                 arcade: {

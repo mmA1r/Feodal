@@ -11,6 +11,10 @@ export default class Village extends Phaser.GameObjects.Image {
         this.id = serverData.id;
         this.scene.villagesGroup.add(this);
         this.setTexture('village');
+        this.resistBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0xff0000);
+        this.resistBar.depth = 99999991;
+        this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
+        this.acceptBar.depth = 99999992;
         this.rewriteData(serverData);
         this.addedToScene();
         this.addToDisplayList();
@@ -25,6 +29,7 @@ export default class Village extends Phaser.GameObjects.Image {
         this.name.style.setAlign('center')
         this.name.scrollFactorX = 1;
         this.name.scrollFactorY = 1;
+
         this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
         this.selector.isStroked = true;
         this.selector.strokeColor = 0x0000FF;
@@ -57,12 +62,28 @@ export default class Village extends Phaser.GameObjects.Image {
     }
 
     rewriteData(serverData) {
-        if (!this.damaged) this.currentHp = 100;
+        if (!this.damaged) this.currentHp = 50;
         this.level = serverData.level-0;
         this.population = serverData.population-0;
+        this.updateResistLevel();
+    }
+
+    updateResistLevel(){
+        const resistLevel = this.scene.might/this.population;
+        if (resistLevel >= 1) {
+            this.acceptBar.setVisible(false);
+            this.resistBar.setVisible(false);
+        }
+        else {
+            this.acceptBar.setVisible(true);
+            this.resistBar.setVisible(true);
+            this.acceptBar.width=(200*resistLevel);
+        }
     }
 
     killed() {
+        this.resistBar.destroy();
+        this.acceptBarBar.destroy();
         this.selector.destroy();
         this.attackArea.destroy();
         this.name.destroy();

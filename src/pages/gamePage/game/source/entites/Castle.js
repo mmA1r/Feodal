@@ -36,6 +36,14 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.name.style.setAlign('center')
         this.name.scrollFactorX = 1;
         this.name.scrollFactorY = 1;
+        this.attackArea = this.scene.add.ellipse(this.x -10, this.y + 45, 500, 500,0xffff00,0.1);
+        this.scene.physics.add.existing(this.attackArea, true);
+        this.attackArea.body.onCollide = true;
+        this.attackArea.isStroked = true;
+        this.attackArea.strokeColor = 0xffff00;
+        this.attackArea.lineWidth = 2;
+        this.attackArea.setVisible(false);
+        this.canAttack = true;
     }
 
     select() {
@@ -88,6 +96,7 @@ export default class Castle extends Phaser.GameObjects.Image {
             DestroyCastle(this);
         }
         this.damaged = true;
+        this.status = "attack"
     }
 
     updateUI() {
@@ -112,6 +121,43 @@ export default class Castle extends Phaser.GameObjects.Image {
                 this.scene.store.loadToStore(castle, 'enemyCastle');
             }
 
+        }
+    }
+
+    attack() {
+        if (this.canAttack) {
+            setTimeout(() => { this.canAttack = true }, 4000);
+            setTimeout(() => { 
+                this.attackArea.setVisible(true);
+             }, 2100);
+            setTimeout(() => { 
+                this.attackArea.fillColor = 0xff0000;
+                this.attackArea.strokeColor = 0xff0000;
+             }, 3700);
+            setTimeout(() => {
+                this.attackArea.fillColor = 0xffff00;
+                this.attackArea.strokeColor = 0xffff00;
+                this.attackArea.setVisible(false);
+             }, 4300);
+             let i = 0;
+            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
+                i ++;
+            })
+            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
+                console.log(this.units.getChildren().reduce((damage,unit)=> damage += unit.atk,0))
+                unit.damage(Math.round(this.units.getChildren().reduce((damage,unit)=> damage += unit.atk,0)/i));
+            })
+            if (i === 0) {
+                this.status="wait"
+                this.attackArea.setVisible(false);
+            };
+            this.canAttack = false;
+        }
+    }
+
+    update(){
+        if (this.status === "attack") {
+            this.attack();
         }
     }
 }

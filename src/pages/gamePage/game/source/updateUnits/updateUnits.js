@@ -1,7 +1,6 @@
 import store from '../../../../../store/store';
 
 export default function updateUnits(scene) {
-    let i = 1;
     const server = store.getState().server.value;
     scene.updateMyUnitsGroup = scene.add.group();
     scene.updateOtherUnitsGroup = scene.add.group();
@@ -34,22 +33,12 @@ export default function updateUnits(scene) {
                         population: village.population
                     }
                 });
-                server.updateUnits({myUnits,otherUnits,villages});
+                await server.updateUnits({myUnits,otherUnits,villages});
                 let deadUnit = scene.deadUnitsGroup.getChildren()[0];
                 while (deadUnit) {
                     deadUnit.killed();
                     deadUnit = scene.deadUnitsGroup.getChildren()[0];
                 }
-                /*let deadUnit = scene.updateMyUnitsGroup.getChildren().find(el => el.hp <= 0);
-                while (deadUnit) {
-                    deadUnit.killed();
-                    deadUnit = scene.updateMyUnitsGroup.getChildren().find(el => el.hp <= 0);
-                }
-                deadUnit = scene.updateOtherUnitsGroup.getChildren().find(el => el.hp <= 0);
-                while (deadUnit) {
-                    deadUnit.killed();
-                    deadUnit = scene.updateOtherUnitsGroup.getChildren().find(el => el.hp <= 0);
-                }*/
                 scene.updateMyUnitsGroup.clear();
                 scene.updateOtherUnitsGroup.clear();
                 scene.updateVillagesGroup.clear();

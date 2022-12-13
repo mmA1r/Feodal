@@ -37,7 +37,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this._setUnitStatus(unitData.status);
         this.lastDist = 0;
         this.activeRadius = 1600;
-        this.atk = 10;
+        this.atk = 10-0;
         this.canAttack = true;
         this.onServer = true;
         this.selector = this.scene.add.ellipse(this.x - 8, this.y + 30, 35, 25);
@@ -130,7 +130,10 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     updateArmyMight(){
-        this.scene.store.loadToStore({might: this.scene.unitsGroup.getChildren().reduce((sumM,unit)=> (unit.type === "myUnit") ?sumM+unit.might: sumM+0, 0)},'gamer')
+        const might = this.scene.unitsGroup.getChildren().reduce((sumM,unit)=> (unit.type === "myUnit") ?sumM+unit.might: sumM+0, 0);
+        this.scene.might = might;
+        this.scene.store.loadToStore({might: might},'gamer');
+        this.scene.villagesGroup.getChildren().forEach((v) => v.updateResistLevel());
     }
 
     damage(dmg) {
@@ -277,7 +280,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                     setTimeout(() => this.moveTo(this.pointer), 100);
                 }
                 if (status === "stand") {
-                    //this.pointer.moveTo(this.x, this.y)
+                    this.pointer.moveTo(this.x, this.y)
                 }
             };
             this.status = status;
