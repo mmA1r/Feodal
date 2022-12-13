@@ -248,7 +248,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.unSelect();
         if (this.type === "myUnit") {
             this.scene.player.units.remove(this);
-            this.updateArmyMight();
+            this.scene.player.updateMight();
         }
         this.destroy();
     }

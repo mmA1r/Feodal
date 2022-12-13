@@ -69,7 +69,7 @@ export default class Village extends Phaser.GameObjects.Image {
     }
 
     updateResistLevel(){
-        const resistLevel = this.scene.might/this.population;
+        const resistLevel = this.scene.player.might/this.population;
         if (resistLevel >= 1) {
             this.acceptBar.setVisible(false);
             this.resistBar.setVisible(false);
