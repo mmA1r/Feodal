@@ -172,4 +172,10 @@ export default class Server {
         });
     }
 
+    async robVillage(villageId) {
+        return await this.send({
+            method: 'robVillage',
+            village: villageId
+        });
+    }
 }

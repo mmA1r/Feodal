@@ -1,0 +1,15 @@
+.beauty-attack-village-button {
+    width: 100px;
+    height: 25px;
+    fill: none;
+    &:hover {
+        & > rect  {
+            fill: #300202;
+        }
+    }
+    &:active {
+        & > rect  {
+            fill: #ad0000;
+        }
+    }
+}

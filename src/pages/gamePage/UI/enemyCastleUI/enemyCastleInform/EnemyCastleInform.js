@@ -9,7 +9,7 @@ export default function EnemyCastleInform() {
 
     return (
         <div className="enemy-castle-inform-panel">
-            {army <= 0 ? <div className='can-be-captured-state'>МОЖНО ЗАВАТИТЬ!</div> : ''}
+            {army <= 0 ? <div className='can-be-captured-state'>МОЖНО ЗАХВАТИТЬ!</div> : ''}
             <span className='army-length'>{army}</span>
             <progress className='enemy-castle-hp-bar' value={currentHp} max={fullHp}/>
         </div>

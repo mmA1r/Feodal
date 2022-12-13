@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const chooseUnitsInterface = createSlice({
-    name: 'hp',
+    name: 'unitsUI',
     initialState: {
         value: false,
     },

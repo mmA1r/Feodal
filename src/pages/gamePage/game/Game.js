@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import Phaser from "phaser";
-import { useSelector } from "react-redux";
+import StoreLoader from "../../../store/StoreLoader";
 
 import WorldScene from "./scenes/WorldScene";
 
 export default function Game() {
-    // eslint-disable-next-line 
-    const server = useSelector((state) => state.server.value);
+    const store = new StoreLoader();
     const scene = new WorldScene;
+
     useEffect(() => {
         const config = {
             type: Phaser.CANVAS,
@@ -32,16 +32,17 @@ export default function Game() {
                 scene
             ]
         };
+        
         const game = new Phaser.Game(config);
 
         return () => {
-            clearInterval(scene.getScene)
-            clearInterval(scene.updateUnits)
-            clearInterval(scene.StoreData)
+            clearInterval(scene.getScene);
+            clearInterval(scene.updateUnits);
+            clearInterval(scene.StoreData);
+            store.restore();
             game.destroy(true, false);
         }
     }, []);
-
 
     return(
         <div id="game"/>
