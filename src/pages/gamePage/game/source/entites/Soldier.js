@@ -6,15 +6,20 @@ export default class Soldier extends Unit {
         this.setTexture('soldier', 0);
         this.anims.create({
             key: "move",
-            frames: [            {
+            frames: [{
                 key: 'soldier',
                 frame: 1,
-                duration: 200
+                duration: 50
+            },
+            {
+                key: 'soldier',
+                frame: 2,
+                duration: 50
             },
             {
                 key: 'soldier',
                 frame: 0,
-                duration: 150
+                duration: 50
             }],
             duration: 350,
             repeat: -1
