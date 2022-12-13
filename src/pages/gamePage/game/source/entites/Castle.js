@@ -18,6 +18,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.addedToScene();
         this.addToDisplayList();
         this.setInteractive();
+        this.setTint(0xff0000);
         this.selected = false;
         this.type = (this.id === this.scene.player.id) ? 'myCastle' : "castle";
         this.scene.physics.add.existing(this, true);

@@ -10,7 +10,7 @@ export default class Village extends Phaser.GameObjects.Image {
         this.activeRadius = 40000;
         this.id = serverData.id;
         this.scene.villagesGroup.add(this);
-        this.setTexture('village');
+        this.setTexture('village', 0);
         this.resistBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0xff0000);
         this.resistBar.depth = 99999991;
         this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
@@ -103,10 +103,10 @@ export default class Village extends Phaser.GameObjects.Image {
             if (this.selected) this._updateUI();
         }
         this.status = "attack";
-        this.setTint(0xFF5545);
+        this.setFrame(1);
         this.damaged = true;
         setTimeout(() => {
-            this.setTint();
+            this.setFrame(0);
             this.damaged = false;
         }, 300);
         
