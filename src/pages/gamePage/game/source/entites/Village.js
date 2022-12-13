@@ -83,7 +83,7 @@ export default class Village extends Phaser.GameObjects.Image {
 
     killed() {
         this.resistBar.destroy();
-        this.acceptBarBar.destroy();
+        this.acceptBar.destroy();
         this.selector.destroy();
         this.attackArea.destroy();
         this.name.destroy();
