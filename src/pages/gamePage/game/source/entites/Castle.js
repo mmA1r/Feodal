@@ -10,6 +10,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.depth = this.y;
         this.activeRadius = 40000;
         this.id = castleData.id;
+        this.level = castleData.level;
         this.scene.castlesGroup.add(this);
         this.setTexture('castleFirstLevel');
         this.rewriteData(castleData);
