@@ -17,7 +17,8 @@ export default function uploadSourses(scene) {
         Scene.load.image('castleFirstLevel', castleSprite);
         Scene.load.spritesheet('village',villageSprite,{frameWidth:320,frameHeight:320});
         //Scene.load.image('village', villageSprite);
-        Scene.load.image('soldier', soldierSprite);
+        //Scene.load.image('soldier', soldierSprite);
+        Scene.load.spritesheet('soldier', soldierSprite,{frameWidth:64,frameHeight:128});
         Scene.load.image('tree1', treeSprite1);
         Scene.load.image('tree2', treeSprite2);
         Scene.load.image('tree3', treeSprite3);
