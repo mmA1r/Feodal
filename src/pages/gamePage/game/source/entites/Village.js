@@ -10,7 +10,7 @@ export default class Village extends Phaser.GameObjects.Image {
         this.activeRadius = 40000;
         this.id = serverData.id;
         this.scene.villagesGroup.add(this);
-        this.setTexture('village');
+        this.setTexture('village', 0);
         this.resistBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0xff0000);
         this.resistBar.depth = 99999991;
         this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
@@ -69,7 +69,7 @@ export default class Village extends Phaser.GameObjects.Image {
     }
 
     updateResistLevel(){
-        const resistLevel = this.scene.might/this.population;
+        const resistLevel = this.scene.player.might/this.population;
         if (resistLevel >= 1) {
             this.acceptBar.setVisible(false);
             this.resistBar.setVisible(false);
@@ -83,7 +83,7 @@ export default class Village extends Phaser.GameObjects.Image {
 
     killed() {
         this.resistBar.destroy();
-        this.acceptBarBar.destroy();
+        this.acceptBar.destroy();
         this.selector.destroy();
         this.attackArea.destroy();
         this.name.destroy();
@@ -103,10 +103,10 @@ export default class Village extends Phaser.GameObjects.Image {
             if (this.selected) this._updateUI();
         }
         this.status = "attack";
-        this.setTint(0xFF5545);
+        this.setFrame(1);
         this.damaged = true;
         setTimeout(() => {
-            this.setTint();
+            this.setFrame(0);
             this.damaged = false;
         }, 300);
         

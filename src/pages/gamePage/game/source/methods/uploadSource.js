@@ -3,7 +3,6 @@ import tileMapSheet from '../../../../../assets/gameSprites/spriteMap.png';
 import castleSprite from '../../../../../assets/gameSprites/castle.png';
 import villageSprite from '../../../../../assets/gameSprites/village.png';
 import soldierSprite from '../../../../../assets/gameSprites/soldier.png';
-import soldierTintSprite from '../../../../../assets/gameSprites/soldierTint.png';
 import treeSprite1 from '../../../../../assets/gameSprites/tree1.png';
 import treeSprite2 from '../../../../../assets/gameSprites/tree2.png';
 import treeSprite3 from '../../../../../assets/gameSprites/tree3.webp';
@@ -16,9 +15,10 @@ export default function uploadSourses(scene) {
     try {
         Scene.load.image('spriteMap', tileMapSheet);
         Scene.load.image('castleFirstLevel', castleSprite);
-        Scene.load.image('village', villageSprite);
-        Scene.load.image('soldier', soldierSprite);
-        Scene.load.image('soldierTint', soldierTintSprite);
+        Scene.load.spritesheet('village',villageSprite,{frameWidth:320,frameHeight:320});
+        //Scene.load.image('village', villageSprite);
+        //Scene.load.image('soldier', soldierSprite);
+        Scene.load.spritesheet('soldier', soldierSprite,{frameWidth:64,frameHeight:128});
         Scene.load.image('tree1', treeSprite1);
         Scene.load.image('tree2', treeSprite2);
         Scene.load.image('tree3', treeSprite3);
