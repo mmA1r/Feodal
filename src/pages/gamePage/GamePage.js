@@ -29,20 +29,29 @@ export default function GamePage() {
             return navigate(routes.Login.path);
         }
         window.addEventListener("contextmenu", e => e.preventDefault());
-        // eslint-disable-next-line
-    }, []);
+    });
 
     async function getUnitsTypes() {
         const units = await server.getUnitsTypes();
         if(units) {
             units.forEach(type => {
-                storeLoader.loadToStore({
-                    hp: type.hp,
-                    cost: type.cost,
-                    damage: type.damage,
-                    speed: type.speed,
-                    might: type.might
-                }, 'soldier');
+                if(type.id-0 === 1) {
+                    storeLoader.loadToStore({
+                        hp: type.hp,
+                        cost: type.cost,
+                        damage: type.damage,
+                        speed: type.speed,
+                        might: type.might
+                    }, 'soldier');
+                } else if(type.id-0 === 2) {
+                    storeLoader.loadToStore({
+                        hp: type.hp,
+                        cost: type.cost,
+                        damage: type.damage,
+                        speed: type.speed,
+                        might: type.might
+                    }, 'assassin');
+                }
             });
         }
     }

@@ -3,7 +3,7 @@ import FrameHpBar from './frameHpBar/FrameHpBar';
 import './unitHpBar.scss';
 
 export default function UnitHpBar(props) {
-    const { type} = props;
+    const { type } = props;
 
     const soldierHp = useSelector((state) => state.soldier.hp);
     const assassinHp = useSelector((state) => state.assassin.hp);
