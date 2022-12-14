@@ -14,10 +14,10 @@ export default function getScene(scene) {
             if (data?.castles[0]) {
                 data.castles.forEach((castleData) => {
                     if (!scene.castlesGroup.getChildren().find(el => el.id === castleData.id)) {
-                        new Castle(scene,castleData);
+                        new Castle(scene, castleData);
                     }
                 })
-                scene.castlesGroup.getChildren().forEach((castle)=>{
+                scene.castlesGroup.getChildren().forEach((castle) => {
                     const castleOnServer = data.castles.find((c) => {
                         return c.id === castle.id;
                     })
@@ -32,10 +32,10 @@ export default function getScene(scene) {
             if (data?.villages[0]) {
                 data.villages.forEach((villageData) => {
                     if (!scene.villagesGroup.getChildren().find(el => el.id === villageData.id)) {
-                        new Village(scene,villageData);
+                        new Village(scene, villageData);
                     }
                 })
-                scene.villagesGroup.getChildren().forEach((village)=>{
+                scene.villagesGroup.getChildren().forEach((village) => {
                     const villageOnServer = data.villages.find((v) => {
                         return v.id === village.id;
                     })
@@ -51,12 +51,15 @@ export default function getScene(scene) {
                 data.units.forEach((unitData) => {
                     if (!scene.unitsGroup.getChildren().find(el => el.id === unitData.id)) {
                         switch (unitData.type) {
-                            case "1": 
-                            new Soldier(scene,unitData);
+                            case "1":
+                                new Soldier(scene, unitData);
+                                break;
+                            case "2":
+                                break;
                         }
                     }
                 })
-                scene.unitsGroup.getChildren().forEach((unit)=>{
+                scene.unitsGroup.getChildren().forEach((unit) => {
                     const unitOnServer = data.units.find((u) => {
                         return u.id === unit.id;
                     })
@@ -66,11 +69,11 @@ export default function getScene(scene) {
                     else {
                         unit.killed()
                     }
-                    
+
                 })
             }
         }
-        ,90
+        , 90
     )
 
     return getScene;
