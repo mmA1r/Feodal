@@ -6,6 +6,11 @@ export default function StoreData(scene) {
     let lastUI=false;
     const StoreData = setInterval(()=>{
         let units = store.getState().gamer.units;
+        const village = store.getState().village;
+        if (village.attacked) {
+            scene.villagesGroup.getChildren().find(el => el.id === village.id).attackOnVillage();
+            setTimeout(()=>scene.store.loadToStore({attacked: false}, 'village'), 100);
+        }
         let ui = store.getState().interface.value.castle;
         if (ui){
             if (ui!=lastUI){

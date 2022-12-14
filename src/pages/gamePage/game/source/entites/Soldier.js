@@ -26,7 +26,7 @@ export default class Soldier extends Unit {
     }
 
     damageFrameOn() {
-        if (this.status === "move") {
+        if (this && this.status === "move") {
             this.anims.pause();
             this.setFrame(
                 (this.anims.currentFrame.index === 0) ? 'soldierMove2Damaged' :
@@ -34,18 +34,16 @@ export default class Soldier extends Unit {
                         'soldierMove1Damaged'
             )
         }
-        if (this.status !== "move") {
-            console.log(123);
+        if (this && this.status !== "move") {
             this.setFrame("soldierStandDamaged");
         }
     }
 
     damageFrameOff() {
-        if (this.status === "move") {
+        if (this && this.status === "move") {
             this.anims.resume();
         }
-        if (this.status !== "move") {
-            console.log(321);
+        if (this && this.status !== "move") {
             this.setFrame("soldierStand");
         }
     }

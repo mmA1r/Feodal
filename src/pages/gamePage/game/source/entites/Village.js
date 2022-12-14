@@ -76,6 +76,13 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.resistBar.depth = 99999991;
         this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
         this.acceptBar.depth = 99999992;
+
+        this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
+        this.selector.isStroked = true;
+        this.selector.strokeColor = 0x00FF00;
+        this.selector.lineWidth = 2;
+        this.selector.setVisible(false);
+
         this.rewriteData(serverData);
         this.addedToScene();
         this.addToDisplayList();
@@ -90,12 +97,6 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.name.style.setAlign('center')
         this.name.scrollFactorX = 1;
         this.name.scrollFactorY = 1;
-
-        this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
-        this.selector.isStroked = true;
-        this.selector.strokeColor = 0x0000FF;
-        this.selector.lineWidth = 2;
-        this.selector.setVisible(false);
         this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
         this.scene.physics.add.existing(this.attackArea, true);
         this.attackArea.body.onCollide = true;
@@ -116,6 +117,25 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this._updateUI();
     }
 
+    openUI() {
+        this.scene.store.loadToStore('village', 'ui');
+        this._updateUI();
+    }
+
+    attackOnVillage() {
+        this.type = "enemyVillage";
+        this.selector.strokeColor = 0xFF0000;
+    }
+
+    peaceInVillage() {
+        if (this.status === "wait") {
+            this.type = "village";
+            this.selector.strokeColor = 0x00FF00;
+        }
+    }
+
+
+
     unSelect() {
         this.selected = false;
         this.selector.setVisible(false);
@@ -135,8 +155,10 @@ export default class Village extends Phaser.GameObjects.Sprite {
         if (resistLevel >= 1) {
             this.acceptBar.setVisible(false);
             this.resistBar.setVisible(false);
+            this.peaceInVillage();
         }
         else {
+            this.attackOnVillage();
             this.acceptBar.setVisible(true);
             this.resistBar.setVisible(true);
             this.acceptBar.width = (200 * resistLevel);
@@ -167,10 +189,21 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.status = "attack";
         if (this.damaged === false) {
             this.damaged = true;
-            this.anims.pause();
-            this.setFrame(this.anims.currentFrame.index+4);
+            if (this.level === 2) {
+                this.anims.pause();
+                this.setFrame(this.anims.currentFrame.index + 4);
+            }
+            else {
+                this.setFrame(1);
+            }
             setTimeout(() => {
-                this.anims.resume();
+                if (this.level === 2) {
+                    this.anims.resume();
+                }
+                else {
+                    this.setFrame(0);
+                }
+
                 this.damaged = false;
             }, 40);
         }
@@ -216,7 +249,8 @@ export default class Village extends Phaser.GameObjects.Sprite {
                 unit.damage(Math.round(this.population / i));
             })
             if (i === 0) {
-                this.status = "wait"
+                this.status = "wait";
+                setTimeout(this.peaceInVillage,400);
                 this.attackArea.setVisible(false);
             };
             this.canAttack = false;

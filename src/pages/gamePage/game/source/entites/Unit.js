@@ -103,8 +103,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                     break;
                 };
                 case "village":
-                    this.attack();
+                    this.target.openUI();
                     break;
+                case "enemyVillage":
+                        this.attack();
+                        break;
                 case "myCastle": {
                     this.enterCastle();
                     break;
@@ -177,7 +180,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         }
         if (this.scene.selectedUnits.getLength() > 1) {
             let soldiers = {
-                fullHp: this.scene.selectedUnits.getLength() * 100,
+                fullHp: this.scene.selectedUnits.getLength() * 120,
                 currentHp: this.scene.selectedUnits.getChildren().reduce((sumHp, unit) => sumHp + unit.hp, 0),
                 num: this.scene.selectedUnits.getLength()
             }
