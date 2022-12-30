@@ -1,17 +1,23 @@
 import { useSelector } from 'react-redux';
 import UnitHpBar from '../hpBar/UnitHpBar';
 import ManageUnitButtons from '../../components/manageUnitButtons/ManageUnitButtons';
+import StoreLoader from '../../../../../../store/StoreLoader';
 
 import './unitInformManagePanel.scss';
+import { useEffect } from 'react';
 
 export default function UnitInformManagePanel() {
-
 
     const soldier = useSelector((state) => state.soldier);
     const assassin = useSelector((state) => state.assassin);
     const type = useSelector((state) => state.currentUnit.type);
+    const store = new StoreLoader();
 
-    console.log(assassin, soldier)
+    useEffect(() => {
+        return () => {
+            store.loadToStore('inactive', 'action');
+        }
+    }, []);
 
     function pushValues(value) {
         if(type === 1) {

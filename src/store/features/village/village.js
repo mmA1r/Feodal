@@ -8,7 +8,8 @@ export const village = createSlice({
         population: 0,
         villageLevel: 1,
         id: 0,
-        attacked: false
+        attacked: false,
+        canBeRobbed: false
     },
     reducers: {
         currentVillage: (state, action) => {
@@ -29,6 +30,9 @@ export const village = createSlice({
             }
             if('attacked' in action.payload) {
                 state.attacked = action.payload.attacked;
+            }
+            if('canBeRobbed' in action.payload) {
+                state.canBeRobbed = action.payload.canBeRobbed;
             }
         }
     }
