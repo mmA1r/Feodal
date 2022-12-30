@@ -8,6 +8,7 @@ import { currentArmy } from './features/currentArmy/currentArmy';
 import { currentVillage } from './features/village/village';
 import { buttonAction } from './features/buttonAction/buttonAction';
 import { castleValues } from './features/enemyCastle/enemyCastle';
+import { hintValues } from './features/hoverHint/hoverHint';
 
 import store from './store';
 
@@ -39,15 +40,18 @@ export default class StoreLoader {
                 return store.dispatch(currentVillage(value));
             case 'enemyCastle':
                 return store.dispatch(castleValues(value));
+            case 'hint':
+                return store.dispatch(hintValues(value));
             default: return true;
         }
     }
 
     restore() {
         store.dispatch(gamer({ level: 1, nextRentTime: 0, upadateLevelCost: 0, money: 0, units: [], might: 0 }));
-        store.dispatch(ui('true'));
+        store.dispatch(ui('hide'));
         store.dispatch(buttonAction('inactive'));
         store.dispatch(openUnitUI(false));
         store.dispatch(currentVillage({ attacked: false }));
+        store.dispatch(hintValues({state: false, top: 0, left: 0, type: null}));
     }
 }

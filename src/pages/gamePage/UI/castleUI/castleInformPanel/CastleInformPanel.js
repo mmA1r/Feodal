@@ -5,16 +5,15 @@ import HpBar from './hpBar/HpBar';
 export default function CastleInformPanel() {
 
     const units = useSelector((state) => state.gamer.units);
-    // eslint-disable-next-line
     const soldiersNumber = units.reduce((accamulator, currentValue) => {
         if(currentValue.type === 1) {
             return accamulator += 1;
-        }
+        } else return accamulator += 0;
     }, 0);
     const assassinsNumber = units.reduce((accamulator, currentValue) => {
         if(currentValue.type === 2) {
             return accamulator += 1;
-        }
+        } else return accamulator += 0;
     }, 0);
 
     return (

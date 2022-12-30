@@ -18,7 +18,7 @@ export const gamerStore = createSlice({
             if(action.payload.hp) {
                 state.hp = action.payload.hp;
             }
-            if(action.payload.money) {
+            if(action.payload.money || action.payload.money === 0) {
                 state.money = action.payload.money;
             }
             if(action.payload.units) {
