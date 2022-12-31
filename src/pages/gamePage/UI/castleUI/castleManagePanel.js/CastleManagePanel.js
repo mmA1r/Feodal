@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useStore } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Money from "./money/Money";
 import WarriorButton from "./manageButtons/warriorButton/WarriorButton";
@@ -8,7 +8,6 @@ import CastleUpgradeButton from "./manageButtons/castleUpgradeButton/CastleUpgra
 import UnitsOutButton from "./manageButtons/unitsOutButton/UnitsOutButton";
 import LockedButton from "./manageButtons/lockedButton/LockedButton";
 import StoreLoader from "../../../../../store/StoreLoader";
-
 
 import './castleManagePanel.scss';
 
@@ -48,13 +47,9 @@ export default function CastleManagePanel() {
         setUnitPrice(castleUpgradeCost);
     }
 
-    function showCost(unitName) {
+    function showCost(e, unitName) {
         if(unitName === 'castle') {
-            if(gamerLevel === 5) {
-                setUnitPrice('max');
-            } else {
-                setUnitPrice(upgradeCastleCost);
-            }
+            setUnitPrice(upgradeCastleCost);
         } else if(unitName === 'soldier') {
             setUnitPrice(soldierCost);
         } else if(unitName === 'assassin') {
@@ -62,11 +57,23 @@ export default function CastleManagePanel() {
         } else {
             setUnitPrice(0);
         }
+        store.loadToStore({
+            state: true,
+            type: unitName,
+            top: e.pageY, 
+            left: e.pageX
+        }, 'hint');
         setPrice(true);
     }
 
     function hideCost() {
-        return setPrice(false);
+        store.loadToStore({
+            state: false,
+            type: null,
+            top: 2000, 
+            left: 0
+        }, 'hint');
+        setPrice(false);
     }
 
     return (
@@ -77,7 +84,7 @@ export default function CastleManagePanel() {
             </div>
             <button
                 className="buy-warrior-unit-button"
-                onMouseEnter={() => showCost("soldier")}
+                onMouseEnter={(e) => showCost(e, "soldier")}
                 onMouseLeave={() => hideCost()}
                 onClick={() => buySoldier()}
             >
@@ -86,9 +93,6 @@ export default function CastleManagePanel() {
             { gamerLevel < 2 ? 
                 <button
                     className="assassin-warrior-button"
-                    onMouseEnter={() => showCost('assassin')}
-                    onMouseLeave={() => hideCost()}
-                    onClick={() => buyAssassin()}
                     disabled
                 >
                     <LockedButton/>
@@ -96,7 +100,7 @@ export default function CastleManagePanel() {
             : 
                 <button
                     className="assassin-warrior-button"
-                    onMouseEnter={() => showCost('assassin')}
+                    onMouseEnter={(e) => showCost(e, 'assassin')}
                     onMouseLeave={() => hideCost()}
                     onClick={() => buyAssassin()}
                 >
@@ -104,14 +108,22 @@ export default function CastleManagePanel() {
                 </button>
             }
             <UnitsOutButton/>
-            <button 
-                className="upgrade-castle-button"
-                onMouseEnter={() => showCost('castle')}
-                onMouseLeave={() => hideCost()}
-                onClick={() => upgradeCastle()}
-            >
-                <CastleUpgradeButton/>
-            </button>
+            { gamerLevel === 5 ? 
+                <button 
+                    className="upgrade-castle-button"
+                    disabled
+                >
+                    <CastleUpgradeButton gamerLevel={gamerLevel}/>
+                </button> :
+                <button 
+                    className="upgrade-castle-button"
+                    onMouseEnter={(e) => showCost(e, 'castle')}
+                    onMouseLeave={() => hideCost()}
+                    onClick={() => upgradeCastle()}
+                >
+                    <CastleUpgradeButton gamerLevel={gamerLevel}/>
+                </button>
+            }
             <div className="castle-manage-panel-back"/>
         </div>
     );

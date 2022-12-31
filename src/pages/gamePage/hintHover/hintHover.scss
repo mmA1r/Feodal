@@ -1,0 +1,46 @@
+.hint-hover-box {
+    position: absolute;
+    z-index: 105;
+
+    border: 1px solid rgb(177, 135, 81);
+
+    width: fit-content;
+    height: fit-content;
+    background-color: rgba(63, 14, 14, 0.87);
+
+    color: white;
+    padding: 10px;
+
+    &.hint-active {
+        opacity: 1;
+        transform: translate(-110%, -110%);
+    }
+    &.hint-inactive {
+        opacity: 0;
+    }
+}
+
+.paragraph {
+    margin-block-start: 0.1em;
+    margin-block-end: 0.1em;
+    font-size: 14px;
+    word-spacing: 3px;
+    letter-spacing: 1px;
+
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    & > .paragraph-low {
+        margin-block-start: 0.1em;
+        margin-block-end: 0.1em;
+        font-size: 11px;
+        word-spacing: 3px;
+    }
+}
+
+.paragraph-low {
+    margin-block-start: 0.1em;
+    margin-block-end: 0.1em;
+    font-size: 13px;
+    word-spacing: 1.5px;
+    letter-spacing: 1px;
+}

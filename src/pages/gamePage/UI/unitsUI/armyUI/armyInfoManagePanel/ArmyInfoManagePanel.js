@@ -1,8 +1,18 @@
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import StoreLoader from '../../../../../../store/StoreLoader';
 import ManageUnitButtons from '../../components/manageUnitButtons/ManageUnitButtons';
 import './armyInfoManagePanel.scss';
 
 export default function ArmyInfoManagePanel() {
+
+    const store = new StoreLoader();
+
+    useEffect(() => {
+        return () => {
+            store.loadToStore('inactive', 'action');
+        }
+    }, []);
 
     const fullHpSoldiers = useSelector((state) => state.currentArmy.soldiers.fullHp);
     const fullHpAssassins = useSelector((state) => state.currentArmy.assassins.fullHp);

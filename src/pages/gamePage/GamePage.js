@@ -9,6 +9,7 @@ import CastleButton from "./castleButton/CastleButton";
 import UI from "./UI/UI";
 import GamerMoney from "./gamerMoney/GamerMoney";
 import Game from './game/Game';
+import HintHover from "./hintHover/HintHover";
 
 import StoreLoader from "../../store/StoreLoader";
 
@@ -63,19 +64,41 @@ export default function GamePage() {
         return storeLoader.loadToStore('castle', 'ui');
     }
 
+    function showHint(e) {
+        return storeLoader.loadToStore({
+            state: true,
+            type: 'castleUI',
+            top: e.pageY, 
+            left: e.pageX
+        }, 'hint');
+    }
+
+    function hideHint() {
+        return storeLoader.loadToStore({
+            state: false,
+            type: null,
+            top: 2000, 
+            left: 0
+        }, 'hint');
+    }
+
     return(
         <div className="game">
             <div className="mini-map-window">
                 <button
                     className="castle-manage-button"
                     onClick={() => openInterface()}
+                    onMouseEnter={(e) => showHint(e)}
+                    onMouseLeave={() => hideHint()}
                 >
-                    <CastleButton></CastleButton>
+                    <CastleButton/>
                 </button>
                 <MiniMapFrame/>
             </div>
             <UI/>
             <Logout></Logout>
+            <HintHover/>
+
             <GamerMoney/>
             <Chat/>
             <Game/>

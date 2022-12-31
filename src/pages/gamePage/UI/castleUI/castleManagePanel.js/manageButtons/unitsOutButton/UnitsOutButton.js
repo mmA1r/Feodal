@@ -16,9 +16,29 @@ export default function UnitsOutButton() {
         }
     }
 
+    function showHint(e) {
+        return storeLoader.loadToStore({
+            state: true,
+            type: 'unitsOut',
+            top: e.pageY, 
+            left: e.pageX
+        }, 'hint');
+    }
+
+    function hideHint() {
+        return storeLoader.loadToStore({
+            state: false,
+            type: null,
+            top: 2000, 
+            left: 0
+        }, 'hint');
+    }
+
     return (
         <button 
             className='units-out-button'
+            onMouseEnter={(e) => showHint(e)}
+            onMouseLeave={() => hideHint()}
             onClick={() => openUnitsInterface()}
         >
             <svg className='units-go-out-button'  viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">

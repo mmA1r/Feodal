@@ -22,23 +22,48 @@ export default function ManageUnitButtons() {
         return storeLoader.loadToStore('stop', 'action');
     }
 
+    function showHint(e, actionName) {
+        return storeLoader.loadToStore({
+            state: true,
+            type: actionName,
+            top: e.pageY, 
+            left: e.pageX
+        }, 'hint');
+    }
+
+    function hideHint() {
+        return storeLoader.loadToStore({
+            state: false,
+            type: null,
+            top: 2000, 
+            left: 0
+        }, 'hint');
+    }
+
+
     return (
         <div className='manage-unit-buttons'>
            <button 
                 className={`attack-unit-button`}
                 onClick={() => attack()}
+                onMouseEnter={(e) => showHint(e, 'attack')}
+                onMouseLeave={() => hideHint()}
             >
                 <AttackButton/>
             </button>
            <button
                 className={`move-unit-button`}
                 onClick={() => move()}
+                onMouseEnter={(e) => showHint(e, 'move')}
+                onMouseLeave={() => hideHint()}
             >
                 <MoveButton/>
             </button>
            <button
                 className={`stop-unit-button`}
                 onClick={() => stop()}
+                onMouseEnter={(e) => showHint(e, 'stop')}
+                onMouseLeave={() => hideHint()}
             >
                 <StopButton/>
             </button>
