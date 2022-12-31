@@ -3,6 +3,8 @@ import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
 import Village from "../entites/Village";
 import Soldier from '../entites/Soldier';
+import assassin from '../../../../../store/features/units/assassin';
+import Assasin from '../entites/Assassin';
 
 
 export default function getScene(scene) {
@@ -55,6 +57,7 @@ export default function getScene(scene) {
                                 new Soldier(scene, unitData);
                                 break;
                             case "2":
+                                new Assasin(scene, unitData);
                                 break;
                         }
                     }

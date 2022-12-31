@@ -16,6 +16,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
             this.setTexture(this.mainTexture);
             this.setDisplaySize(40, 70);
             break;
+            case 2:
+                this.mainTexture = 'assassin';
+                this.setTexture(this.mainTexture);
+                this.setDisplaySize(50, 50);
+            break;
         }
         this.ownerId = unitData.ownerId;
         this.x = unitData.posX * 64;

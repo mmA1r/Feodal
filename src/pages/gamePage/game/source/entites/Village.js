@@ -12,6 +12,7 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.level = serverData.level - 0;
         this.scene.villagesGroup.add(this);
         this.damageTexture = 0;
+        this.canBeRobbed = false;
         switch (this.level) {
             case 1:
                 this.setTexture('villageFirstLevel');
@@ -220,7 +221,8 @@ export default class Village extends Phaser.GameObjects.Sprite {
                 fullHp: 50,
                 population: this.population,
                 villageLevel: this.level,
-                id: this.id
+                id: this.id,
+                canBeRobbed: this.canBeRobbed
             }
             this.scene.store.loadToStore(village, 'village');
         }
