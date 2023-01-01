@@ -9,17 +9,19 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.depth = 1;
         this.activeRadius = 40000;
         this.id = serverData.id;
-        this.level = serverData.level-0;
+        this.level = serverData.level - 0;
         this.scene.villagesGroup.add(this);
-        switch (this.level){
+        this.damageTexture = 0;
+        this.canBeRobbed = false;
+        switch (this.level) {
             case 1:
-                this.setTexture('villageFirstLevel', 0);
-                this.attackTexture = 1;
+                this.setTexture('villageFirstLevel');
+                this.damageTexture = 1;
                 break;
             case 2:
                 this.anims.create({
                     key: "mill",
-                    frames: [            {
+                    frames: [{
                         key: 'villageSecondLevel',
                         frame: 0,
                         duration: 80
@@ -42,8 +44,32 @@ export default class Village extends Phaser.GameObjects.Sprite {
                     duration: 320,
                     repeat: -1
                 });
+                this.anims.create({
+                    key: "damaged",
+                    frames: [{
+                        key: 'villageSecondLevel',
+                        frame: 4,
+                        duration: 80
+                    },
+                    {
+                        key: 'villageSecondLevel',
+                        frame: 5,
+                        duration: 80
+                    },
+                    {
+                        key: 'villageSecondLevel',
+                        frame: 6,
+                        duration: 80
+                    },
+                    {
+                        key: 'villageSecondLevel',
+                        frame: 7,
+                        duration: 80
+                    }],
+                    duration: 320,
+                    repeat: -1
+                });
                 this.anims.play("mill", true)
-                this.attackTexture = 4;
                 break;
 
         }
@@ -51,6 +77,13 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.resistBar.depth = 99999991;
         this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
         this.acceptBar.depth = 99999992;
+
+        this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
+        this.selector.isStroked = true;
+        this.selector.strokeColor = 0x00FF00;
+        this.selector.lineWidth = 2;
+        this.selector.setVisible(false);
+
         this.rewriteData(serverData);
         this.addedToScene();
         this.addToDisplayList();
@@ -65,13 +98,7 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.name.style.setAlign('center')
         this.name.scrollFactorX = 1;
         this.name.scrollFactorY = 1;
-
-        this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
-        this.selector.isStroked = true;
-        this.selector.strokeColor = 0x0000FF;
-        this.selector.lineWidth = 2;
-        this.selector.setVisible(false);
-        this.attackArea = this.scene.add.ellipse(this.x -10, this.y + 45, 500, 500,0xffff00,0.1);
+        this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
         this.scene.physics.add.existing(this.attackArea, true);
         this.attackArea.body.onCollide = true;
         this.attackArea.isStroked = true;
@@ -80,6 +107,7 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.attackArea.setVisible(false);
         this.canAttack = true;
         this.status = "wait"
+        this.damaged = false;
     }
 
     select() {
@@ -90,6 +118,25 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this._updateUI();
     }
 
+    openUI() {
+        this.scene.store.loadToStore('village', 'ui');
+        this._updateUI();
+    }
+
+    attackOnVillage() {
+        this.type = "enemyVillage";
+        this.selector.strokeColor = 0xFF0000;
+    }
+
+    peaceInVillage() {
+        if (this.status === "wait") {
+            this.type = "village";
+            this.selector.strokeColor = 0x00FF00;
+        }
+    }
+
+
+
     unSelect() {
         this.selected = false;
         this.selector.setVisible(false);
@@ -99,21 +146,23 @@ export default class Village extends Phaser.GameObjects.Sprite {
 
     rewriteData(serverData) {
         if (!this.damaged) this.currentHp = 50;
-        this.level = serverData.level-0;
-        this.population = serverData.population-0;
+        this.level = serverData.level - 0;
+        this.population = serverData.population - 0;
         this.updateResistLevel();
     }
 
-    updateResistLevel(){
-        const resistLevel = this.scene.player.might/this.population;
+    updateResistLevel() {
+        const resistLevel = this.scene.player.might / this.population;
         if (resistLevel >= 1) {
             this.acceptBar.setVisible(false);
             this.resistBar.setVisible(false);
+            this.peaceInVillage();
         }
         else {
+            this.attackOnVillage();
             this.acceptBar.setVisible(true);
             this.resistBar.setVisible(true);
-            this.acceptBar.width=(200*resistLevel);
+            this.acceptBar.width = (200 * resistLevel);
         }
     }
 
@@ -129,9 +178,9 @@ export default class Village extends Phaser.GameObjects.Sprite {
     }
 
     damage(dmg) {
-        if (this.population>0) {
+        if (this.population > 0) {
             this.currentHp -= dmg;
-            if (this.currentHp<=0) {
+            if (this.currentHp <= 0) {
                 this.currentHp = 50;
                 this.population--;
                 this.scene.updateVillagesGroup.add(this);
@@ -139,14 +188,28 @@ export default class Village extends Phaser.GameObjects.Sprite {
             if (this.selected) this._updateUI();
         }
         this.status = "attack";
-        this.setFrame(1);
-        this.damaged = true;
-        setTimeout(() => {
-            this.setFrame(0);
-            this.damaged = false;
-        }, 300);
-        
-        if (this.population<=0) {
+        if (this.damaged === false) {
+            this.damaged = true;
+            if (this.level === 2) {
+                this.anims.pause();
+                this.setFrame(this.anims.currentFrame.index + 4);
+            }
+            else {
+                this.setFrame(1);
+            }
+            setTimeout(() => {
+                if (this.level === 2) {
+                    this.anims.resume();
+                }
+                else {
+                    this.setFrame(0);
+                }
+
+                this.damaged = false;
+            }, 40);
+        }
+
+        if (this.population <= 0) {
             DestroyVillage(this);
         }
     }
@@ -154,12 +217,13 @@ export default class Village extends Phaser.GameObjects.Sprite {
     _updateUI() {
         if (this.selected) {
             let village = {
-                    currentHp: this.currentHp,
-                    fullHp: 50,
-                    population: this.population,
-                    villageLevel: this.level,
-                    id: this.id
-                }
+                currentHp: this.currentHp,
+                fullHp: 50,
+                population: this.population,
+                villageLevel: this.level,
+                id: this.id,
+                canBeRobbed: this.canBeRobbed
+            }
             this.scene.store.loadToStore(village, 'village');
         }
     }
@@ -167,34 +231,35 @@ export default class Village extends Phaser.GameObjects.Sprite {
     attack() {
         if (this.canAttack) {
             setTimeout(() => { this.canAttack = true }, 4000);
-            setTimeout(() => { 
+            setTimeout(() => {
                 this.attackArea.setVisible(true);
-             }, 2100);
-            setTimeout(() => { 
+            }, 2100);
+            setTimeout(() => {
                 this.attackArea.fillColor = 0xff0000;
                 this.attackArea.strokeColor = 0xff0000;
-             }, 3700);
+            }, 3700);
             setTimeout(() => {
                 this.attackArea.fillColor = 0xffff00;
                 this.attackArea.strokeColor = 0xffff00;
                 this.attackArea.setVisible(false);
-             }, 4300);
-             let i = 0;
-            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
-                i ++;
+            }, 4300);
+            let i = 0;
+            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
+                i++;
             })
-            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
-                unit.damage(Math.round(this.population/i));
+            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
+                unit.damage(Math.round(this.population / i));
             })
             if (i === 0) {
-                this.status="wait"
+                this.status = "wait";
+                setTimeout(this.peaceInVillage,400);
                 this.attackArea.setVisible(false);
             };
             this.canAttack = false;
         }
     }
 
-    update(){
+    update() {
         if (this.status === "attack") {
             this.attack();
         }

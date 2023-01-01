@@ -1,9 +1,9 @@
 import Unit from "./Unit"
 
-export default class Soldier extends Unit {
+export default class Assassin extends Unit {
     constructor(scene, unitData) {
         super(scene, unitData)
-        this.anims.create({
+        /*this.anims.create({
             key: "move",
             frames: [{
                 key: 'soldier',
@@ -22,10 +22,10 @@ export default class Soldier extends Unit {
             }],
             duration: 240,
             repeat: -1
-        });
+        });*/
     }
 
-    damageFrameOn() {
+    /*damageFrameOn() {
         if (this && this.status === "move") {
             this.anims.pause();
             this.setFrame(
@@ -46,5 +46,5 @@ export default class Soldier extends Unit {
         if (this && this.status !== "move") {
             this.setFrame("soldierStand");
         }
-    }
+    }*/
 }
