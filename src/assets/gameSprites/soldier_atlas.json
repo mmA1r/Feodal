@@ -1,0 +1,76 @@
+{
+    "frames": [
+        {
+            "filename": "soldierStand",
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 100,
+                "h": 175
+            }
+        },
+        {
+            "filename": "soldierMove1",
+            "frame": {
+                "x": 100,
+                "y": 0,
+                "w": 64,
+                "h": 128
+            }
+        },
+        {
+            "filename": "soldierMove2",
+            "frame": {
+                "x": 164,
+                "y": 0,
+                "w": 64,
+                "h": 128
+            }
+        },
+        {
+            "filename": "soldierMove3",
+            "frame": {
+                "x": 228,
+                "y": 0,
+                "w": 64,
+                "h": 128
+            }
+        },
+        {
+            "filename": "soldierStandDamaged",
+            "frame": {
+                "x": 0,
+                "y": 175,
+                "w": 100,
+                "h": 175
+            }
+        },
+        {
+            "filename": "soldierMove1Damaged",
+            "frame": {
+                "x": 100,
+                "y": 175,
+                "w": 64,
+                "h": 128
+            }
+        },
+        {
+            "filename": "soldierMove2Damaged",
+            "frame": {
+                "x": 164,
+                "y": 175,
+                "w": 64,
+                "h": 128
+            }
+        },
+        {
+            "filename": "soldierMove3Damaged",
+            "frame": {
+                "x": 228,
+                "y": 175,
+                "w": 64,
+                "h": 128
+            }
+        }
+    ]
+}

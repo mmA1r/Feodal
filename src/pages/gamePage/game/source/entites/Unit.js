@@ -9,11 +9,23 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.selected = false;
         this.id = unitData.id;
         this.might = 5;
+        this.unitType = unitData.type - 0;
+        switch (this.unitType) {
+            case 1: 
+            this.mainTexture = 'soldier';
+            this.setTexture(this.mainTexture);
+            this.setDisplaySize(40, 70);
+            break;
+            case 2:
+                this.mainTexture = 'assassin';
+                this.setTexture(this.mainTexture);
+                this.setDisplaySize(50, 50);
+            break;
+        }
         this.ownerId = unitData.ownerId;
         this.x = unitData.posX * 64;
         this.y = unitData.posY * 64;
         this.depth = this.y;
-        this.unitType = unitData.type - 0;
         this.type = (this.ownerId === this.scene.player.id) ? 'myUnit' : "unit";
         this.speed = 5;//unitData.speed;
         this.target = {
@@ -38,7 +50,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.activeRadius = 1600;
         this.atk = 10 - 0;
         this.canAttack = true;
-        this.selector = this.scene.add.ellipse(this.x - 8, this.y + 30, 35, 25);
+        this.selector = this.scene.add.ellipse(this.x, this.y + 22, 35, 25);
         this.selector.isStroked = true;
         this.selector.strokeColor = (this.type === "myUnit") ? 0x00FF00 : 0xFF0000;
         this.selector.lineWidth = 2;
@@ -53,7 +65,7 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         this.setVisible(true);
         this.body.enable = true;
         this.addedToScene();
-        this.setInteractive()
+        this.setInteractive();
 
     }
 
@@ -96,8 +108,11 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                     break;
                 };
                 case "village":
-                    this.attack();
+                    this.target.openUI();
                     break;
+                case "enemyVillage":
+                        this.attack();
+                        break;
                 case "myCastle": {
                     this.enterCastle();
                     break;
@@ -111,8 +126,8 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         else {
             this.x += this.direction.cos * this.speed;
             this.y += this.direction.sin * this.speed;
-            this.selector.x = (this.flipX) ? this.x + 5 : this.x - 8;
-            this.selector.y = this.y + 30;
+            this.selector.x = this.x;
+            this.selector.y = this.y + 22;
             this.depth = this.y;
             if (this.type === "myUnit") {
                 this.scene.updateMyUnitsGroup.add(this);
@@ -130,21 +145,23 @@ export default class Unit extends Phaser.GameObjects.Sprite {
     }
 
     damage(dmg) {
-        if (this.status === "inCastle") {
-            this.castle.setTint(0xFF5545);
-            this.castle.damaged = true;
-            setTimeout(() => {
-                this.castle.setTint();
-                this.castle.damaged = false;
-            }, 300);
-        }
-        else {
-            this.setTint(0xFF5545);
-            this.damaged = true;
-            setTimeout(() => {
-                this.setTint();
-                this.damaged = false;
-            }, 300);
+        if (!this.damaged) {
+            if (this.status === "inCastle") {
+                this.castle.setTint(0xFF5545);
+                this.castle.damaged = true;
+                setTimeout(() => {
+                    this.castle.setTint();
+                    this.castle.damaged = false;
+                }, 300);
+            }
+            else {
+                this.damageFrameOn();
+                this.damaged = true;
+                setTimeout(() => {
+                    this.damageFrameOff()
+                    this.damaged = false;
+                }, 300);
+            }
         }
         this.hp -= dmg;
         if (this.hp < 0) this.hp = 0;
@@ -163,12 +180,12 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         if (this.scene.selectedUnits.getLength() === 1) {
             this.scene.store.loadToStore({
                 hp: this.hp - 0,
-                type: 1
+                type: this.unitType
             }, 'currentUnit')
         }
         if (this.scene.selectedUnits.getLength() > 1) {
             let soldiers = {
-                fullHp: this.scene.selectedUnits.getLength() * 100,
+                fullHp: this.scene.selectedUnits.getLength() * 120,
                 currentHp: this.scene.selectedUnits.getChildren().reduce((sumHp, unit) => sumHp + unit.hp, 0),
                 num: this.scene.selectedUnits.getLength()
             }
@@ -228,11 +245,18 @@ export default class Unit extends Phaser.GameObjects.Sprite {
         if (this.type !== "myUnit") {
             this._setUnitStatus(unitData.status);
             this._getDirection(unitData.direction);
-            this.moveTo({
-                x: unitData.posX * 64,
-                y: unitData.posY * 64,
-                activeRadius: 100,
-            })
+            if (this.visible && this.status === "move") {
+                this.moveTo({
+                    x: unitData.posX * 64,
+                    y: unitData.posY * 64,
+                    activeRadius: 100,
+                    type: "pointer"
+                })
+            } 
+            else {
+                this.x = unitData.posX * 64;
+                this.y = unitData.posY * 64;
+            }
         }
     }
 
@@ -265,21 +289,26 @@ export default class Unit extends Phaser.GameObjects.Sprite {
                 this.status = status;
                 this._intoCastle();
                 this._removeScene();
+                this.anims.stop();
             }
             else {
+                if (status === "stand") {
+                    this.pointer.moveTo(this.x, this.y);
+                    this.anims.stop();
+                    this.setTexture(this.mainTexture);
+                }
+                if (status === "move") {
+                    if (this.anims.get("move")) this.anims.play("move", true);
+                }
+                if (status === "attack") {
+                    this.anims.stop();
+                    this.setTexture(this.mainTexture);
+                }
                 if (this.status === "inCastle") {
                     this._outCastle();
                     this._addScene();
                     this.pointer.moveTo(this.castle.pointer.x, this.castle.pointer.y);
                     setTimeout(() => this.moveTo(this.pointer), 100);
-                }
-                if (status === "stand") {
-                    this.pointer.moveTo(this.x, this.y);
-                    this.anims.stop();
-                    this.setTexture('soldier', 0);
-                }
-                if (status === "move") {
-                    this.anims.play("move", true);
                 }
             };
             this.status = status;
