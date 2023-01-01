@@ -13,6 +13,7 @@ import action from "./features/buttonAction/buttonAction";
 import village from './features/village/village';
 import enemyCastle from "./features/enemyCastle/enemyCastle";
 import hoverHint from "./features/hoverHint/hoverHint";
+import gameOver from "./features/gameOver/gameOver";
 
 export default configureStore({
     reducer: {
@@ -28,7 +29,8 @@ export default configureStore({
         action: action,
         village: village,
         enemyCastle: enemyCastle,
-        hoverHint: hoverHint
+        hoverHint: hoverHint,
+        gameOver: gameOver
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

@@ -9,6 +9,7 @@ import CastleButton from "./castleButton/CastleButton";
 import UI from "./UI/UI";
 import GamerMoney from "./gamerMoney/GamerMoney";
 import Game from './game/Game';
+import GameOver from "./gameOver/GameOver";
 import HintHover from "./hintHover/HintHover";
 
 import StoreLoader from "../../store/StoreLoader";
@@ -95,10 +96,10 @@ export default function GamePage() {
                 </button>
                 <MiniMapFrame/>
             </div>
+            <GameOver/>
             <UI/>
             <Logout></Logout>
             <HintHover/>
-
             <GamerMoney/>
             <Chat/>
             <Game/>
