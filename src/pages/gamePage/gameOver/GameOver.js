@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import StoreLoader from '../../../store/StoreLoader';
+import FightButton from './fightButton/FightButton';
 
 import './gameOver.scss';
+import MenuButton from './menuButton/MenuButton';
 
 export default function GameOver() {
     const [endOfPage, setEndOfPage] = useState(false);
@@ -28,31 +30,36 @@ export default function GameOver() {
                 setEndOfPage(false);
                 clearTimeout(timeout);
             }
-        }, 1500)
+        }, 1200);
     }
 
     function returnToTheFight() {
-        return
+        setEndOfPage(true);
+        const timeout = setTimeout(() => {
+            storeLoader.loadToStore( 1, 'reRender');
+            window.location.reload();
+            return () => {
+                setEndOfPage(false);
+                clearTimeout(timeout);
+            }
+        }, 1200);
     }
 
     return(
-        <div>
-            <button onClick={() => storeLoader.loadToStore(!isGameOver, 'gameOver')}>agfkjapogjsapogksa[g[</button>
-            <div className={`game-over-window ${isGameOver ? 'show-game-over' : 'hide-game-over'}`}>
-                <div className={`game-over-box ${endOfPage ? 'box-disappear' : ''}`}>
-                    <button 
-                        className='return-to-the-fight'
-                        onClick={() => returnToTheFight()}
-                    >
-
-                    </button>
-                    <button 
-                        className='return-to-menu' 
-                        onClick={() => returnToMenu()}
-                    >
-                        menu
-                    </button>
-                </div>
+        <div className={`game-over-window ${isGameOver ? 'show-game-over' : 'hide-game-over'}`}>
+            <div className={`game-over-box ${endOfPage ? 'box-disappear' : ''}`}>
+                <button 
+                    className='return-to-the-fight'
+                    onClick={() => returnToTheFight()}
+                >
+                    <FightButton/>
+                </button>
+                <button 
+                    className='return-to-menu' 
+                    onClick={() => returnToMenu()}
+                >
+                    <MenuButton/>
+                </button>
             </div>
         </div>
     );

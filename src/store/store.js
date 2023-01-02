@@ -14,6 +14,7 @@ import village from './features/village/village';
 import enemyCastle from "./features/enemyCastle/enemyCastle";
 import hoverHint from "./features/hoverHint/hoverHint";
 import gameOver from "./features/gameOver/gameOver";
+import reRender from "./features/reRender/reRender";
 
 export default configureStore({
     reducer: {
@@ -30,7 +31,8 @@ export default configureStore({
         village: village,
         enemyCastle: enemyCastle,
         hoverHint: hoverHint,
-        gameOver: gameOver
+        gameOver: gameOver,
+        reRender: reRender,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

@@ -1,0 +1,27 @@
+@import '../../gameConst.scss';
+
+.menu-button-svg {
+    width: 150px;
+    height: 40px;
+    fill: none;
+
+    &:hover {
+        .menu-frame {
+            fill: rgba(49, 0, 0, 0.315);
+            stroke: white;
+        }
+        .menu-text {
+            fill: white;
+        }
+    }
+
+    &:active {
+        .menu-frame {
+            fill: rgba(49, 0, 0, 0.315);
+            stroke: $jewerly-background-active-color;
+        }
+        .menu-text {
+            fill: $jewerly-background-active-color;
+        }
+    }
+}

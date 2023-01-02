@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useStore } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
 import Logout from './logout/Logout';
@@ -19,6 +19,7 @@ import './gamePage.scss';
 
 export default function GamePage() {
 
+    const forceRender = useSelector((state) => state.reRender.value);
     const store = useStore();
     const navigate = useNavigate();
     const routes = store.getState().routes.value;
@@ -84,7 +85,7 @@ export default function GamePage() {
     }
 
     return(
-        <div className="game">
+        <div key={forceRender} className="game">
             <div className="mini-map-window">
                 <button
                     className="castle-manage-button"

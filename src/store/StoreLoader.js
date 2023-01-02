@@ -10,6 +10,7 @@ import { buttonAction } from './features/buttonAction/buttonAction';
 import { castleValues } from './features/enemyCastle/enemyCastle';
 import { hintValues } from './features/hoverHint/hoverHint';
 import { gameIsOver } from './features/gameOver/gameOver';
+import { incValue } from './features/reRender/reRender';
 
 import store from './store';
 
@@ -45,6 +46,8 @@ export default class StoreLoader {
                 return store.dispatch(hintValues(value));
             case 'gameOver':
                 return store.dispatch(gameIsOver(value));
+            case 'reRender':
+                return store.dispatch(incValue(value));
             default: return true;
         }
     }

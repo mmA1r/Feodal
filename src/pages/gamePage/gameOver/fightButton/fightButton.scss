@@ -1,0 +1,26 @@
+@import '../../gameConst.scss';
+
+.fight-button-svg {
+    width: 150px;
+    height: 40px;
+    fill: none;
+
+    &:hover {
+        .fight-frame {
+            fill: rgba(49, 0, 0, 0.315);
+            stroke: white;
+        }
+        .fight-text {
+            fill: white;
+        }
+    }
+    &:active {
+        .fight-frame {
+            fill: rgba(49, 0, 0, 0.315);
+            stroke: $jewerly-background-active-color;
+        }
+        .fight-text {
+            fill: $jewerly-background-active-color;
+        }
+    }
+}
