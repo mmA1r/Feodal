@@ -12,7 +12,7 @@ export default function ArmyInfoManagePanel() {
         return () => {
             store.loadToStore('inactive', 'action');
         }
-    }, []);
+    });
 
     const fullHpSoldiers = useSelector((state) => state.currentArmy.soldiers.fullHp);
     const fullHpAssassins = useSelector((state) => state.currentArmy.assassins.fullHp);

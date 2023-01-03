@@ -37,7 +37,6 @@ export default function GameOver() {
         setEndOfPage(true);
         const timeout = setTimeout(() => {
             storeLoader.loadToStore( 1, 'reRender');
-            window.location.reload();
             return () => {
                 setEndOfPage(false);
                 clearTimeout(timeout);

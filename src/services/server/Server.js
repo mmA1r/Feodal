@@ -62,6 +62,8 @@ export default class Server {
             localStorage.removeItem('token');
             this.token = null;
             this.chatHash = 1;
+            this.mapHash = 1;
+            this.unitsHash = 1;
             return true;
         }
     }

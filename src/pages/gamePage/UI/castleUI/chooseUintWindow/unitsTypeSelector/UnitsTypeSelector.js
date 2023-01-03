@@ -6,12 +6,29 @@ import './unitsTypeSelector.scss';
 export default function ChooseUnitWindow() {
 
     const units = useSelector((state) => state.gamer.units);
-    // eslint-disable-next-line
-    const soldires = units.map(unit => {
-        if(unit.type === 1 && unit.status === 'inCastle') {
-            return unit;
+    const soldiers = [];
+    const assassins = [];
+    let soldiersKey;
+    let assassinsKey;
+
+    units.forEach(unit => {
+        if(unit.status === 'inCastle') {
+            if(unit.type === 1) {
+                return soldiers.push(unit);
+            } else if(unit.type === 2) {
+                return assassins.push(unit);
+            }
         }
-    })
+    });
+
+    if(soldiers.length === assassins.length) {
+        soldiersKey = 1; //index of type to not to cause 'the same keys for components' error
+        assassinsKey = 2;
+    } else {
+        soldiersKey = soldiers;
+        assassinsKey = assassins;
+    }
+
     const unitsType = units.map(unit => {
         return unit.type;
     });
@@ -22,11 +39,13 @@ export default function ChooseUnitWindow() {
     return (
         <div className='units-type-selector'>
             {
-                // eslint-disable-next-line
                 types.map(type => {
                     if(type === 1) {
-                        return <UnitType key={soldires} units={soldires}/>
+                        return <UnitType key={soldiersKey} units={soldiers} type={1}/>
+                    } else if(type === 2) {
+                        return <UnitType key={assassinsKey} units={assassins} type={2}/>
                     }
+                    return null;
                 })
             }
         </div>

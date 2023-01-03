@@ -35,45 +35,60 @@ export const gamerStore = createSlice({
             }
         },
         changeStatus: (state, action) => {
-            const soldiers = state.units.map(unit => {
+            const soldiers = [];
+            const assassins = [];
+            state.units.forEach(unit => {
                 if(unit.type === 1) {
-                    return unit;
-                }
+                    soldiers.push(unit);
+                } else if(unit.type === 2) {
+                    assassins.push(unit);
+                } 
             });
+            /******************/
+            /*****Soldiers****/
+            /******************/
             if(action.payload.type === 1) {
                 const damagedNum = action.payload.damagedNumber;
                 const fullHpNum = action.payload.fullHpNumber;
-                // eslint-disable-next-line
-                const fullHpSoldiers = (soldiers.map(soldier => {
-                    if(soldier.hp >= action.payload.fullHp) {
-                        return soldier;
-                    } else {
-                        return null;
+                const fullHpSoldiers = [];
+                const damagedSoldier = [];
+                if(soldiers.length > 0) {
+                    soldiers.forEach(soldier => {
+                        if(soldier.hp >= action.payload.fullHp) {
+                            fullHpSoldiers.push(soldier);
+                        } else if(soldier.hp < action.payload.fullHp) {
+                            damagedSoldier.push(soldier);
+                        }
+                    });
+                    for(let i = 0; i < damagedNum; i++) {
+                        damagedSoldier[i].status = 'outOfCastle';
                     }
-                    // eslint-disable-next-line
-                })).filter(item => {
-                    if(item) {
-                        return item;
+                    for(let i = 0; i < fullHpNum; i++) {
+                        fullHpSoldiers[i].status = 'outOfCastle';
                     }
-                });
-                // eslint-disable-next-line
-                const damagedSoldier = (soldiers.map(soldier => {
-                    if(soldier.hp < action.payload.fullHp) {
-                        return soldier;
-                    } else {
-                        return null;
-                    }
-                    // eslint-disable-next-line
-                })).filter(item => {
-                    if(item) {
-                        return item
-                    }
-                });
-                for(let i = 0; i < damagedNum; i++) {
-                    damagedSoldier[i].status = 'outOfCastle';
                 }
-                for(let i = 0; i < fullHpNum; i++) {
-                    fullHpSoldiers[i].status = 'outOfCastle';
+            /******************/
+            /*****Assassins****/
+            /******************/
+            } else if(action.payload.type === 2) {
+                const damagedNum = action.payload.damagedNumber;
+                const fullHpNum = action.payload.fullHpNumber;
+                const fullHpAssassins = [];
+                const damagedAssassins = [];
+                if(assassins.length > 0) {
+                    assassins.forEach(assassin => {
+                        if(assassin.hp >= action.payload.fullHp) {
+                            fullHpAssassins.push(assassin);
+                        } else if(assassin.hp < action.payload.fullHp) {
+                            damagedAssassins.push(assassin);
+                        }
+                    });
+                    for(let i = 0; i < damagedNum; i++) {
+                        damagedAssassins[i].status = 'outOfCastle';
+                    }
+                    for(let i = 0; i < fullHpNum; i++) {
+                        fullHpAssassins[i].status = 'outOfCastle';
+                    }
                 }
             }
         },
