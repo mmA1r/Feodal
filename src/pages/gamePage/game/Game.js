@@ -38,7 +38,6 @@ export default function Game() {
         return () => {
             clearInterval(scene.getScene);
             clearInterval(scene.updateUnits);
-            clearInterval(scene.StoreData);
             store.restore();
             game.destroy(true, false);
         }

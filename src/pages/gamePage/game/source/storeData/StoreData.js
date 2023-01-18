@@ -1,6 +1,4 @@
-import gamer from '../../../../../store/features/gamer/gamer';
 import store from '../../../../../store/store';
-import Phaser, { Cameras } from "phaser";
 
 export default class StoreData {
     constructor(scene) {
