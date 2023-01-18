@@ -11,6 +11,7 @@ import { castleValues } from './features/enemyCastle/enemyCastle';
 import { hintValues } from './features/hoverHint/hoverHint';
 import { gameIsOver } from './features/gameOver/gameOver';
 import { incValue } from './features/reRender/reRender';
+import { changeFunction } from './features/changeStoreFlag/changeStoreFlag';
 
 import store from './store';
 
@@ -48,6 +49,8 @@ export default class StoreLoader {
                 return store.dispatch(gameIsOver(value));
             case 'reRender':
                 return store.dispatch(incValue(value));
+            case 'changeStore' :
+                return store.dispatch(changeFunction(value));
             default: return true;
         }
     }
@@ -60,5 +63,6 @@ export default class StoreLoader {
         store.dispatch(currentVillage({ attacked: false }));
         store.dispatch(hintValues({state: false, top: 0, left: 0, type: null}));
         store.dispatch(gameIsOver(false));
+        store.dispatch(changeFunction(null));
     }
 }
