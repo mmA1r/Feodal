@@ -26,8 +26,7 @@ export default class WorldScene extends Phaser.Scene {
         this.villagesGroup = this.add.group();
         this.selectedUnits = this.add.group();
         this.treesGroup = this.add.group();
-        this.unitsInCastleGroup = this.add.group();
-        this.player = new Player(this);
+        this.updates = this.add.group();
     }
 
     async create() {
@@ -47,18 +46,25 @@ export default class WorldScene extends Phaser.Scene {
             tile.setVisible(false);
         });
         Trees(this);
-        SelectorUnits(this);
+        //SelectorUnits(this);
         EventsOn(this);
-        Camera(this);
         Physics(this);
+        Camera(this);
+        this.player = new Player(this);
         this.updateUnits = updateUnits(this);
         this.getScene = getScene(this);
-        this.StoreData = StoreData(this);
+        this.StoreData = new StoreData(this);
     }
 
 
-    async update() {
-        this.unitsGroup.getChildren().forEach((el) => {
+    update() {
+        const time = new Date() - 0;
+        this.updates.getChildren().forEach(el => {
+            if (el.timeNextUpdate <= time) {
+                el.update();
+            }
+        })
+        /*this.unitsGroup.getChildren().forEach((el) => {
             if (el.status != "inCastle") el.update();
         });
         this.villagesGroup.getChildren().forEach((el) => {
@@ -69,6 +75,6 @@ export default class WorldScene extends Phaser.Scene {
         });
         if (this.cameras.main.isMoved) {
             this.cameras.main.move();
-        }
+        }*/
     }
 }

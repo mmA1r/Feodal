@@ -113,9 +113,6 @@ export default class Village extends Phaser.GameObjects.Sprite {
     select() {
         this.selector.setVisible(true);
         this.selected = true;
-        this.scene.selectedObject = this;
-        this.scene.store.loadToStore('village', 'ui');
-        this._updateUI();
     }
 
     openUI() {
@@ -137,11 +134,9 @@ export default class Village extends Phaser.GameObjects.Sprite {
 
 
 
-    unSelect() {
+    unselect() {
         this.selected = false;
         this.selector.setVisible(false);
-        this.scene.selectedObject = null;
-        this.scene.store.loadToStore('hide', 'ui');
     }
 
     rewriteData(serverData) {

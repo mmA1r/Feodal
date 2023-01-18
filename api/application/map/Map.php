@@ -17,7 +17,7 @@ class Map{
         );
     }
 
-    private function validPosObject($map, $posX, $posY, $type, $map, $castles, $villages){
+    private function validPosObject($posX, $posY, $type, $map, $castles, $villages){
         $isValid = true;
         foreach($castles as $castle){
             if (abs($castle->posX-$posX)+abs($castle->posY-$posY) <10) $isValid = false;
@@ -46,7 +46,7 @@ class Map{
         $villages = $this->db->getVillages();
         $posX = rand(10000,150000) / 1000;
         $posY = rand(10000,150000) / 1000;
-        while(!$this->validPosObject($map,$posX,$posY,1, $map, $castles,$villages)){
+        while(!$this->validPosObject($posX,$posY,1, $map, $castles,$villages)){
             $posX = rand(10000,145000) / 1000;
             $posY = rand(10000,145000) / 1000;
         };

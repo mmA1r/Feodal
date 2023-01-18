@@ -3,13 +3,10 @@ import Castle from '../entites/Castle'
 import store from '../../../../../store/store';
 import Village from "../entites/Village";
 import Soldier from '../entites/Soldier';
-import assassin from '../../../../../store/features/units/assassin';
 import Assasin from '../entites/Assassin';
-
 
 export default function getScene(scene) {
     const server = store.getState().server.value;
-    const Scene = scene;
     const getScene = setInterval(
         async () => {
             const data = (await server.getScene());
@@ -50,8 +47,13 @@ export default function getScene(scene) {
                 })
             }
             if (data?.units[0]) {
+                const units = scene.unitsGroup.getChildren();
                 data.units.forEach((unitData) => {
-                    if (!scene.unitsGroup.getChildren().find(el => el.id === unitData.id)) {
+                    const unit = units.find(el => el.id === unitData.id);
+                    if (unit) {
+                        unit.rewriteData(unitData);
+                    }
+                    else {
                         switch (unitData.type) {
                             case "1":
                                 new Soldier(scene, unitData);
@@ -62,15 +64,12 @@ export default function getScene(scene) {
                         }
                     }
                 })
-                scene.unitsGroup.getChildren().forEach((unit) => {
-                    const unitOnServer = data.units.find((u) => {
-                        return u.id === unit.id;
-                    })
-                    if (unitOnServer) {
-                        unit.rewriteData(unitOnServer);
+                units.forEach((unit) => {
+                    if (unit.isUpdated) {
+                        unit.isUpdated = false;
                     }
                     else {
-                        unit.killed()
+                        unit.killed();
                     }
 
                 })

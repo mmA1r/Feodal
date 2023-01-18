@@ -1,6 +1,6 @@
 <?php
     class Game {
-        function __construct($db,$map, $config) {
+        function __construct($db,$map,$config) {
             $this->db = $db;
             $this->map = $map;
             $this->config=$config;
@@ -33,16 +33,15 @@
         }
 
         public function robVillage($gamer, $village) {
-            $lootedMoney = (int)($village->money / 10);
-            if (!$lootedMoney) {
-                return $this->destroyVillage($gamer, $village);
+            $lootedMoney = $village->money - 50*$village->population;
+            if ($lootedMoney > 0) {
+                $this->db->robVillage($village->id, $lootedMoney);
+                $this->db->updateMoney($gamer->id, $lootedMoney);
+                $this->db->setMapHash(md5(rand()));
+                return array (
+                    'money'=>$this->db->getMoney($gamer->id)
+                );
             }
-            $this->db->robVillage($village->id, $lootedMoney);
-            $this->db->updateMoney($gamer->id, $lootedMoney);
-            $this->db->setMapHash(md5(rand()));
-            return array (
-                'money'=>$this->db->getMoney($gamer->id)
-            );
         }
 
         public function destroyVillage($gamer, $village) {
@@ -146,13 +145,16 @@
                 if ((float)$time>=(float)$village->nextUpdateTime) {
                     $id= $village->id;
                     // посчитать новую популяцию
-                    $population = $village->population + rand(1, 1+round($village->population/10,0,PHP_ROUND_HALF_EVEN));
+                    $population = $village->population;
+                    if ($village->money - 50*$village->population >= 50) {
+                        $population += 1;
+                    }
                     // посчитать новые деньги
-                    $money = $village->money + rand(1,$village->level*(1+round($village->population/10,0,PHP_ROUND_HALF_EVEN)));
+                    $money = $village->money + rand(1*$village->population,2*$village->level*$village->population);
                     // увеличить уровень если чо
-                    $cost = 300*$village->level + $village->level*$village->level*200;
-                    if ($village->money >= $cost && $village->level <5 ){
-                        $level =$village->level +1;
+                    $cost = 500*$village->level + $village->level*$village->level*400;
+                    if ($village->money >= $cost && $village->level < 5 ){
+                        $level = $village->level + 1;
                         $money = $village->money - $cost;
                     } else{$level= $village->level;};
             // записать в БД
@@ -164,20 +166,30 @@
                 $this->addVillage();
             }
             // обновить все замки
-            //...
-            /*$castles = $this->db->getCastles();
+            $castles = $this->db->getCastles();
+            $unitsTypes = $this->db->getUnitsTypes();
             foreach ($castles as $castle){
                 if((float)$castle->nextRentTime<=(float)$time){
-                    $rent= $this->db->getUnitsTypes()->rent * $this->db->countUnitsGamer($castle->id);
-                    $gamer= $castle->id;
-                    $this->db->updateMoney($gamer,-$rent);
-                    if($castle->money-$rent<=0) {
-                        $this->db->destroyCastle($gamer);
+                    $gamerId= $castle->id;
+                    $gamerUnits = $this->db->getGamerUnits($gamerId);
+                    if ($gamerUnits){
+                        $rent = 0;
+                        foreach($gamerUnits as $unit) {
+                            $rent +=$unitsTypes[$unit->type - 1]->cost * 0.05;
+                        }
+                        if($castle->money - $rent < 0) {
+                            $this->db->destroyCastle($gamerId);
+                            $isUpdate = true;
+                        }
+                        else {
+                            $this->db->updateMoney($gamerId,-$rent);
+                            $this->db->updateNextRentTime($gamerId,(float)$castle->nextRentTime + $this->config["intervalRentMinutes"]*60);
+
+                        }
                     }
-                    //обновить время следующей ренты
-                    $isUpdate = true;
+                                    
                 }
-            }*/
+            }
             if ($isUpdate) {
                 $this->db->setMapHash(md5(rand()));
             }

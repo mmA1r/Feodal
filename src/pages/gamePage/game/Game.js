@@ -6,9 +6,9 @@ import WorldScene from "./scenes/WorldScene";
 
 export default function Game() {
     const store = new StoreLoader();
-    const scene = new WorldScene;
 
     useEffect(() => {
+        let scene = new WorldScene;
         const config = {
             type: Phaser.CANVAS,
             width: '100%',
@@ -40,6 +40,7 @@ export default function Game() {
             clearInterval(scene.updateUnits);
             store.restore();
             game.destroy(true, false);
+            console.log('logout')
         }
     }, []);
 

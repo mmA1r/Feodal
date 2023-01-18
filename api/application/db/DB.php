@@ -148,7 +148,7 @@ class DB {
 
     public function getCastles() {
         $query = '
-                SELECT g.id as id, u.name as ownerName, g.castleLevel as Level, g.castleX as posX, g.castleY as posY 
+                SELECT g.id as id, u.name as ownerName, g.castleLevel as Level, g.castleX as posX, g.castleY as posY, g.nextRentTime as nextRentTime
                 FROM gamers as g 
                 JOIN users as u ON g.userId=u.id
             ';
@@ -189,6 +189,12 @@ class DB {
         return true;
     }
 
+    public function updateNextRentTime($gamer,$time){
+        $query = 'UPDATE gamers SET nextRentTime='. $time . ' WHERE id='. $gamer;
+        $this->db->query($query);
+        return true;
+   }
+
     ////////////////////////////////////////
     //////////////forVillages///////////////
     ////////////////////////////////////////
@@ -218,25 +224,6 @@ class DB {
         return true;
     }
 
-
-    // Пока не стали удалять
-    /*public function updateVillagesLevel() {
-        $query = 'UPDATE villages 
-                SET money = money - 300*level-level*level*200,
-                level=level + 1
-                WHERE (money>300*level+level*level*200) AND (level<11)';
-        $this->db->query($query);
-        return true;
-    }
-
-    public function updateVillagesMoney() {
-        $query = 'UPDATE villages SET
-            money= money + population * 2';
-        $this->db->query($query);
-        return true;
-    }
-
-    */
     public function updateVillagePopulations($id,$population){
         $query = 'UPDATE villages SET population ='. $population . ' WHERE id ='.  $id;
         $this -> db -> query($query);
@@ -300,11 +287,14 @@ class DB {
     return $this->db->query($query)->fetchObject();
     }
 
-    public function countUnitsGamer($gamerId){
-        $query ='SELECT count(*) FROM units WHERE gamerId='.$gamerId;
-        return $this->db->query($query)->fetchObject();
-
+    public function getGamerUnits($gamerId) {
+        $query = '
+        SELECT id, type, status
+        FROM units 
+        WHERE gamerId=' . $gamerId;
+    return $this->getArray($query);
     }
+
     // По id отдельного юнита меняет у него 
     // hp, posX, posY, status, direction в БД
     public function updateUnit($gamerId, $unitId,$hp, $posX, $posY, $status, $direction){

@@ -11,7 +11,6 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.activeRadius = 40000;
         this.id = castleData.id;
         this.level = castleData.Level;
-        console.log(this.level);
         this.scene.castlesGroup.add(this);
         this.setTexture('castleFirstLevel');
         this.rewriteData(castleData);
@@ -20,7 +19,8 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.setInteractive();
         this.setTint(0xff0000);
         this.selected = false;
-        this.type = (this.id === this.scene.player.id) ? 'myCastle' : "castle";
+        this.type = 'castle';
+        this.isMine = (this.id === this.scene.player.id) ? true : false;
         this.scene.physics.add.existing(this, true);
         this.body.isCircle = true;
         this.units = this.scene.add.group();
@@ -30,7 +30,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.onServer = true;
         this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
         this.selector.isStroked = true;
-        this.selector.strokeColor = (this.type === "myCastle") ? 0x00FF00 : 0xFF0000;
+        this.selector.strokeColor = (this.isMine) ? 0x00FF00 : 0xFF0000;
         this.selector.lineWidth = 2;
         this.selector.setVisible(false);
         this.name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
@@ -50,29 +50,15 @@ export default class Castle extends Phaser.GameObjects.Image {
     }
 
     select() {
-        let unit = this.scene.selectedUnits.getChildren()[0];
-        while (unit) {
-            unit.unSelect();
-            unit = this.scene.selectedUnits.getChildren()[0];
-        }
         this.selector.setVisible(true);
         this.selected = true;
-        this.scene.selectedObject = this;
+        if (this.isMine) this.pointer.setVisible(true);
         this.updateUI();
-        if (this.type === "myCastle") {
-            this.scene.store.loadToStore('castle', 'ui');
-            this.pointer.setVisible(true);
-        }
-        else {
-            this.scene.store.loadToStore('enemyCastle', 'ui');
-        }
     }
 
-    unSelect() {
+    unselect() {
         this.selected = false;
         this.selector.setVisible(false);
-        this.scene.selectedObject = null;
-        this.scene.store.loadToStore('hide', 'ui');
         this.pointer.setVisible(false);
     }
 
@@ -80,7 +66,7 @@ export default class Castle extends Phaser.GameObjects.Image {
             this.selector.destroy();
             this.pointer.destroy();
             this.name.destroy();
-            this.unSelect();
+            this.unselect();
             this.scene.castlesGroup.remove(this);
             this.destroy();
     }
@@ -98,12 +84,11 @@ export default class Castle extends Phaser.GameObjects.Image {
             DestroyCastle(this);
         }
         this.damaged = true;
-        this.status = "attack"
+        this.status = "attack";
     }
 
     updateUI() {
-        if (this.selected) {
-            if (this.type === "myCastle") {
+            if (this.isMine) {
                 const array = this.units.getChildren().map((el) => {
                     return {
                         type: el.unitType,
@@ -113,17 +98,20 @@ export default class Castle extends Phaser.GameObjects.Image {
                 });
                 this.scene.store.loadToStore({ units: array }, 'gamer');
             }
-            if (this.type ==="castle") {
-                let castle = {
-                    fullHp: this.units.getLength()*100,
-                    currentHp: this.units.getChildren().reduce((sumHp,unit)=> sumHp+unit.hp, 0),
+            else {
+                let fullHp = 0;
+                let currentHp = 0;
+                this.units.getChildren().forEach((unit)=>{
+                    fullHp += this.scene.unitTypesData[unit.unitType-1];
+                    currentHp += unit.hp;
+                })
+                this.scene.store.loadToStore({
+                    fullHp: fullHp,
+                    currentHp: currentHp,
                     armyLength: this.units.getLength(),
                     castleLevel: this.level
-                }
-                this.scene.store.loadToStore(castle, 'enemyCastle');
+                }, 'enemyCastle');
             }
-
-        }
     }
 
     attack() {
@@ -146,7 +134,6 @@ export default class Castle extends Phaser.GameObjects.Image {
                 i ++;
             })
             this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
-                console.log(this.units.getChildren().reduce((damage,unit)=> damage += unit.atk,0))
                 unit.damage(Math.round(this.units.getChildren().reduce((damage,unit)=> damage += unit.atk,0)/i));
             })
             if (i === 0) {

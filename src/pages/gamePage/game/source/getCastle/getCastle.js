@@ -8,10 +8,11 @@ export default async function getCastle(player) {
         console.log(data);
         player.id = data.id;
         player.money = data.money;
-        player.scene.store.loadToStore({ money: data.money-0 },'gamer');
-        player.scene.store.loadToStore({ level: data.level-0 },'gamer');
-        player.scene.store.loadToStore({castleUpdateCost:data.castleUpgradeCost-0},'gamer');
-        player.scene.store.loadToStore({nextRentTime:Math.round((data.nextRentTime-0) - Date.now()/1000)},'gamer');
+        player.scene.store.loadToStore({ money: data.money - 0 }, 'gamer');
+        player.scene.store.loadToStore({ level: data.level - 0 }, 'gamer');
+        player.scene.store.loadToStore({ castleUpdateCost: data.castleUpgradeCost - 0 }, 'gamer');
+        player.scene.store.loadToStore({ nextRentTime: Math.round((data.nextRentTime - 0) - Date.now() / 1000) }, 'gamer');
         player.scene.cameras.main.centerOn(data.posX * 64, data.posY * 64);
+        player.scene.cameras.main.viewScreenUpdate();
     }
 }
