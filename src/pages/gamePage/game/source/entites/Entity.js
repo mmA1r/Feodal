@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import StatusBar from "./StatusBar";
 
-export default class Entite extends Phaser.GameObjects.Sprite{
+export default class Entity extends Phaser.GameObjects.Sprite{
     constructor(scene, props) {
         super(scene);
         this.selected = false;
@@ -9,7 +9,7 @@ export default class Entite extends Phaser.GameObjects.Sprite{
         this.callbackUI = this.scene.player.updateUI; //props.callbackUI;
         this.activeRadius = props.activeRadius;
         this.viewRadius = this.scene.add.arc;
-        this.selectArc = new StatusBar(this);
+        this.statusBar = new StatusBar(this);
     }
 
     _updateDataCallbackUI(){
@@ -17,19 +17,25 @@ export default class Entite extends Phaser.GameObjects.Sprite{
     }
 
     updateData(param, value){
-        if (this[param]) {
+        if (this[param] || this[param] === false) {
             this[param] = value;
             this._updateDataCallbackUI();
         }
     }
 
     select() {
-        this.selected = true;
-        this.selectArc.setVisible(true);
+        this.updateData('selected', true);
+        this.statusBar.setVisible(true);
     }
 
     unselect() {
-        this.selected = false;
-        this.selectArc.setVisible(false);
+        this.updateData('selected', false);
+        this.statusBar.setVisible(false);
+        this.callbackUI();
+    }
+
+    destroy(){
+        this.statusBar.destroy();
+        super.destroy();
     }
 }

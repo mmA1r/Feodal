@@ -1,10 +1,13 @@
-import Phaser from "phaser";
 import UnitPointer from "./UnitPointer";
 import DestroyCastle from "../destroyCastle/DestroyCastle";
+import Entity from "./Entity";
 
-export default class Castle extends Phaser.GameObjects.Image {
+export default class Castle extends Entity {
     constructor(scene, castleData) {
-        super(scene);
+        super(scene, {
+            type: 'castle',
+            activeRadius: 16000
+        });
         this.x = castleData.posX * 64;
         this.y = castleData.posY * 64;
         this.depth = this.y;
@@ -28,7 +31,13 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.pointer.x = this.x - 150;
         this.pointer.y = this.y - 150;
         this.onServer = true;
-        this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
+        this.selector = this.statusBar;
+        this.statusBar.setColor(0x14b914);
+        this.statusBar.setSize(85);
+        this.statusBar.setAddXY(0, 30);
+        this.statusBar.setXY(this.x, this.y);
+        this.fullHP = 0;
+        this.currentHP = 0;
         this.selector.isStroked = true;
         this.selector.strokeColor = (this.isMine) ? 0x00FF00 : 0xFF0000;
         this.selector.lineWidth = 2;
@@ -39,7 +48,7 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.name.style.setAlign('center')
         this.name.scrollFactorX = 1;
         this.name.scrollFactorY = 1;
-        this.attackArea = this.scene.add.ellipse(this.x -10, this.y + 45, 500, 500,0xffff00,0.1);
+        this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
         this.scene.physics.add.existing(this.attackArea, true);
         this.attackArea.body.onCollide = true;
         this.attackArea.isStroked = true;
@@ -49,30 +58,27 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.canAttack = true;
     }
 
-    select() {
-        this.selector.setVisible(true);
-        this.selected = true;
+    /*select() {
+        super.select();
         if (this.isMine) this.pointer.setVisible(true);
-        this.updateUI();
     }
 
     unselect() {
         this.selected = false;
         this.selector.setVisible(false);
         this.pointer.setVisible(false);
-    }
+    }*/
 
     killed() {
-            this.selector.destroy();
-            this.pointer.destroy();
-            this.name.destroy();
-            this.unselect();
-            this.scene.castlesGroup.remove(this);
-            this.destroy();
+        this.pointer.destroy();
+        this.name.destroy();
+        this.unselect();
+        this.scene.castlesGroup.remove(this);
+        this.destroy();
     }
 
     rewriteData(castleData) {
-        this.level = castleData.Level-0;
+        this.level = castleData.Level - 0;
     }
 
     damage(dmg) {
@@ -87,64 +93,70 @@ export default class Castle extends Phaser.GameObjects.Image {
         this.status = "attack";
     }
 
+    updateHP() {
+        if (!this.damaged) this.fullHP = 0;
+        this.currentHP = 0;
+        this.units.getChildren().forEach((unit) => {
+            if (!this.damaged) this.fullHP += 120;
+            this.currentHP += unit.hp;
+        });
+        console.log(this.currentHP)
+        this.statusBar.updateHPBar(this.currentHP/this.fullHP);
+    }
+
     updateUI() {
-            if (this.isMine) {
-                const array = this.units.getChildren().map((el) => {
-                    return {
-                        type: el.unitType,
-                        status: 'inCastle',
-                        hp: el.hp
-                    }
-                });
-                this.scene.store.loadToStore({ units: array }, 'gamer');
-            }
-            else {
-                let fullHp = 0;
-                let currentHp = 0;
-                this.units.getChildren().forEach((unit)=>{
-                    fullHp += this.scene.unitTypesData[unit.unitType-1];
-                    currentHp += unit.hp;
-                })
-                this.scene.store.loadToStore({
-                    fullHp: fullHp,
-                    currentHp: currentHp,
-                    armyLength: this.units.getLength(),
-                    castleLevel: this.level
-                }, 'enemyCastle');
-            }
+        this.updateHP();
+        if (this.isMine) {
+            const array = this.units.getChildren().map((el) => {
+                return {
+                    type: el.unitType,
+                    status: 'inCastle',
+                    hp: el.hp
+                }
+            });
+            this.scene.store.loadToStore({ units: array }, 'gamer');
+            return 'castle';
+        }
+        this.scene.store.loadToStore({
+            fullHp: this.fullHP,
+            currentHp: this.currentHP,
+            armyLength: this.units.getLength(),
+            castleLevel: this.level
+        }, 'enemyCastle');
+        return 'enemyCastle';
     }
 
     attack() {
         if (this.canAttack) {
             setTimeout(() => { this.canAttack = true }, 4000);
-            setTimeout(() => { 
+            setTimeout(() => {
                 this.attackArea.setVisible(true);
-             }, 2100);
-            setTimeout(() => { 
+            }, 2100);
+            setTimeout(() => {
                 this.attackArea.fillColor = 0xff0000;
                 this.attackArea.strokeColor = 0xff0000;
-             }, 3700);
+            }, 3700);
             setTimeout(() => {
                 this.attackArea.fillColor = 0xffff00;
                 this.attackArea.strokeColor = 0xffff00;
                 this.attackArea.setVisible(false);
-             }, 4300);
-             let i = 0;
-            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
-                i ++;
+            }, 4300);
+            let i = 0;
+            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
+                i++;
             })
-            this.scene.physics.collide(this.attackArea,this.scene.unitsGroup, (area, unit) =>{
-                unit.damage(Math.round(this.units.getChildren().reduce((damage,unit)=> damage += unit.atk,0)/i));
+            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
+                unit.damage(Math.round(this.units.getChildren().reduce((damage, unit) => damage += unit.atk, 0) / i));
             })
             if (i === 0) {
-                this.status="wait"
+                this.status = "wait"
                 this.attackArea.setVisible(false);
             };
             this.canAttack = false;
         }
     }
 
-    update(){
+    update() {
         if (this.status === "attack") {
             this.attack();
         }

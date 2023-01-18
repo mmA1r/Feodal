@@ -1,3 +1,4 @@
+import { Data } from 'phaser';
 import getCastle from '../getCastle/getCastle'
 import MouseController from '../methods/MouseController';
 import Selector from './selector/Selector';
@@ -23,35 +24,23 @@ export default class Player {
 
     select(obj){
         this.unselect();
-        obj.select();
         this.selectedObject = obj;
-        this.updateUI();
+        obj.select();
     }
 
     unselect(){
         if (this.selectedObject) {
-            this.selectedObject.unselect();
+            let obj = this.selectedObject;
             this.selectedObject = undefined;
+            obj.unselect();
         }
     }
-    
+
     updateUI() {
         let typeUI = 'hide';
-        switch (this.selectedObject.type) {
-            case 'castle': {
-                typeUI = (this.selectedObject.isMine) ? 'castle' : 'enemyCastle';
-                break;
-            }
-            case 'unit': {
-                typeUI = (this.selectedObject.isMine) ? 'unit' : 'enemyUnit';
-                break;
-            }
-            case 'army': {
-                typeUI = (this.selectedObject.isMine) ? 'army' : 'enemyArmy';
-                break;
-            }
-        }
+        if (this.selectedObject) typeUI = this.selectedObject.updateUI();
         this.scene.store.loadToStore(typeUI, 'ui');
+        this.scene.StoreData.lastUI = typeUI;
     }
 
     command(obj) {

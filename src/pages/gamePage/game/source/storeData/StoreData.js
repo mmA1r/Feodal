@@ -3,7 +3,7 @@ import store from '../../../../../store/store';
 export default class StoreData {
     constructor(scene) {
         this.scene = scene;
-        this.lasUI = 'hide';
+        this.lastUI = 'hide';
         this.scene.store.loadToStore(this.changeDataStore.bind(this),'changeStore');
     }
 
@@ -22,6 +22,7 @@ export default class StoreData {
         if (myCastle) {
             const state = store.getState();
             let ui = this.nameUI(state.interface.value);
+            console.log(this.lastUI);
             if (ui === this.lastUI) {
                 switch (ui) {
                     case 'castle': {
@@ -41,12 +42,20 @@ export default class StoreData {
                 }
             }
             else {
-                if (ui === 'castle') {
-                    this.scene.cameras.main.centerOn(myCastle.x, myCastle.y);
-                    this.scene.cameras.main.viewScreenUpdate();
-                    myCastle.select();
+                switch (ui) {
+                    case 'castle': {
+                        this.scene.cameras.main.centerOn(myCastle.x, myCastle.y);
+                        this.scene.cameras.main.viewScreenUpdate();
+                        this.scene.player.select(myCastle);
+                        break;
+                    }
+                    case undefined:
+                        {
+                            this.scene.player.unselect();
+                        }
                 }
-                this.lasUI = ui;
+                this.lastUI = ui;
+                console.log(ui, this.lastUI)
             }
         }
     }

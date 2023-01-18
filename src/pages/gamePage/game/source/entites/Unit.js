@@ -1,17 +1,14 @@
 import Phaser from "phaser";
-import Entite from "./Entite";
+import Entity from "./Entity";
 import UnitPointer from "./UnitPointer";
 
-export default class Unit extends Entite {
+export default class Unit extends Entity {
     constructor(scene, unitData) {
         super(scene, {
             type: 'unit',
-            activeRadius: 16000,
-            widthSelectArc: 20,
-            heightSelectArc: 25,
-            colorSelectArc:  0x00FF00
+            activeRadius: 16000
         });
-        this.selectArc.setAddXY(0, 22);
+        this.statusBar.setAddXY(0, 22);
         this.scene.physics.add.existing(this, false);
         this.body.isCircle = true;
         this.selected = false;
@@ -59,10 +56,10 @@ export default class Unit extends Entite {
         this.activeRadius = 1600;
         this.atk = 10 - 0;
         this.canAttack = true;
-        this.selector = this.selectArc;
-        this.selectArc.setColor(0x14b914);
-        this.selectArc.setSize(12);
-        this.selectArc.setXY(this.x, this.y+22);
+        this.selector = this.statusBar;
+        this.statusBar.setColor(0x14b914);
+        this.statusBar.setSize(12);
+        this.statusBar.setXY(this.x, this.y);
          /*this.selector = this.scene.add.ellipse(this.x, this.y + 22, 35, 25);
         this.selector.isStroked = true;
         this.selector.strokeColor = (this.isMine) ? 0x00FF00 : 0xFF0000;
@@ -137,7 +134,7 @@ export default class Unit extends Entite {
         else {
             this.x += this.direction.cos * this.speed;
             this.y += this.direction.sin * this.speed;
-            this.selectArc.setXY(this.x, this.y);
+            this.statusBar.setXY(this.x, this.y);
             this.depth = this.y;
             if (this.isMine) {
                 this.scene.updateMyUnitsGroup.add(this);
@@ -185,14 +182,15 @@ export default class Unit extends Entite {
         if (this.type === "myUnit") this.scene.updateMyUnitsGroup.add(this);
     }
 
-    _updateUI() {
-        if (this.scene.selectedUnits.getLength() === 1) {
+    updateUI() {
+            this.statusBar.updateHPBar(this.hp/120);
             this.scene.store.loadToStore({
                 hp: this.hp - 0,
                 type: this.unitType
             }, 'currentUnit')
-        }
-        if (this.scene.selectedUnits.getLength() > 1) {
+            return (this.isMine) ? 'unit' : 'enemyUnit';
+
+        /*if (this.scene.selectedUnits.getLength() > 1) {
             let soldiers = {
                 fullHp: this.scene.selectedUnits.getLength() * 120,
                 currentHp: this.scene.selectedUnits.getChildren().reduce((sumHp, unit) => sumHp + unit.hp, 0),
@@ -202,19 +200,17 @@ export default class Unit extends Entite {
 
             }
             this.scene.store.loadToStore({ soldiers: soldiers }, 'currentArmy')
-        }
+        }*/
     }
 
     select() {
-        this.selector.setVisible(true);
-        this.pointer.setVisible(true);
-        this.selected = true;
+        super.select();
+        if (this.isMine) this.pointer.setVisible(true);
     }
 
     unselect() {
-        this.selector.setVisible(false);
-        this.pointer.setVisible(false);
-        this.selected = false;
+        super.unselect();
+        if (this.isMine) this.pointer.setVisible(false);
     }
 
     moveTo(obj) {
@@ -266,7 +262,6 @@ export default class Unit extends Entite {
     }
 
     killed() {
-        this.selector.destroy();
         this.pointer.destroy();
         this.scene.unitsGroup.remove(this);
         this.unSelect();

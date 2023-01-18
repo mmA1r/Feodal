@@ -1,13 +1,15 @@
 export default class StatusBar {
     constructor(entity) {
         this.owner = entity;
-        this.selectedArc = this._createArc(2);
+        this.arcs = [];
+        this._selectedArc();
         switch(this.owner.type){
             case 'unit': {
                 this._unitHPBar();
                 break;
             }
             case 'castle': {
+                this._castleHPBar();
                 break;
             }
         }
@@ -15,11 +17,31 @@ export default class StatusBar {
         this.addY = 0;
     }
 
+    _selectedArc() {
+        this._createArc(2);
+    }
+
+    _castleHPBar() {
+        this.currentHP = this._createArc(5);
+        this.currentHP.setClosePath(false);
+        this.currentHP.setStartAngle(75);
+        this.currentHP.setEndAngle(-130);
+        this.currentHP.depth = 0.2;
+        this.barHP = this._createArc(8);
+        this.barHP.setClosePath(false);
+        this.barHP.setStartAngle(74);
+        this.barHP.setEndAngle(-129);
+        this.barHP.strokeColor = 0x101010;
+        this.barHP.depth = 0.1;
+        this.dr = 10;
+    }
+
     _unitHPBar() {
         this.currentHP = this._createArc(2);
         this.currentHP.setClosePath(false);
-        this.currentHP.setStartAngle(-30);
-        this.currentHP.setEndAngle(100);
+        this.currentHP.anticlockwise = true;
+        this.currentHP.setStartAngle(100);
+        this.currentHP.setEndAngle(-45);
         this.currentHP.depth = 0.2;
         this.barHP = this._createArc(4);
         this.barHP.setClosePath(false);
@@ -27,6 +49,7 @@ export default class StatusBar {
         this.barHP.setEndAngle(102);
         this.barHP.strokeColor = 0x101010;
         this.barHP.depth = 0.1;
+        this.dr = 5;
     }
 
     _createArc(lineWidth) {
@@ -36,16 +59,15 @@ export default class StatusBar {
         arc.lineWidth = lineWidth;
         arc.setVisible(false);
         arc.scaleX = 1.5;
+        this.arcs.push(arc);
         return arc;
     }
 
     setXY(x, y) {
-        this.selectedArc.x = x + this.addX;
-        this.selectedArc.y = y + this.addY;
-        this.currentHP.x = x + this.addX;
-        this.currentHP.y = y + this.addY;
-        this.barHP.x = x + this.addX;
-        this.barHP.y = y + this.addY;
+        this.arcs.forEach((arc)=>{
+            arc.x = x + this.addX;
+            arc.y = y + this.addY
+        })
     }
 
     setAddXY(dx, dy) {
@@ -54,26 +76,31 @@ export default class StatusBar {
     }
 
     setSize(radius){
-        this.selectedArc.setRadius(radius);
-        this.currentHP.setRadius(radius+5);
-        this.barHP.setRadius(radius+5);
-        //this.selectedArc.setOrigin(1, 1)
-        /*this.selectedArc.setSize(width+10, height+10);
-        this.currentHP.setSize(width, height);*/
+        this.arcs.forEach((arc, index)=>{
+            let r = (index == 0) ? radius : radius + this.dr; 
+            arc.setRadius(r);
+        })
     }
 
     setColor(color) {
-        this.selectedArc.strokeColor = color;
-        this.currentHP.strokeColor = color;
+        this.arcs[0].strokeColor = color;
+        if (this.arcs[1]) this.arcs[1].strokeColor = color;
     }
 
     setVisible(visible) {
-        this.selectedArc.setVisible(visible);
-        this.currentHP.setVisible(visible);
-        this.barHP.setVisible(visible);
+        this.arcs.forEach((arc)=>{
+            arc.setVisible(visible);
+        })
     }
 
-    damage(damage) {
-        this.currentHP = 130;
+    updateHPBar(procent) {
+        let base = (this.owner.type === "unit") ? -155 : 155
+        this.arcs[1].setEndAngle(this.arcs[1].startAngle + base*procent)
+    }
+
+    destroy() {
+        this.arcs.forEach((arc)=> {
+            arc.destroy();
+        })
     }
 }
