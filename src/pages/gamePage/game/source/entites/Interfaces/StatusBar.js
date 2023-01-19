@@ -1,6 +1,8 @@
 export default class StatusBar {
     constructor(entity, type, size) {
         this.owner = entity;
+        this.owner.interfacesForSelected.push(this);
+        this.owner.interfacesAll.push(this);
         this.type = type;
         switch (size) {
             case 'small' : {

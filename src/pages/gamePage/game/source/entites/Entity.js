@@ -23,31 +23,44 @@ export default class Entity extends Phaser.GameObjects.Sprite{
         // Добавление объекта на сцену
         this.addedToScene();
         this.addToDisplayList();
+        //  Интерфейсы
+        //  Для выбранного
+        this.interfacesForSelected = [];
+        // Все
+        this.interfaceAll = [];
     }
 
     //  Выбор объекта
     select() {
         this.selected = true;
-        this.selectMarker.setVisible(true);
+        this.interfacesForSelected.forEach((interface) => {
+            interface.setVisible(true);
+        });
         this.callbackUI();
     }
 
     //  Снятие выбора
     unselect() {
         this.selected = false;
-        this.selectMarker.setVisible(false);
+        this.interfacesForSelected.forEach((interface) => {
+            interface.setVisible(false);
+        });
         this.callbackUI();
     }
 
     //  Смена координат объекта вместе с интерфейсом
     setXY(x,y){
         this.setPosition(x,y);
-        this.selectMarker.setXY(x,y);
+        this.interfacesAll.forEach((interface) => {
+            interface.setXY(x,y);
+        })
     }
 
     //  Уничтожение объекта вместе с интерфейсом
     destroy(){
-        this.statusBar.destroy();
+        this.interfacesAll.forEach((interface) => {
+            interface.destroy();
+        })
         super.destroy();
     }
 }
