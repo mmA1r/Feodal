@@ -3,33 +3,29 @@ import DestroyCastle from "../destroyCastle/DestroyCastle";
 import Entity from "./Entity";
 
 export default class Castle extends Entity {
-    constructor(scene, castleData) {
+    constructor(scene, data) {
         super(scene, {
             type: 'castle',
-            activeRadius: 16000
+            activeRadius: 200
         });
-        this.x = castleData.posX * 64;
-        this.y = castleData.posY * 64;
-        this.depth = this.y;
-        this.activeRadius = 40000;
-        this.id = castleData.id;
-        this.level = castleData.Level;
-        this.scene.castlesGroup.add(this);
-        this.setTexture('castleFirstLevel');
-        this.rewriteData(castleData);
-        this.addedToScene();
-        this.addToDisplayList();
-        this.setInteractive();
-        this.setTint(0xff0000);
-        this.selected = false;
-        this.type = 'castle';
-        this.isMine = (this.id === this.scene.player.id) ? true : false;
-        this.scene.physics.add.existing(this, true);
-        this.body.isCircle = true;
+
         this.units = this.scene.add.group();
         this.pointer = new UnitPointer(this);
         this.pointer.x = this.x - 150;
         this.pointer.y = this.y - 150;
+        this.canAttack = true;
+
+        this.id = data.id;
+        this.level - data.level;
+        this.isMine = (this.id === this.scene.player.id) ? true : false;
+
+        /*this.x = castleData.posX * 64;
+        this.y = castleData.posY * 64;
+        this.depth = this.y;*/
+        this.scene.castlesGroup.add(this);
+        this.setTexture('castleFirstLevel');
+        this.rewriteData(castleData);
+        
         this.onServer = true;
         this.selector = this.statusBar;
         this.statusBar.setColor(0x14b914);
@@ -38,10 +34,8 @@ export default class Castle extends Entity {
         this.statusBar.setXY(this.x, this.y);
         this.fullHP = 0;
         this.currentHP = 0;
-        this.selector.isStroked = true;
         this.selector.strokeColor = (this.isMine) ? 0x00FF00 : 0xFF0000;
-        this.selector.lineWidth = 2;
-        this.selector.setVisible(false);
+        this.ownerName = castleData.ownerName;
         this.name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
         this.name.depth = 10000000;
         this.name.style.setFontSize(30);
@@ -55,7 +49,6 @@ export default class Castle extends Entity {
         this.attackArea.strokeColor = 0xffff00;
         this.attackArea.lineWidth = 2;
         this.attackArea.setVisible(false);
-        this.canAttack = true;
     }
 
     /*select() {

@@ -1,39 +1,51 @@
 import Phaser from "phaser";
-import StatusBar from "./StatusBar";
+import SelectMarker from "./SelectMarker";
 
 export default class Entity extends Phaser.GameObjects.Sprite{
     constructor(scene, props) {
         super(scene);
-        this.selected = false;
+        //  Присваиваем тип
         this.type = props.type;
-        this.callbackUI = this.scene.player.updateUI; //props.callbackUI;
+        //  Определяем размеры хитбоксов
         this.activeRadius = props.activeRadius;
-        this.viewRadius = this.scene.add.arc;
-        this.statusBar = new StatusBar(this);
+        this.scene.physics.add.existing(this, false);
+        this.body.isCircle = true;
+        this.body.setCirle(this.activeRadius);
+        this.setInteractive(Phaser.Geom.Circle(this.x,this.y,this.activeRadius)); 
+        //  Выбран/не выбран
+        this.selected = false;
+        // Функция для обновления UI
+        this.callbackUI = this.scene.player.updateUI;
+        //  "Глаза" объекта
+        //this.viewRadius = new ViewZone(this);
+        //  Графическая отметка о выборе объекта
+        this.selectMarker = new SelectMarker(this);
+        // Добавление объекта на сцену
+        this.addedToScene();
+        this.addToDisplayList();
     }
 
-    _updateDataCallbackUI(){
-        if (this.selected) this.callbackUI();
-    }
-
-    updateData(param, value){
-        if (this[param] || this[param] === false) {
-            this[param] = value;
-            this._updateDataCallbackUI();
-        }
-    }
-
+    //  Выбор объекта
     select() {
-        this.updateData('selected', true);
-        this.statusBar.setVisible(true);
-    }
-
-    unselect() {
-        this.updateData('selected', false);
-        this.statusBar.setVisible(false);
+        this.selected = true;
+        this.selectMarker.setVisible(true);
         this.callbackUI();
     }
 
+    //  Снятие выбора
+    unselect() {
+        this.selected = false;
+        this.selectMarker.setVisible(false);
+        this.callbackUI();
+    }
+
+    //  Смена координат объекта вместе с интерфейсом
+    setXY(x,y){
+        this.setPosition(x,y);
+        this.selectMarker.setXY(x,y);
+    }
+
+    //  Уничтожение объекта вместе с интерфейсом
     destroy(){
         this.statusBar.destroy();
         super.destroy();
