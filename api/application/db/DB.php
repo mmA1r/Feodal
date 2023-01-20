@@ -132,10 +132,10 @@ class DB {
     //////////////forCastles////////////////
     ////////////////////////////////////////
 
-    public function addCastle($userId, $castleColor, $castleX, $castleY, $nextRentTime) {
+    public function addCastle($userId, $castleX, $castleY, $nextRentTime) {
         $query = '
-                INSERT INTO gamers (userId, castleColor, castleX, castleY, nextRentTime) 
-                VALUES (' . $userId . ', "' . $castleColor . '", ' . $castleX . ',' . $castleY . ',' . $nextRentTime . ')
+                INSERT INTO gamers (userId, castleX, castleY, nextRentTime) 
+                VALUES (' . $userId . ',' . $castleX . ',' . $castleY . ',' . $nextRentTime . ')
             ';
         $this->db->query($query);
         return true;
@@ -148,9 +148,16 @@ class DB {
 
     public function getCastles() {
         $query = '
-                SELECT g.id as id, u.name as ownerName, g.castleLevel as Level, g.castleX as posX, g.castleY as posY, g.nextRentTime as nextRentTime
+                SELECT g.id as id, u.name as ownerName, g.castleLevel as Level, g.castleX as posX, g.castleY as posY
                 FROM gamers as g 
                 JOIN users as u ON g.userId=u.id
+            ';
+        return $this->getArray($query);
+    }
+
+    public function getCastlesRents() {
+        $query = '
+                SELECT id, money, nextRentTime FROM gamers
             ';
         return $this->getArray($query);
     }
@@ -321,11 +328,11 @@ class DB {
     ////////////////////////////////////////
     //////////////forGamers/////////////////
     ////////////////////////////////////////
-    public function getGamer($user) {
+    public function getGamer($userId) {
         $query = '
-            SELECT id, castleLevel as level, castleColor as color, castleX as posX, castleY as posY, money, nextRentTime  
+            SELECT id, castleLevel as level, castleX as posX, castleY as posY, money, nextRentTime  
             FROM gamers 
-            WHERE userId=' . $user;
+            WHERE userId=' . $userId;
         return $this->db->query($query)->fetchObject();
     }
 

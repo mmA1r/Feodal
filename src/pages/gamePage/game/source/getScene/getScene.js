@@ -10,25 +10,28 @@ export default function getScene(scene) {
     const getScene = setInterval(
         async () => {
             const data = (await server.getScene());
-            if (data?.castles[0]) {
+            console.log(data);
+            if (data?.castles) {
+                const castles = scene.castlesGroup.getChildren();
                 data.castles.forEach((castleData) => {
-                    if (!scene.castlesGroup.getChildren().find(el => el.id === castleData.id)) {
+                    const castle = castles.find(el => el.id === castleData.id);
+                    if (castle){
+                        castle.rewriteData(castleData);
+                    }
+                    else {
                         new Castle(scene, castleData);
                     }
-                })
-                scene.castlesGroup.getChildren().forEach((castle) => {
-                    const castleOnServer = data.castles.find((c) => {
-                        return c.id === castle.id;
-                    })
-                    if (castleOnServer) {
-                        castle.rewriteData(castleOnServer);
+                });
+                castles.forEach((castle) => {
+                    if (castle.isUpdated) {
+                        castle.isUpdated = false;
                     }
                     else {
                         castle.killed();
                     }
                 })
             }
-            if (data?.villages[0]) {
+            if (data?.villages) {
                 data.villages.forEach((villageData) => {
                     if (!scene.villagesGroup.getChildren().find(el => el.id === villageData.id)) {
                         new Village(scene, villageData);
@@ -46,7 +49,7 @@ export default function getScene(scene) {
                     }
                 })
             }
-            if (data?.units[0]) {
+            if (data?.units) {
                 const units = scene.unitsGroup.getChildren();
                 data.units.forEach((unitData) => {
                     const unit = units.find(el => el.id === unitData.id);

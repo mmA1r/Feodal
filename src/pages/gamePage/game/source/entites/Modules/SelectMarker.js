@@ -1,6 +1,6 @@
 export default class SelectMarker {
-    constructor(entity) {
-        this.owner = entity;
+    constructor(infographics) {
+        this.infographics = infographics;
         this.marker = this._createArc(2);
         this.marker.depth = 0.1;
         this.borderMarker = this._createArc(4);
@@ -10,9 +10,9 @@ export default class SelectMarker {
     }
 
     _createArc(lineWidth) {
-        let arc = this.owner.scene.add.arc(0, 0, 0, 0);
+        let arc = this.infographics.owner.scene.add.arc(0, 0, 0, 0);
         arc.isStroked = true;
-        arc.strokeColor = 0;
+        arc.strokeColor = 0x101010;
         arc.lineWidth = lineWidth;
         arc.setVisible(false);
         arc.scaleX = 1.5;
@@ -46,7 +46,7 @@ export default class SelectMarker {
     }
 
     destroy() {
-        this.marker.destroy();
-        this.borderMarker.destroy();
+        if (this.marker) this.marker.destroy();
+        if (this.borderMarker) this.borderMarker.destroy();
     }
 }

@@ -2,7 +2,40 @@ import Phaser from "phaser";
 
 export default class UnitPointer extends Phaser.GameObjects.Arc {
     constructor(unit) {
-        super(unit.scene, unit.x, unit.y, 10, 0, 360, false, 2132, 0.5);
+        super(unit.scene, unit.x, unit.y, 7);
+        this.flag = this.scene.add.sprite(this.x, this.y, 'flag')
+        this.isStroked = true;
+        this.flag.depth = 0.4;
+        this.strokeColor = 0x101010;
+        this.lineWidth = 2;
+        this.setVisible(false);
+        this.scaleX = 1.5;
+        this.flag.anims.create({
+            key: "stand",
+            frames: [{
+                key: 'flag',
+                frame: 1,
+                duration: 80
+            },
+            {
+                key: 'flag',
+                frame: 2,
+                duration: 80
+            },
+            {
+                key: 'flag',
+                frame: 3,
+                duration: 80
+            },
+            {
+                key: 'flag',
+                frame: 4,
+                duration: 80
+            }],
+            duration: 320,
+            repeat: -1
+        });
+        this.flag.anims.play("stand", true);
         this.setVisible(false);
         this.id = unit.id;
         this.unit = unit;
@@ -35,6 +68,27 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         }
         this.x = x;
         this.y = y;
+        this.flag.setVisible(true);
+        this.flag.x = x + 23;
+        this.flag.y = y - 107;
+        //this.setDisplaySize(128, 128);
+        setTimeout(()=> {
+            this.flag.y +=20;
+            //this.setDisplaySize(112, 112);
+        },50)
+        setTimeout(()=> {
+            this.flag.y +=20;
+            //this.setDisplaySize(96, 96);
+        },100)
+        setTimeout(()=> {
+            this.flag.y +=20;
+            //this.setDisplaySize(80, 80);
+        },150)
+        setTimeout(()=> {
+            this.flag.y +=20;
+            //this.setDisplaySize(64, 64);
+        },200)
+        
         this._relocate();
     }
 }

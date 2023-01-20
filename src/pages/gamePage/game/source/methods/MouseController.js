@@ -34,4 +34,12 @@ export default function MouseController(scene) {
         if (pointer.button === 0 && selector.active)
             selector.selectUnits()
     });
+
+    scene.input.on('gameobjectover', (pointer, gameObject) => {
+        if (!pointer.isDown) gameObject.inFocus();
+    });
+
+    scene.input.on('gameobjectout', (pointer, gameObject) => {
+        if (!gameObject.selected) gameObject.outFocus();
+    });
 }

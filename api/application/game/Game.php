@@ -55,19 +55,16 @@
 
         public function addCastle($userId) {
             $coor = $this->map->generationPos();
-            $nextRentTime = microtime(true) + 300;
+            $nextRentTime = microtime(true) + $this->config["intervalFirstRentMinutes"]*60;
 
-            $castleColor = '#' . substr(md5(mt_rand()), 0, 6);
-
-            $this->db->addCastle($userId, $castleColor, $coor->posX, $coor->posY, $nextRentTime);
+            $this->db->addCastle($userId, $coor->posX, $coor->posY, $nextRentTime);
 
             $gamer = $this->db->getGamer($userId);
             $unitTypeData = $this->db->getUnitTypeData(1);
             $this->db->addUnit($gamer->id, 1, $unitTypeData->hp, $gamer->posX, $gamer->posY, microtime(true));
 
-            $hash = md5(rand());
-            $this->db->setMapHash($hash);
-            $this->db->setUnitsHash($hash);
+            $this->db->setMapHash(md5(rand()));
+            $this->db->setUnitsHash(md5(rand()));
             return true;
         }
 
@@ -94,6 +91,13 @@
 
         public function getScene($unitsHash, $mapHash) {
             $statuses = $this->db->getStatuses();
+            $time = microtime(true);
+            if ($statuses->mapTimeStamp <= $time) {
+                //$this->db->deadUnits();
+                $this->db->setMapTimeStamp($time + 0.15);
+                $this->updateMap($time);
+            }
+            $statuses = $this->db->getStatuses();
             if (
                 $unitsHash === $statuses->unitsHash && 
                 $mapHash === $statuses->mapHash
@@ -109,10 +113,15 @@
             );
             if ($unitsHash !== $statuses->unitsHash) {
                 $result['units'] = $this->db->getUnits();
+            } else {
+                $result['units'] = null;
             }
             if ($mapHash !== $statuses->mapHash) { 
                 $result['castles'] = $this->db->getCastles();
                 $result['villages'] = $this->db->getVillages();                   
+            } else {
+                $result['villages'] = null;
+                $result['castles'] = null;
             }
             return $result;
         }
@@ -138,6 +147,7 @@
         }
         
         public function updateMap($time) {
+            $time = (float)$time;
             // обновить все деревни
             $isUpdated = false;
             $villages = $this->db->getVillages();
@@ -166,28 +176,27 @@
                 $this->addVillage();
             }
             // обновить все замки
-            $castles = $this->db->getCastles();
+            $castles = $this->db->getCastlesRents();
             $unitsTypes = $this->db->getUnitsTypes();
             foreach ($castles as $castle){
-                if((float)$castle->nextRentTime<=(float)$time){
+                $timeUpdate = (float)$castle->nextRentTime;
+                if($time>=$timeUpdate){
                     $gamerId= $castle->id;
                     $gamerUnits = $this->db->getGamerUnits($gamerId);
                     if ($gamerUnits){
-                        $rent = 0;
+                    $rent = 0;
                         foreach($gamerUnits as $unit) {
                             $rent +=$unitsTypes[$unit->type - 1]->cost * 0.05;
                         }
-                        if($castle->money - $rent < 0) {
+                        if ($castle->money < $rent) {
                             $this->db->destroyCastle($gamerId);
                             $isUpdate = true;
                         }
                         else {
                             $this->db->updateMoney($gamerId,-$rent);
-                            $this->db->updateNextRentTime($gamerId,(float)$castle->nextRentTime + $this->config["intervalRentMinutes"]*60);
-
+                            $this->db->updateNextRentTime($gamerId,$timeUpdate + $this->config["intervalRentMinutes"]*60);
                         }
-                    }
-                                    
+                    }        
                 }
             }
             if ($isUpdate) {

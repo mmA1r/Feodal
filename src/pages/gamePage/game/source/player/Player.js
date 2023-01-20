@@ -1,19 +1,38 @@
-import { Data } from 'phaser';
 import getCastle from '../getCastle/getCastle'
 import MouseController from '../methods/MouseController';
-import Selector from './selector/Selector';
 
 export default class Player {
     constructor(scene) {
+        this.getCastle = {};
         this.scene = scene;
         this.id = 0;
         this.castle = {};
         this.might = 0;
         this.selectedObject = undefined;
         this.units = scene.add.group();
+        this.nextUpdateTime = 0;
         getCastle(this);
         MouseController(this.scene);
         this.updateUI = this.updateUI.bind(this);
+        this.isAlive = true;
+    }
+
+    addCastle(castle) {
+        this.castle = castle;
+        this.onCastle();
+        this.isAlive = true;
+    }
+
+    onCastle(){
+        this.scene.cameras.main.centerOn(this.castle.x, this.castle.y);
+        this.scene.cameras.main.viewScreenUpdate();
+    }
+
+    gameOver() {
+        console.log('GAME OVER!!!')
+        this.isAlive = false;
+        this.scene.updater.remove(this.getCastle);
+        this.scene.store.loadToStore(true, 'gameOver');
     }
 
     updateMight() {
@@ -60,5 +79,10 @@ export default class Player {
                 }
             }
         }
+    }
+
+    rent() {
+        console.log('GET MY CASTLE')
+        if (this.isAlive) getCastle(this);
     }
 }

@@ -8,13 +8,7 @@ export default function EventsOn(scene) {
         }
     });*/
 
-    Scene.input.on('gameobjectover', (pointer, gameObject) => {
-            if (!pointer.isDown) gameObject.selector.setVisible(true);
-    });
 
-    Scene.input.on('gameobjectout', (pointer, gameObject) => {
-        if (!gameObject.selected) gameObject.selector.setVisible(false);
-});
 
     //Передвижение юнитов по клику
     scene.input.on('pointerdown', (pointer, gameObject) => {

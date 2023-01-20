@@ -11,6 +11,7 @@ import treeSprite2 from '../../../../../assets/gameSprites/tree2.png';
 import treeSprite3 from '../../../../../assets/gameSprites/tree3.webp';
 import treeSprite4 from '../../../../../assets/gameSprites/tree4.png';
 import treeSprite5 from '../../../../../assets/gameSprites/tree5.png';
+import flagSprite from '../../../../../assets/gameSprites/flag.webp';
 import tower from '../../../../../assets/gameSprites/Tower.png';
 
 
@@ -21,13 +22,10 @@ export default function uploadSourses(scene) {
         Scene.load.image('castleFirstLevel', castleSprite);
         Scene.load.spritesheet('villageFirstLevel',villageFirstLevelSprite,{frameWidth:320,frameHeight:320});
         Scene.load.spritesheet('villageSecondLevel',villageSecondLevelSprite,{frameWidth:320,frameHeight:320});
-        //Scene.load.image('village', villageSprite);
-        //Scene.load.image('soldier', soldierSprite);
         //Scene.load.spritesheet('soldier', soldierSprite,{frameWidth:100,frameHeight:175,startFrame:0, endFrame: 0});
         Scene.load.atlas("soldier",soldierSprite,soldierAtlas);
-        //Scene.load.spritesheet('soldiermove', soldierSprite,{frameWidth:64,frameHeight:128,startFrame:1});
         Scene.load.spritesheet('assassin', assassinSprite, {frameWidth:168,frameHeight:160});
-        
+        Scene.load.spritesheet('flag', flagSprite, {frameWidth:64,frameHeight:64});
         Scene.load.image('tree1', treeSprite1);
         Scene.load.image('tree2', treeSprite2);
         Scene.load.image('tree3', treeSprite3);

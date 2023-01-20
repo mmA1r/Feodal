@@ -38,8 +38,8 @@ export default function Game() {
         return () => {
             clearInterval(scene.getScene);
             clearInterval(scene.updateUnits);
-            store.restore();
             game.destroy(true, false);
+            store.restore();
             console.log('logout')
         }
     }, []);

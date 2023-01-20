@@ -4,30 +4,32 @@ export default class StatusBar {
         this.owner.interfacesForSelected.push(this);
         this.owner.interfacesAll.push(this);
         this.type = type;
+        let borderLineWidth = 3;
+        let valueLineWidth = 1;
         switch (size) {
             case 'small' : {
-                let borderLineWidth = 3;
-                let valueLineWidth = 1;
+                borderLineWidth = 3;
+                valueLineWidth = 1;
                 break;
             }
             case 'middle' : {
-                let borderLineWidth = 4;
-                let valueLineWidth = 2;
+                borderLineWidth = 4;
+                valueLineWidth = 2;
                 break;
             }
             case 'big' : {
-                let borderLineWidth = 8;
-                let valueLineWidth = 2;
+                borderLineWidth = 8;
+                valueLineWidth = 2;
                 break;
             }
         }
         this.startAngle = (this.type === 'left') ? -45 : 95;
         this.endAngle = (this.type === 'left') ? 85 : -135;
-        this.border = _createArc(borderLineWidth);
+        this.border = this._createArc(borderLineWidth);
         this.border.strokeColor = 0x101010;
-        this.maxValue = _createArc(valueLineWidth);
+        this.maxValue = this._createArc(valueLineWidth);
         this.maxValue.depth = 0.1;
-        this.currentValue = _createArc(valueLineWidth);
+        this.currentValue = this._createArc(valueLineWidth);
         this.currentValue.depth = 0.2;
     }
 

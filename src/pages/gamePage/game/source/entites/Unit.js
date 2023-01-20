@@ -6,9 +6,8 @@ export default class Unit extends Entity {
     constructor(scene, unitData) {
         super(scene, {
             type: 'unit',
-            activeRadius: 16000
+            activeRadius: 40
         });
-        this.statusBar.setAddXY(0, 22);
         this.scene.physics.add.existing(this, false);
         this.body.isCircle = true;
         this.selected = false;
@@ -28,10 +27,8 @@ export default class Unit extends Entity {
                 break;
         }
         this.ownerId = unitData.ownerId;
-        this.x = unitData.posX * 64;
-        this.y = unitData.posY * 64;
-        this.depth = this.y;
-        //this.type = "unit";
+        this.setXY(unitData.posX * 64,unitData.posY * 64)
+        this.infographics.getModule('selectMarker').setColor(0x14b914);
         this.isMine = (this.ownerId === this.scene.player.id) ? true : false;
         this.speed = 5;
         this.target = {
@@ -53,13 +50,11 @@ export default class Unit extends Entity {
         if (unitData.status !== "inCastle") this._addScene();
         this._setUnitStatus(unitData.status);
         this.lastDist = 0;
-        this.activeRadius = 1600;
         this.atk = 10 - 0;
         this.canAttack = true;
-        this.selector = this.statusBar;
-        this.statusBar.setColor(0x14b914);
+        /*this.statusBar.setColor(0x14b914);
         this.statusBar.setSize(12);
-        this.statusBar.setXY(this.x, this.y);
+        this.statusBar.setXY(this.x, this.y);*/
          /*this.selector = this.scene.add.ellipse(this.x, this.y + 22, 35, 25);
         this.selector.isStroked = true;
         this.selector.strokeColor = (this.isMine) ? 0x00FF00 : 0xFF0000;
@@ -103,7 +98,6 @@ export default class Unit extends Entity {
     }
 
     _move() {
-        this.updateData('hp', 50);
         let dist = this._distance();
         if (this.lastDist < dist) {
             this._getDirection();
@@ -134,7 +128,6 @@ export default class Unit extends Entity {
         else {
             this.x += this.direction.cos * this.speed;
             this.y += this.direction.sin * this.speed;
-            this.statusBar.setXY(this.x, this.y);
             this.depth = this.y;
             if (this.isMine) {
                 this.scene.updateMyUnitsGroup.add(this);
@@ -183,7 +176,7 @@ export default class Unit extends Entity {
     }
 
     updateUI() {
-            this.statusBar.updateHPBar(this.hp/120);
+            //this.statusBar.updateHPBar(this.hp/120);
             this.scene.store.loadToStore({
                 hp: this.hp - 0,
                 type: this.unitType
@@ -264,7 +257,7 @@ export default class Unit extends Entity {
     killed() {
         this.pointer.destroy();
         this.scene.unitsGroup.remove(this);
-        this.unSelect();
+        this.unselect();
         if (this.isMine) {
             this.scene.player.units.remove(this);
             this.scene.player.updateMight();

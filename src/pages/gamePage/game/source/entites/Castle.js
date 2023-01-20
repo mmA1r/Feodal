@@ -6,9 +6,10 @@ export default class Castle extends Entity {
     constructor(scene, data) {
         super(scene, {
             type: 'castle',
-            activeRadius: 200
+            activeRadius: 100,
+            isStatic: true
         });
-
+        this.isUpdated = true;
         this.units = this.scene.add.group();
         this.pointer = new UnitPointer(this);
         this.pointer.x = this.x - 150;
@@ -16,27 +17,24 @@ export default class Castle extends Entity {
         this.canAttack = true;
 
         this.id = data.id;
-        this.level - data.level;
+        this.level = data.level;
+        this.setXY(data.posX * 64, data.posY * 64)
         this.isMine = (this.id === this.scene.player.id) ? true : false;
+        if (this.isMine) {
+            this.scene.player.addCastle(this);
+        }
+        this.ownerName = data.ownerName;
+        this.infographics.getModule('selectMarker').setAddXY(0, 30);
 
-        /*this.x = castleData.posX * 64;
-        this.y = castleData.posY * 64;
-        this.depth = this.y;*/
         this.scene.castlesGroup.add(this);
         this.setTexture('castleFirstLevel');
-        this.rewriteData(castleData);
-        
-        this.onServer = true;
-        this.selector = this.statusBar;
-        this.statusBar.setColor(0x14b914);
-        this.statusBar.setSize(85);
-        this.statusBar.setAddXY(0, 30);
-        this.statusBar.setXY(this.x, this.y);
+        this.rewriteData(data);
+        this.infographics.getModule('selectMarker').setColor(0x14b914);
+    
         this.fullHP = 0;
         this.currentHP = 0;
-        this.selector.strokeColor = (this.isMine) ? 0x00FF00 : 0xFF0000;
-        this.ownerName = castleData.ownerName;
-        this.name = this.scene.add.text(this.x, this.y + 130, castleData.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
+        this.create(true);
+        /*this.name = this.scene.add.text(this.x, this.y + 130, this.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
         this.name.depth = 10000000;
         this.name.style.setFontSize(30);
         this.name.style.setAlign('center')
@@ -48,7 +46,7 @@ export default class Castle extends Entity {
         this.attackArea.isStroked = true;
         this.attackArea.strokeColor = 0xffff00;
         this.attackArea.lineWidth = 2;
-        this.attackArea.setVisible(false);
+        this.attackArea.setVisible(false);*/
     }
 
     /*select() {
@@ -63,15 +61,16 @@ export default class Castle extends Entity {
     }*/
 
     killed() {
-        this.pointer.destroy();
-        this.name.destroy();
-        this.unselect();
+        console.log('KILL')
+        if (this.isMine) this.scene.player.gameOver();
+        //this.pointer.destroy();
         this.scene.castlesGroup.remove(this);
-        this.destroy();
+        super.killed();
     }
 
     rewriteData(castleData) {
         this.level = castleData.Level - 0;
+        this.isUpdated = true;
     }
 
     damage(dmg) {
@@ -93,8 +92,7 @@ export default class Castle extends Entity {
             if (!this.damaged) this.fullHP += 120;
             this.currentHP += unit.hp;
         });
-        console.log(this.currentHP)
-        this.statusBar.updateHPBar(this.currentHP/this.fullHP);
+        //this.statusBar.updateHPBar(this.currentHP/this.fullHP);
     }
 
     updateUI() {
