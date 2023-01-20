@@ -1,9 +1,10 @@
 <?php
     class Game {
-        function __construct($db,$map,$config) {
+        function __construct($db,$map,$config,$cache) {
             $this->db = $db;
             $this->map = $map;
-            $this->config=$config;
+            $this->config = $config;
+            $this->cache = $cache;
         }
 
         private function addVillage(){
@@ -112,13 +113,13 @@
                 'units' => array()
             );
             if ($unitsHash !== $statuses->unitsHash) {
-                $result['units'] = $this->db->getUnits();
+                $result['units'] = $this->cache->get('units', 'getUnits');
             } else {
                 $result['units'] = null;
             }
             if ($mapHash !== $statuses->mapHash) { 
-                $result['castles'] = $this->db->getCastles();
-                $result['villages'] = $this->db->getVillages();                   
+                $result['castles'] = $this->cache->get('castles', 'getCastles');
+                $result['villages'] = $this->cache->get('villages', 'getVillages');                  
             } else {
                 $result['villages'] = null;
                 $result['castles'] = null;

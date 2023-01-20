@@ -1,11 +1,12 @@
 <?php
 class DB {
-    function __construct($config) {
+    function __construct($config,$cache) {
         $host = $config["host"];
         $port = $config["port"];
         $name = $config["name"];
         $user = $config["user"];
         $password = $config["password"];
+        $this->cache = $cache;
 
         try {
             $this->db = new PDO(
@@ -356,10 +357,13 @@ class DB {
     }
 
     public function setMapHash($hash) {
+        $this->cache->delete('castles');
+        $this->cache->delete('villages');
         return $this->simpleUpdate('statuses', 'mapHash', $hash);
     }
 
     public function setUnitsHash($hash) {
+        $this->cache->delete('units');
         return $this->simpleUpdate('statuses', 'unitsHash', $hash);
     }
 }

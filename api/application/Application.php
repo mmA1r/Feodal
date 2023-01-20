@@ -6,29 +6,32 @@ require("chat/Chat.php");
 require("game/Game.php");
 require("gamer/Gamer.php");
 require("map/Map.php");
+require("./cache/Cache.php");
 
 class Application {
     function __construct()
     {
         $config = json_decode(file_get_contents('./config/config.json'), true);
-        $db = new DB($config["DataBase"]);
-        $map = new Map($db);
+        $cache = new Cache($config["Cache"]);
+        $db = new DB($config["DataBase"], $cache);
+        $cache->addDB($db);
+        $map = new Map($db, $cache);
         $this->user = new User($db);
         $this->chat = new Chat($db);
-        $this->game = new Game($db, $map, $config["Game"]);
+        $this->game = new Game($db, $map, $config["Game"], $cache);
         $this->gamer = new Gamer($db, $map);
     }
 
     //функция проверки полученных значений в запросе
     private function checkParams($params){
         foreach($params as $param=>$value){
-            if($param == 'token' && !is_string($value) && strlen($value) > 32){
+            if($param == 'token' && (!is_string($value) || strlen($value) > 32)){
                 return false;
             }
-            if($param == 'login' && !is_string($value) && strlen($value) > 16){
+            if($param == 'login' && (!is_string($value) || strlen($value) > 16 )){
                 return false;
             }
-            if($param == 'password' && !is_string($value) && strlen($value) > 16){
+            if($param == 'password' && (!is_string($value) && strlen($value) > 16)){
                 return false;
             }
             if($param == 'name' && !is_string($value) && strlen($value) > 16){
