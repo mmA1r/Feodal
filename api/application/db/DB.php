@@ -42,6 +42,14 @@ class DB {
         return true;
     }
 
+    private function selectWithCondition($table, $fields, $condition ,$value) {
+        $query = 'SELECT ' . $fields .' FROM ' . $table . ' WHERE ' . $condition . '=?';
+        $sth = $this->db->prepare($query);
+        $this->db->quote($value);
+        $sth->execute([$value]);
+        return $sth;
+    }
+
     ////////////////////////////////////////
     //////////////forUser///////////////////
     ////////////////////////////////////////
@@ -113,11 +121,7 @@ class DB {
     //////////////forMap////////////////////
     ////////////////////////////////////////
     public function getMap($id) {
-        $query = '
-                SELECT ground,plants,trees
-                FROM Maps
-                WHERE id='.$id;
-        return $this->db->query($query)->fetchObject();
+        return $this->selectWithCondition('Maps', 'ground, plants, trees', 'id', $id)->fetchObject();
     }
 
     public function getUnitsTypes() {
@@ -143,6 +147,7 @@ class DB {
     }
 
     public function getCastle($id) {
+        //return $this->selectWithCondition('gamers', 'id, castleX as posX, castleY as posY, money, nextRentTime', 'userId', $id)->fetchObject();
         $query = 'SELECT id, castleX as posX, castleY as posY, money, nextRentTime FROM gamers WHERE id='.$id;
         return $this->db->query($query)->fetchObject();
     }

@@ -34,22 +34,22 @@ class Application {
             if($param == 'password' && (!is_string($value) && strlen($value) > 16)){
                 return false;
             }
-            if($param == 'name' && !is_string($value) && strlen($value) > 16){
+            if($param == 'name' && (!is_string($value) || strlen($value) > 16)){
                 return false;
             }
-            if($param == 'message' && !is_string($value) && strlen($value) > 256 ){
+            if($param == 'message' && (!is_string($value) || strlen($value) > 256)){
                 return false;
             }
             if($param == 'messageTo' && !is_numeric($value)){
                 return false;
             }
-            if($param == 'hash' && !is_string($value) && !(strlen($value) == 32) ){
+            if($param == 'hash' && (!is_string($value) || !strlen($value) == 32)){
                 return false;
             }
-            if($param == 'mapHash' && !is_string($value) && !(strlen($value) == 32) ){
+            if($param == 'mapHash' && (!is_string($value) || !strlen($value) == 32) ){
                 return false;
             }
-            if($param == 'unitsHash' && !is_string($value) && !(strlen($value) == 32) ){
+            if($param == 'unitsHash' && (!is_string($value) || !strlen($value) == 32)){
                 return false;
             }
             if($param == 'unitType' && !is_numeric($value)){
@@ -149,14 +149,18 @@ class Application {
     }
 
     public function getScene($params){
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            return $this->game->getScene($params['unitsHash'], $params['mapHash']);
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                return $this->game->getScene($params['unitsHash'], $params['mapHash']);
+            }
         }
     }
+
     ////////////////////////////////////////
     //////////////forGamer//////////////////
     ////////////////////////////////////////
+    
     public function getCastle($params){
         $user = $this->user->getUser($params['token']);
         if ($user) {
