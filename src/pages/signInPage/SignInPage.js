@@ -18,6 +18,7 @@ export default function SignInPage() {
     const [visible, setVisible] = useState('effect-hide');
     const [messageStatus, setMessagesStatus] = useState(false);
     const [emptyString, setemptyString] = useState(false);
+    const [succsessfulAuth, setSuccsessfulAuth] = useState(false);
 
     const login = useRef();
     const password = useRef();
@@ -39,7 +40,9 @@ export default function SignInPage() {
 
             if(data) {
                 setVisible('effect-shows');
+                setSuccsessfulAuth(true);
                 setTimeout(() => {
+                    setSuccsessfulAuth(false);
                     return navigate(routes.Game.path);
                 }, 1500);
             } else {
@@ -47,6 +50,7 @@ export default function SignInPage() {
             }
         } else {
             setemptyString(true);
+            setSuccsessfulAuth(false);
             const returnEmptyString = setTimeout(() => {
                 setemptyString(false);
                 clearTimeout(returnEmptyString);
@@ -89,8 +93,9 @@ export default function SignInPage() {
                         />
                     );
                 })}
-                <div className={`invalid-message ${messageStatus  ? 'invalid-show' : 'invalid-hide'}`}>*invalid login or password</div>
-                <div className={`invalid-message ${emptyString  ? 'invalid-show' : 'invalid-hide'}`}>*please fill all the fields</div>
+                <div className={`invalid-message ${succsessfulAuth  ? 'succ-show' : 'succ-hide'}`}>Авторизация успешна!</div>
+                <div className={`invalid-message ${messageStatus  ? 'invalid-show' : 'invalid-hide'}`}>Неверный логин и пароль</div>
+                <div className={`invalid-message ${emptyString  ? 'invalid-show' : 'invalid-hide'}`}>Пожалуйста, заполните все поля ввода</div>
                 <div className="button-box">
                     <LoginButton
                         onClick={() => signIn()}

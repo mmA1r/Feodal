@@ -1,9 +1,9 @@
 export default class Server {
     constructor(token) {
         this.token = token || null;
-        this.chatHash = 1; // value 1 is to initialize methods
-        this.mapHash = 1;
-        this.unitsHash = 1;
+        this.chatHash = '11111111111111111111111111111111'; // value 1 is to initialize methods(32 length)
+        this.mapHash = '11111111111111111111111111111111';
+        this.unitsHash = '11111111111111111111111111111111';
     }
 
     async send(params = {}) {
@@ -61,9 +61,9 @@ export default class Server {
         if(this.token) {
             localStorage.removeItem('token');
             this.token = null;
-            this.chatHash = 1;
-            this.mapHash = 1;
-            this.unitsHash = 1;
+            this.chatHash = '11111111111111111111111111111111';
+            this.mapHash = '11111111111111111111111111111111';
+            this.unitsHash = '11111111111111111111111111111111';
             return true;
         }
     }
