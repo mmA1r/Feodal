@@ -31,7 +31,7 @@
 
         function getUser($token) {
             if ($token) {
-                return $this->db->getUserByToken($token);
+                return $this->db->getUserByToken($token)->id - 0;
             }
         }
     }

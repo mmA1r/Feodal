@@ -18,13 +18,14 @@
                 case 6: $subname="Средние"; break;
                 case 7: $subname="Новые"; break;
             }
-            switch (rand(1,6)) {
+            switch (rand(1,7)) {
                 case 1: $name="Потёмки"; break;
                 case 2: $name="Свистульки"; break;
                 case 3: $name="Разгромки"; break;
                 case 4: $name="Удалёнки"; break;
                 case 5: $name="Полёнки"; break;
                 case 6: $name="Бубрёнки"; break;
+                case 7: $name="Печёнки"; break;
             }
             $this->db->createVillage($subname.' '.$name, $coor->posX, $coor->posY, microtime(true));
         }
@@ -36,8 +37,8 @@
         public function robVillage($gamer, $village) {
             $lootedMoney = $village->money - 50*$village->population;
             if ($lootedMoney > 0) {
-                $this->db->robVillage($village->id, $lootedMoney);
-                $this->db->updateMoney($gamer->id, $lootedMoney);
+                $this->db->robVillage($village->id, $village->money - $lootedMoney);
+                $this->db->updateMoney($gamer->id, $gamer->money + $lootedMoney);
                 $this->db->setMapHash(md5(rand()));
             }
             return array (
@@ -57,13 +58,10 @@
         public function addCastle($userId) {
             $coor = $this->map->generationPos();
             $nextRentTime = microtime(true) + $this->config["intervalFirstRentMinutes"]*60;
-
             $this->db->addCastle($userId, $coor->posX, $coor->posY, $nextRentTime);
-
             $gamer = $this->db->getGamer($userId);
             $unitTypeData = $this->db->getUnitTypeData(1);
-            $this->db->addUnit($gamer->id, 1, $unitTypeData->hp, $gamer->posX, $gamer->posY, microtime(true));
-
+            $this->db->addUnit($gamer->id, 1, $unitTypeData->hp, $gamer->posX, $gamer->posY);
             $this->db->setMapHash(md5(rand()));
             $this->db->setUnitsHash(md5(rand()));
             return true;

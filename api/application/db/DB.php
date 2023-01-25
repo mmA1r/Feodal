@@ -42,6 +42,26 @@ class DB {
         return true;
     }
 
+    private function simpleUpdateById($table,$field,$value,$id) {
+        $query = 'UPDATE '.$table.' SET '.$field.'=? WHERE id=?';
+        $sth = $this->db->prepare($query);
+        $sth->execute([$value, $id]);
+        return true;
+    }
+
+    private function delete($table, $condition, $value){
+        $query = 'DELETE FROM '.$table.' WHERE '.$condition.'=?';
+        $sth = $this->db->prepare($query);
+        $sth->execute([$value]);
+        return true;
+    }
+
+    private function protectQuery($query, $arr){
+        $sth = $this->db->prepare($query);
+        $sth->execute($arr);
+        return $sth;
+    }
+
     private function selectWithCondition($table, $fields, $condition ,$value) {
         $query = 'SELECT ' . $fields .' FROM ' . $table . ' WHERE ' . $condition . '=?';
         $sth = $this->db->prepare($query);
@@ -55,19 +75,13 @@ class DB {
     ////////////////////////////////////////
 
     public function getUser($login) {
-        $query = '
-            SELECT * 
-            FROM users 
-            WHERE login="' . $login . '"';
-        return $this->db->query($query)->fetchObject();
+        $query = 'SELECT * FROM users WHERE login=?';
+        return $this->protectQuery($query,[$login])->fetchObject();
     }
 
     public function getUserByToken($token) {
-        $query = '
-            SELECT id 
-            FROM users 
-            WHERE token="' . $token . '"';
-        return $this->db->query($query)->fetchObject()->id;
+        $query = 'SELECT id FROM users WHERE token=?';
+        return $this->protectQuery($query,[$token])->fetchObject();
     }
 
     public function getLoggedUsers() {
@@ -79,19 +93,12 @@ class DB {
     }
 
     public function addUser($login, $password, $name) {
-        $query = '
-            INSERT INTO users (login, password, name) 
-            VALUES ("' . $login . '","' . $password . '","' .  $name . '")';
-        $this->db->query($query);
+        $query = 'INSERT INTO users (login, password, name) VALUES (?,?,?)';
+        return $this->protectQuery($query,[$login, $password,$name])->fetchObject();
     }
 
     public function updateToken($id, $token) {
-        $query = '
-            UPDATE users 
-            SET token="' . $token . '" 
-            WHERE id=' . $id;
-        $this->db->query($query);
-        return true;
+        return $this->simpleUpdateById('users', 'token', $token, $id);
     }
 
     ////////////////////////////////////////
@@ -140,14 +147,13 @@ class DB {
     public function addCastle($userId, $castleX, $castleY, $nextRentTime) {
         $query = '
                 INSERT INTO gamers (userId, castleX, castleY, nextRentTime) 
-                VALUES (' . $userId . ',' . $castleX . ',' . $castleY . ',' . $nextRentTime . ')
+                VALUES (' . $userId . ',' . $castleX . ',' . $castleY . ',"' . $nextRentTime . '")
             ';
         $this->db->query($query);
         return true;
     }
 
     public function getCastle($id) {
-        //return $this->selectWithCondition('gamers', 'id, castleX as posX, castleY as posY, money, nextRentTime', 'userId', $id)->fetchObject();
         $query = 'SELECT id, castleX as posX, castleY as posY, money, nextRentTime FROM gamers WHERE id='.$id;
         return $this->db->query($query)->fetchObject();
     }
@@ -185,28 +191,13 @@ class DB {
             return $this->db->query($query)->fetchObject()->money;
         }
 
-    public function updateMoney($gamer, $money) {
-        $query = '
-            UPDATE gamers 
-            SET money=money+' . $money . ' 
-            WHERE id=' . $gamer;
-        $this->db->query($query);
-        return true;
+    public function updateMoney($gamerId, $money) {
+        return $this->simpleUpdateById('gamers','money',$money,$gamerId);
     }
-
 
     public function destroyCastle($id) {
-        $query = 'DELETE FROM gamers
-        WHERE id=' . $id;
-        $this->db->query($query);
-        return true;
+        return $this->delete('gamers','id',$id);
     }
-
-    public function updateNextRentTime($gamer,$time){
-        $query = 'UPDATE gamers SET nextRentTime='. $time . ' WHERE id='. $gamer;
-        $this->db->query($query);
-        return true;
-   }
 
     ////////////////////////////////////////
     //////////////forVillages///////////////
@@ -237,24 +228,12 @@ class DB {
         return true;
     }
 
-    public function updateVillagePopulations($id,$population){
-        $query = 'UPDATE villages SET population ='. $population . ' WHERE id ='.  $id;
-        $this -> db -> query($query);
-        return true;
-    }
-
     public function robVillage($id, $money) {
-        $query = 'UPDATE villages SET
-            money=money - ' . $money . '
-            WHERE id=' . $id;
-        $this->db->query($query);
-        return true;
+        return $this->simpleUpdateById('villages', 'money', $money, $id);
     }
 
     public function destroyVillage($id) {
-        $query = 'DELETE FROM villages WHERE id=' . $id;
-        $this->db->query($query);
-        return true;
+        return $this->delete('villages','id',$id);
     }
     ////////////////////////////////////////
     //////////////forUnits//////////////////
@@ -319,10 +298,7 @@ class DB {
         return $query;
     }
     public function updateUnitHP($unitId,$hp){
-        $query='UPDATE units
-            SET  hp='. $hp . ' WHERE id='. $unitId;
-        $this->db->query($query);
-        return true;
+        return $this->simpleUpdateById('units','hp',$hp,$unitId);
     }
 
     public function deadUnits (){
@@ -346,11 +322,6 @@ class DB {
     public function getStatuses() {
         $query = 'SELECT * FROM statuses';
         return $this->db->query($query)->fetchObject();
-    }
-
-    public function getChatHash() {
-        $query = 'SELECT chatHash FROM statuses';
-        return $this->db->query($query)->fetchObject()->chatHash;
     }
 
     public function setChatHash($hash) {

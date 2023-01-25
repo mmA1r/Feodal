@@ -12,7 +12,7 @@
         }
 
         public function getMessages($hash, $user) {
-            $dbHash = $this->db->getChatHash();
+            $dbHash = $this->db->getStatuses()->chatHash;
             if ($hash != $dbHash) {
                 return array(
                     'messages' => $this->db->getMessages($user),

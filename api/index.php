@@ -37,8 +37,6 @@ function router($params) {
             case 'robVillage': return $app->robVillage($params);
             case 'destroyVillage': return $app->destroyVillage($params);
             case 'destroyCastle': return $app->destroyCastle($params);
-            case 'trade': return $app->trade($params);
-            case 'requestCastle': return $app->requestCastle($params);
             ///////////
             // GAME //
             //////////
