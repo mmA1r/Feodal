@@ -9,7 +9,7 @@ export default class Infographics {
         this.modules = [];
     }
 
-    addModule(type, name, hidden){
+    addModule(type, name, hidden = true, setXY = true){
         const newModule = 
         (type === 'name') ? new Name(this) :
         (type === 'selectMarker') ? new SelectMarker(this) :
@@ -18,17 +18,21 @@ export default class Infographics {
             this.modules.push({
                 name: name,
                 module: newModule,
-                hidden: hidden
+                hidden: hidden,
+                setXY: setXY
             })
         }
     }
 
     getModule(name) {
-        return this.modules.find(el => el.name === name).module
+        module = this.modules.find(el => el.name === name)
+        return (module) ? module.module : false;
     }
 
     setXY(x, y) {
-        this.modules.forEach(el => el.module.setXY(x,y));
+        this.modules.forEach(el => {
+            if (el.setXY) el.module.setXY(x,y);
+        });
     }
 
     setVisible(visible, forAll) {
@@ -36,9 +40,7 @@ export default class Infographics {
             this.modules.forEach(el => el.module.setVisible(visible));
         }
         else {
-            this.modules.map(el => {
-                if (el.hidden) return el;
-            }).forEach(el => el.module.setVisible(visible))
+            this.modules.filter(el => el.hidden).forEach(el => el.module.setVisible(visible))
         }
     }
 

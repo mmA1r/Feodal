@@ -3,8 +3,39 @@ import MouseController from '../methods/MouseController';
 
 export default class Player {
     constructor(scene) {
-        this.getCastle = {};
         this.scene = scene;
+        this.getCastle = {};
+
+        this.pointer = this.scene.add.sprite(this.x, this.y, 'pointer');
+        this.pointer.depth = 0.4;
+        this.pointer.anims.create({
+            key: "stand",
+            frames: [{
+                key: 'flag',
+                frame: 1,
+                duration: 80
+            },
+            {
+                key: 'flag',
+                frame: 2,
+                duration: 80
+            },
+            {
+                key: 'flag',
+                frame: 3,
+                duration: 80
+            },
+            {
+                key: 'flag',
+                frame: 4,
+                duration: 80
+            }],
+            duration: 320,
+            repeat: -1
+        });
+        this.pointer.anims.play("stand", true);
+        this.pointer.depth = 100000000;
+
         this.id = 0;
         this.castle = {};
         this.might = 0;
@@ -28,8 +59,12 @@ export default class Player {
         this.scene.cameras.main.viewScreenUpdate();
     }
 
+    addUnit(unit) {
+        this.units.add(unit);
+        this.updateMight();
+    }
+
     gameOver() {
-        console.log('GAME OVER!!!')
         this.isAlive = false;
         this.scene.updater.remove(this.getCastle);
         this.scene.store.loadToStore(true, 'gameOver');
@@ -41,10 +76,18 @@ export default class Player {
         this.scene.villagesGroup.getChildren().forEach((v) => v.updateResistLevel());
     }
 
+    removeSelect(obj){
+        if (this.selectedObject = obj) {
+            this.selectedObject = undefined;
+        }
+        this.updateUI();
+    }
+
     select(obj){
         this.unselect();
         this.selectedObject = obj;
-        obj.select();
+        obj.select(this);
+        if (obj.isMine) this.movePointer(obj.pointer);
     }
 
     unselect(){
@@ -52,6 +95,27 @@ export default class Player {
             let obj = this.selectedObject;
             this.selectedObject = undefined;
             obj.unselect();
+            this.pointer.setVisible(false);
+        }
+    }
+
+    movePointer(obj){
+        if (obj.visible) {
+            this.pointer.setVisible(true);
+            this.pointer.x = obj.x + 23;
+            this.pointer.y = obj.y - 107;
+            setTimeout(()=> {
+                this.pointer.y +=20;
+            },50)
+            setTimeout(()=> {
+                this.pointer.y +=20;
+            },100)
+            setTimeout(()=> {
+                this.pointer.y +=20;
+            },150)
+            setTimeout(()=> {
+                this.pointer.y +=20;
+            },200)
         }
     }
 
@@ -67,14 +131,17 @@ export default class Player {
             switch (this.selectedObject.type) {
                 case 'castle': {
                     this.selectedObject.pointer.moveTo(obj.x, obj.y);
+                    this.movePointer(obj);
                     break;
                 }
                 case 'unit':{
                         this.selectedObject.moveTo(obj);
+                        this.movePointer(obj);
                         break;
                 }
                 case 'army':{
                         this.selectedObject.moveTo(obj);
+                        if (obj.type === 'pointer')this.movePointer(obj);
                         break;
                 }
             }
@@ -82,7 +149,6 @@ export default class Player {
     }
 
     rent() {
-        console.log('GET MY CASTLE')
         if (this.isAlive) getCastle(this);
     }
 }

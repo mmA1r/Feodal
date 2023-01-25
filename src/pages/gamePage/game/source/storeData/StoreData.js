@@ -5,6 +5,7 @@ export default class StoreData {
         this.scene = scene;
         this.lastUI = 'hide';
         this.scene.store.loadToStore(this.changeDataStore.bind(this),'changeStore');
+        this.scene.updater.add(this, new Date()- 0 + 500, 'loadDataUnitsTypes', true);
     }
 
     nameUI(ui) {
@@ -17,12 +18,17 @@ export default class StoreData {
         if (ui.enemyUnit) return 'enemyUnit';
     }
 
+    loadDataUnitsTypes(){
+        const state = store.getState();
+        this.scene.dataUnitsTypes = [{hp: 1}, state.soldier, state.assassin];
+        console.log(state);
+    }
+
     changeDataStore() {
         const myCastle = this.scene.castlesGroup.getChildren().find(el => el.isMine);
         if (myCastle) {
             const state = store.getState();
             let ui = this.nameUI(state.interface.value);
-            console.log(this.lastUI);
             if (ui === this.lastUI) {
                 switch (ui) {
                     case 'castle': {
@@ -55,7 +61,6 @@ export default class StoreData {
                         }
                 }
                 this.lastUI = ui;
-                console.log(ui, this.lastUI)
             }
         }
     }

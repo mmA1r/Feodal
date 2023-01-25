@@ -19,8 +19,10 @@ export default function VillageInformPanel() {
     const server = useSelector((state) => state.server.value);
 
     async function robVillage() {
-        const money = (await server.robVillage(villageId)).money-0;
-        store.loadToStore({ money: money }, 'gamer');
+        if (canBeRobbed()){
+            const money = (await server.robVillage(villageId)).money-0;
+            store.loadToStore({ money: money }, 'gamer');
+        }
     }
 
     function attackVillage() {

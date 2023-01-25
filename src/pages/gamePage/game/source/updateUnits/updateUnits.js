@@ -9,24 +9,35 @@ export default function updateUnits(scene) {
     const updateUnits = setInterval(
         async() => {
             if (scene.updateMyUnitsGroup.getChildren()[0] || scene.updateOtherUnitsGroup.getChildren()[0] || scene.updateVillagesGroup.getChildren()[0]) {
-                let myUnits = scene.updateMyUnitsGroup.getChildren().map((unit) => {
-                    if (unit.hp<=0) scene.deadUnitsGroup.add(unit);
-                    return {
-                        id: unit.id,
-                        hp: unit.hp,
-                        posX: unit.x / 64,
-                        posY: unit.y / 64,
-                        status: unit.status,
-                        direction: unit.direction.angle
-                    }
-                });
-                let otherUnits=scene.updateOtherUnitsGroup.getChildren().map((unit) => {
-                    if (unit.hp<=0) scene.deadUnitsGroup.add(unit);
-                    return {
-                        id: unit.id,
-                        hp: unit.hp
-                    }
-                });
+                let updateMyUnitsGroup = scene.updateMyUnitsGroup.getChildren();
+                let updateOtherUnitsGroup = scene.updateOtherUnitsGroup.getChildren();
+                let myUnits = [];
+                let otherUnits = [];
+                
+                let myUnit = updateMyUnitsGroup[0];
+                while (myUnit) {
+                    myUnits.push({
+                        id: myUnit.id,
+                        hp: myUnit.hp,
+                        posX: myUnit.x / 64,
+                        posY: myUnit.y / 64,
+                        status: myUnit.status,
+                        direction: myUnit.direction.angle
+                    })
+                    scene.updateMyUnitsGroup.remove(myUnit);
+                    myUnit = updateMyUnitsGroup[0];
+                }
+
+                let enemyUnit = updateOtherUnitsGroup[0];
+                while (enemyUnit) {
+                    otherUnits.push({
+                        id: enemyUnit.id,
+                        dmg: enemyUnit.sumDmg
+                    });
+                    enemyUnit.postUpdater();
+                    enemyUnit = updateOtherUnitsGroup[0];
+                }
+
                 let villages=scene.updateVillagesGroup.getChildren().map((village) => {
                     return {
                         id: village.id,
@@ -34,14 +45,14 @@ export default function updateUnits(scene) {
                     }
                 });
                 await server.updateUnits({myUnits,otherUnits,villages});
-                let deadUnit = scene.deadUnitsGroup.getChildren()[0];
+                /*let deadUnit = scene.deadUnitsGroup.getChildren()[0];
                 while (deadUnit) {
                     deadUnit.killed();
                     deadUnit = scene.deadUnitsGroup.getChildren()[0];
-                }
-                scene.updateMyUnitsGroup.clear();
+                }*/
+                /*scene.updateMyUnitsGroup.clear();
                 scene.updateOtherUnitsGroup.clear();
-                scene.updateVillagesGroup.clear();
+                scene.updateVillagesGroup.clear();*/
             }
         }
         ,150

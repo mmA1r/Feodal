@@ -24,17 +24,17 @@ class Map{
         }
         foreach($villages as $village){
             if (abs($village->posX-$posX)+abs($village->posY-$posY) <10) $isValid = false;
-        }
-        /*$r = 7;
-        if ($posX - $r > 0) $beginI = 0 else $beginI = $posX - $r;
-        if ($posY - $r > 0) $beginJ = 0 else $beginJ = $posY - $r;
-        if ($posX + $r > 160) $endI = 160 else $beginI = $posX + $r;
-        if ($posY + $r > 160) $endJ = 160 else $beginJ = $posY + $r;
+        };
+        $r = 10;
+        if ($posX - $r < 0)  $beginI = 0; else $beginI = $posX - $r;
+        if ($posY - $r < 0) $beginJ = 0; else $beginJ = $posY - $r;
+        if ($posX + $r > 160) $endI  = 160; else $beginI = $posX + $r;
+        if ($posY + $r > 160) $endJ = 160; else $beginJ = $posY + $r;
         for($i = $beginI; $i <= $endI; $i++){
             for($j = $beginJ; $j <= $endJ; $j++){
                 if ($map->trees[j][i]!=0) $isValid = false;
             }
-        }*/
+        }
         //проверка элементов массива от $map[$posX-r][$posY-r] до $map[$posX+r][$posY+r], где r зависит от $type
         return $isValid;
     }

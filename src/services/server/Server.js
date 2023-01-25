@@ -175,6 +175,7 @@ export default class Server {
     }
 
     async robVillage(villageId) {
+        console.log(villageId)
         return await this.send({
             method: 'robVillage',
             village: villageId

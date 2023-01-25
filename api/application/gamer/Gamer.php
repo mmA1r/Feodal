@@ -65,6 +65,7 @@
                 }
             }  
             if ($isUpdate) {
+                $this->db->deadUnits();
                 $this->db->setUnitsHash(md5(rand()));
             }
         }
@@ -73,12 +74,13 @@
             $isUpdate = false;
             foreach ($otherUnits as $otherUnit){
                     $dbUnit = $this->db->getUnit($otherUnit->id);
-                    if ($dbUnit && $otherUnit->hp<$dbUnit->hp){
-                        $this->db->updateUnitHP($otherUnit->id ,$otherUnit->hp);
+                    if ($dbUnit && $otherUnit->dmg > 0){
+                        $this->db->updateUnitHP($otherUnit->id ,$dbUnit->hp - $otherUnit->dmg);
                         $isUpdate = true;
                     }
             }
             if ($isUpdate) {
+                $this->db->deadUnits();
                 $this->db->setUnitsHash(md5(rand()));
             }
         }

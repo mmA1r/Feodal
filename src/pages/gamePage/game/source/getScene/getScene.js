@@ -10,11 +10,10 @@ export default function getScene(scene) {
     const getScene = setInterval(
         async () => {
             const data = (await server.getScene());
-            console.log(data);
             if (data?.castles) {
                 const castles = scene.castlesGroup.getChildren();
                 data.castles.forEach((castleData) => {
-                    const castle = castles.find(el => el.id === castleData.id);
+                    const castle = castles.find(el => el.id == castleData.id - 0);
                     if (castle){
                         castle.rewriteData(castleData);
                     }
@@ -32,27 +31,26 @@ export default function getScene(scene) {
                 })
             }
             if (data?.villages) {
+                const villages = scene.villagesGroup.getChildren();
                 data.villages.forEach((villageData) => {
-                    if (!scene.villagesGroup.getChildren().find(el => el.id === villageData.id)) {
-                        new Village(scene, villageData);
-                    }
+                    const village = villages.find(el => el.id == villageData.id - 0);
+                    (village) ? village.rewriteData(villageData) : new Village(scene, villageData);
                 })
-                scene.villagesGroup.getChildren().forEach((village) => {
-                    const villageOnServer = data.villages.find((v) => {
-                        return v.id === village.id;
-                    })
-                    if (villageOnServer) {
-                        village.rewriteData(villageOnServer);
+                villages.forEach((village) => {
+                    if (village.isUpdated) {
+                        village.isUpdated = false;
                     }
                     else {
                         village.killed();
+                        console.log(village.isUpdated)
                     }
+
                 })
             }
             if (data?.units) {
                 const units = scene.unitsGroup.getChildren();
                 data.units.forEach((unitData) => {
-                    const unit = units.find(el => el.id === unitData.id);
+                    const unit = units.find(el => el.id == unitData.id - 0);
                     if (unit) {
                         unit.rewriteData(unitData);
                     }

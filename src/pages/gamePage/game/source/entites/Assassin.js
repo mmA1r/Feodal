@@ -3,26 +3,34 @@ import Unit from "./Unit"
 export default class Assassin extends Unit {
     constructor(scene, unitData) {
         super(scene, unitData)
-        /*this.anims.create({
+        this.mainTexture = 'assassin';
+        this.anims.create({
             key: "move",
             frames: [{
-                key: 'soldier',
-                frame: 'soldierMove2',
+                key: 'assassin',
+                frame: 'assassinMove4',
                 duration: 80
             },
             {
-                key: 'soldier',
-                frame: 'soldierMove3',
+                key: 'assassin',
+                frame: 'assassinMove3',
                 duration: 80
             },
             {
-                key: 'soldier',
-                frame: 'soldierMove1',
+                key: 'assassin',
+                frame: 'assassinMove2',
+                duration: 80
+            },
+            {
+                key: 'assassin',
+                frame: 'assassinMove1',
                 duration: 80
             }],
-            duration: 240,
+            duration: 320,
             repeat: -1
-        });*/
+        });
+        this.create(unitData);
+        this.setDisplaySize(50, 50);
     }
 
     /*damageFrameOn() {

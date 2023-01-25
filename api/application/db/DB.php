@@ -211,9 +211,9 @@ class DB {
     ////////////////////////////////////////
     //////////////forVillages///////////////
     ////////////////////////////////////////
-    public function createVillage($name, $posX, $posY) {
-        $query = 'INSERT INTO villages (name, posX, posY) 
-        VALUES ("' . $name . '", ' . $posX . ',' . $posY . ')';
+    public function createVillage($name, $posX, $posY, $time) {
+        $query = 'INSERT INTO villages (name, posX, posY, nextUpdateTime) 
+        VALUES ("' . $name . '", ' . $posX . ',' . $posY . ', ' . $time . ')';
         $this->db->query($query);
         return true;
     }

@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { Data } from "phaser";
 import Entity from "./Entity";
 import UnitPointer from "./UnitPointer";
 
@@ -6,31 +6,27 @@ export default class Unit extends Entity {
     constructor(scene, unitData) {
         super(scene, {
             type: 'unit',
-            activeRadius: 40
+            activeRadius: 15
         });
-        this.scene.physics.add.existing(this, false);
-        this.body.isCircle = true;
-        this.selected = false;
-        this.id = unitData.id;
-        this.might = 5;
+        this.id = unitData.id - 0;
         this.unitType = unitData.type - 0;
-        switch (this.unitType) {
-            case 1:
-                this.mainTexture = 'soldier';
-                this.setTexture(this.mainTexture);
-                this.setDisplaySize(40, 70);
-                break;
-            case 2:
-                this.mainTexture = 'assassin';
-                this.setTexture(this.mainTexture);
-                this.setDisplaySize(50, 50);
-                break;
-        }
-        this.ownerId = unitData.ownerId;
-        this.setXY(unitData.posX * 64,unitData.posY * 64)
+        this.might = this.scene.dataUnitsTypes[this.unitType].might - 0;
+        this.ownerId = unitData.ownerId - 0;
+        this.infographics.addModule('statusBar', 'hpBar');
+        this.hpBar = this.infographics.getModule('hpBar');
+        this.hpBar.setAddXY(0, 22);
+        this.hpBar.setSize(this.activeRadius*0.8 + 6);
+        this.hpBar.setType('m');
+        const selectMarker = this.infographics.getModule('selectMarker');
+        selectMarker.setAddXY(0, 22);
+        this.setXY(unitData.posX * 64, unitData.posY * 64)
         this.infographics.getModule('selectMarker').setColor(0x14b914);
         this.isMine = (this.ownerId === this.scene.player.id) ? true : false;
-        this.speed = 5;
+        const color = (this.isMine) ? 0x14b914 : 0xff0000;
+        selectMarker.setColor(color);
+        this.hpBar.setColor(color);
+        this.updater = {}
+        this.speed = this.scene.dataUnitsTypes[this.unitType].speed - 0;
         this.target = {
             x: unitData.posX * 64,
             y: unitData.posY * 64,
@@ -45,26 +41,20 @@ export default class Unit extends Entity {
             sin: 1,
             cos: 0
         };
-        this.rewriteData(unitData);
-        this.addToDisplayList();
-        if (unitData.status !== "inCastle") this._addScene();
-        this._setUnitStatus(unitData.status);
+        
+        
         this.lastDist = 0;
-        this.atk = 10 - 0;
+        this.atk = this.scene.dataUnitsTypes[this.unitType].damage - 0;
         this.canAttack = true;
-        /*this.statusBar.setColor(0x14b914);
-        this.statusBar.setSize(12);
-        this.statusBar.setXY(this.x, this.y);*/
-         /*this.selector = this.scene.add.ellipse(this.x, this.y + 22, 35, 25);
-        this.selector.isStroked = true;
-        this.selector.strokeColor = (this.isMine) ? 0x00FF00 : 0xFF0000;
-        this.selector.lineWidth = 2;
-        this.selector.setVisible(false);*/
-        if (this.type === "myUnit") {
-            this.scene.player.units.add(this);
-            this.scene.player.updateMight();
-        }
+        if (this.isMine) this.scene.player.addUnit(this);
         this.isUpdated = true;
+    }
+
+    create(data) {
+        this.setTexture(this.mainTexture);
+        super.create(false);
+        this.rewriteData(data);
+        this._setUnitStatus(data.status);
     }
 
     _addScene() {
@@ -72,10 +62,10 @@ export default class Unit extends Entity {
         this.body.enable = true;
         this.addedToScene();
         this.setInteractive();
-
     }
 
     _removeScene() {
+        console.log(123);
         this.setVisible(false);
         this.body.enable = false;
         this.removedFromScene();
@@ -83,27 +73,18 @@ export default class Unit extends Entity {
     }
 
     _getDirection() {
-        const angle = Phaser.Math.Angle.Between(this.x, this.y, this.target.x, this.target.y);
-        const normAngle = Phaser.Math.Angle.Normalize(angle);
-        this.direction.angle = angle;
-        this.direction.sin = Math.sin(normAngle);
-        this.direction.cos = Math.cos(normAngle);
+        this.direction.distance = Phaser.Math.Distance.Between(this.x, this.y, this.target.x, this.target.y)
+        const dx = this.target.x - this.x;
+        const dy = this.target.y - this.y;
+        this.direction.sin = dy/this.direction.distance;
+        this.direction.cos = dx/this.direction.distance;
+        this.direction.speedX = this.direction.cos * this.speed;
+        this.direction.speedY = this.direction.sin * this.speed;
         (this.direction.cos >= 0) ? this.flipX = false : this.flipX = true;
     }
 
-    _distance() {
-        let dx = this.target.x - this.x;
-        let dy = this.target.y - this.y;
-        return dx * dx + dy * dy;
-    }
-
     _move() {
-        let dist = this._distance();
-        if (this.lastDist < dist) {
-            this._getDirection();
-        }
-        this.lastDist = dist;
-        if (dist <= this.target.activeRadius) {
+        if (this.direction.distance <= this.target.activeRadius*1.1) {
             switch (this.target.type) {
                 case "unit": {
                     (this.target.isMine) ? this.moveTo(this.target) : this.attack();
@@ -126,9 +107,12 @@ export default class Unit extends Entity {
             }
         }
         else {
-            this.x += this.direction.cos * this.speed;
-            this.y += this.direction.sin * this.speed;
-            this.depth = this.y;
+            this.nextX = this.x + this.direction.speedX;
+            this.nextY = this.y + this.direction.speedY;
+            this.direction.distance -= this.speed;
+            this.setXY(this.nextX, this.nextY);
+            if (this.x != this.nextX || this.y != this.nextY) this._getDirection();
+            this.pointer.update();
             if (this.isMine) {
                 this.scene.updateMyUnitsGroup.add(this);
             }
@@ -140,18 +124,24 @@ export default class Unit extends Entity {
         if (this.canAttack && this.target) {
             this.canAttack = false;
             setTimeout(() => { this.canAttack = true }, 2000);
-            this.target.damage(this.atk);
+            this.target.damage(this.atk);   
         }
+        if (!this.target) this.scene.updater.remove(this.moveUpdater);
         this._setUnitStatus('attack');
     }
 
+    _takeDamage(){
+        this.damaged = true;
+        if (this.selected) this.updateUI();
+        this.hpBar.updateValue(this.hp / this.scene.dataUnitsTypes[this.unitType].hp);
+    }
+
     damage(dmg) {
-        if (!this.damaged) {
+        /*if (!this.damaged) {
             if (this.status === "inCastle") {
                 this.castle.setTint(0xFF5545);
                 this.castle.damaged = true;
                 setTimeout(() => {
-                    this.castle.setTint();
                     this.castle.damaged = false;
                 }, 300);
             }
@@ -163,47 +153,38 @@ export default class Unit extends Entity {
                     this.damaged = false;
                 }, 300);
             }
+        }*/
+        if (this.isMine) {
+            this.hp -= dmg;
         }
-        this.hp -= dmg;
+        else {
+            this.sumDmg += dmg;
+        }
         if (this.hp < 0) this.hp = 0;
-        this.damaged = true;
-        if (this.selected) {
-            this.data.set('dirty', true);
-            this._updateUI();
-        }
-        if (this.type === "unit") this.scene.updateOtherUnitsGroup.add(this);
-        if (this.type === "myUnit") this.scene.updateMyUnitsGroup.add(this);
+        this._takeDamage();
+        if (!this.isMine) this.scene.updateOtherUnitsGroup.add(this);
+        if (this.isMine) this.scene.updateMyUnitsGroup.add(this);
     }
 
     updateUI() {
-            //this.statusBar.updateHPBar(this.hp/120);
-            this.scene.store.loadToStore({
-                hp: this.hp - 0,
-                type: this.unitType
-            }, 'currentUnit')
-            return (this.isMine) ? 'unit' : 'enemyUnit';
-
-        /*if (this.scene.selectedUnits.getLength() > 1) {
-            let soldiers = {
-                fullHp: this.scene.selectedUnits.getLength() * 120,
-                currentHp: this.scene.selectedUnits.getChildren().reduce((sumHp, unit) => sumHp + unit.hp, 0),
-                num: this.scene.selectedUnits.getLength()
-            }
-            const assassin = {
-
-            }
-            this.scene.store.loadToStore({ soldiers: soldiers }, 'currentArmy')
-        }*/
+        this.hpBar.updateValue(this.hp/this.scene.dataUnitsTypes[this.unitType].hp);
+        this.scene.store.loadToStore({
+            hp: this.hp - 0,
+            type: this.unitType
+        }, 'currentUnit')
+        return (this.isMine) ? 'unit' : 'enemyUnit';
     }
 
-    select() {
+    select(selector) {
         super.select();
         if (this.isMine) this.pointer.setVisible(true);
+        this.selector = selector;
     }
 
     unselect() {
         super.unselect();
         if (this.isMine) this.pointer.setVisible(false);
+        this.selector.removeSelect(this);
     }
 
     moveTo(obj) {
@@ -217,6 +198,8 @@ export default class Unit extends Entity {
                 this.target = this.pointer;
             }
             this._setUnitStatus("move");
+            this.scene.updater.remove(this.moveUpdater);
+            this.moveUpdater = this.scene.updater.add(this, new Date() - 0, 'update', false)
         }
     }
 
@@ -225,14 +208,26 @@ export default class Unit extends Entity {
             this._setUnitStatus('stand');
         }
         this.pointer.setVisible(false);
-        this.depth = this.y;
+        this.scene.updater.remove(this);
+    }
+
+    postUpdater() {
+        if (this.isMine){
+            this.scene.updateMyUnitsGroup.remove(this);
+        }
+        else {
+            this.scene.updateOtherUnitsGroup.remove(this);
+            this.sumDmg = 0;
+        }
+        
     }
 
     rewriteData(unitData) {
         //HP
         const hp = unitData.hp - 0;
         const dmg = this.hp - hp;
-        (dmg > 0) ? this.damage(dmg) : this.hp = hp;
+        if (dmg > 0) this._takeDamage();
+        this.hp = hp;
         //Status
         if (!this.isMine) {
             this._setUnitStatus(unitData.status);
@@ -255,9 +250,9 @@ export default class Unit extends Entity {
     }
 
     killed() {
+        if (this.scene.player.selectedObject) this.scene.player.selectedObject.updateUI();
         this.pointer.destroy();
         this.scene.unitsGroup.remove(this);
-        this.unselect();
         if (this.isMine) {
             this.scene.player.units.remove(this);
             this.scene.player.updateMight();
@@ -266,8 +261,11 @@ export default class Unit extends Entity {
     }
 
     _intoCastle() {
+        if (this.selected) this.unselect()
         this.castle.units.add(this);
         this.castle.updateUI();
+        if (this.scene.player.selectedObject) this.scene.player.selectedObject.updateUI();
+        this._removeScene();
     }
 
     _outCastle() {
@@ -281,7 +279,6 @@ export default class Unit extends Entity {
             if (status === "inCastle") {
                 this.status = status;
                 this._intoCastle();
-                this._removeScene();
                 this.anims.stop();
             }
             else {
@@ -305,10 +302,9 @@ export default class Unit extends Entity {
                 }
             };
             this.status = status;
-            if (this.type === "myUnit") this.scene.updateMyUnitsGroup.add(this);
+            if (this.isMine) this.scene.updateMyUnitsGroup.add(this);
+            this.scene.updater.remove(this.moveUpdater);
         }
-        this.timeNextUpdate = new Date() - 0;
-        this.scene.updates.add(this);
     }
 
     enterCastle() {
@@ -321,18 +317,7 @@ export default class Unit extends Entity {
     }
 
     update() {
-        if (this.status === 'move' || this.status === 'attack') 
-        {
             this._move();
-            this.timeNextUpdate += 33;
-            this.scene.updates.add(this);
-        } 
-        else {
-            this.scene.updates.remove(this);
-        }
     }
 
-    subscribe(subscriber){
-        this.subscriber = subscriber;
-    }
 }

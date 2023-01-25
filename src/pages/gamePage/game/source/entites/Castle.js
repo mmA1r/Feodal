@@ -6,41 +6,48 @@ export default class Castle extends Entity {
     constructor(scene, data) {
         super(scene, {
             type: 'castle',
-            activeRadius: 100,
-            isStatic: true
+            activeRadius: 260,
         });
-        this.isUpdated = true;
+        this.infographics.addModule('name', 'name', false);
+        this.infographics.addModule('statusBar', 'hpBar');
+        const name = this.infographics.getModule('name');
+        name.setAddXY(120, 130);
+
         this.units = this.scene.add.group();
+
+        this.hpBar = this.infographics.getModule('hpBar');
+        this.hpBar.setAddXY(0, 60);
+        this.hpBar.setSize(this.activeRadius*0.8+10);
+        this.hpBar.setType('l');
+
+        const selectMarker = this.infographics.getModule('selectMarker');
+        selectMarker.setAddXY(0, 60);
+        this.setXY(data.posX * 64, data.posY * 64)
         this.pointer = new UnitPointer(this);
-        this.pointer.x = this.x - 150;
-        this.pointer.y = this.y - 150;
         this.canAttack = true;
 
-        this.id = data.id;
-        this.level = data.level;
-        this.setXY(data.posX * 64, data.posY * 64)
+        this.id = data.id - 0;
         this.isMine = (this.id === this.scene.player.id) ? true : false;
-        if (this.isMine) {
-            this.scene.player.addCastle(this);
-        }
+        if (this.isMine) this.scene.player.addCastle(this);
+        const color = (this.isMine) ? 0x14b914 : 0xff0000
+        selectMarker.setColor(color);
+        this.hpBar.setColor(color);
+
+        this.rewriteData(data);
+        this.setTexture('castleFirstLevel');
+
         this.ownerName = data.ownerName;
-        this.infographics.getModule('selectMarker').setAddXY(0, 30);
+        name.setName(this.ownerName);
 
         this.scene.castlesGroup.add(this);
-        this.setTexture('castleFirstLevel');
-        this.rewriteData(data);
-        this.infographics.getModule('selectMarker').setColor(0x14b914);
-    
+        
+        this.pointer.x = this.x - 400;
+        this.pointer.y = this.y + 300;
         this.fullHP = 0;
         this.currentHP = 0;
         this.create(true);
-        /*this.name = this.scene.add.text(this.x, this.y + 130, this.ownerName, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
-        this.name.depth = 10000000;
-        this.name.style.setFontSize(30);
-        this.name.style.setAlign('center')
-        this.name.scrollFactorX = 1;
-        this.name.scrollFactorY = 1;
-        this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
+        this.body.setOffset(0,0);
+        /*this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
         this.scene.physics.add.existing(this.attackArea, true);
         this.attackArea.body.onCollide = true;
         this.attackArea.isStroked = true;
@@ -49,21 +56,19 @@ export default class Castle extends Entity {
         this.attackArea.setVisible(false);*/
     }
 
-    /*select() {
+    select() {
         super.select();
         if (this.isMine) this.pointer.setVisible(true);
     }
 
     unselect() {
-        this.selected = false;
-        this.selector.setVisible(false);
-        this.pointer.setVisible(false);
-    }*/
+        super.unselect();
+        if (this.isMine) this.pointer.setVisible(false);
+    }
 
     killed() {
-        console.log('KILL')
         if (this.isMine) this.scene.player.gameOver();
-        //this.pointer.destroy();
+        this.pointer.destroy();
         this.scene.castlesGroup.remove(this);
         super.killed();
     }
@@ -89,10 +94,10 @@ export default class Castle extends Entity {
         if (!this.damaged) this.fullHP = 0;
         this.currentHP = 0;
         this.units.getChildren().forEach((unit) => {
-            if (!this.damaged) this.fullHP += 120;
+            if (!this.damaged) this.fullHP += this.scene.dataUnitsTypes[unit.unitType].hp-0;
             this.currentHP += unit.hp;
         });
-        //this.statusBar.updateHPBar(this.currentHP/this.fullHP);
+        this.hpBar.updateValue(this.currentHP/this.fullHP);
     }
 
     updateUI() {

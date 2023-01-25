@@ -1,3 +1,5 @@
+import { Data } from "phaser";
+
 export default class Updater{
     constructor() {
         this.updateList = [];
@@ -15,14 +17,12 @@ export default class Updater{
             obj: obj,
             func: func
         }
-        this.updateList.push(updates);
-        console.log(this.updateList);
-        return updates;
+        const i = (this.updateList.push(updates));
+        return this.updateList[i-1];
     }
 
     remove(obj) {
         this.updateList = this.updateList.filter(el =>el != obj)
-        console.log(this.updateList);
     }
 
     getFPS() {

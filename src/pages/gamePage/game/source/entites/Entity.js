@@ -28,6 +28,7 @@ export default class Entity extends Phaser.GameObjects.Sprite{
         this.interfacesAll = [];
         this.interfacesAll.push(this.selectMarker);
         this.interfacesForSelected.push(this.selectMarker);
+        this.isUpdated = true;
     }
 
     //вывод на карту
@@ -38,17 +39,15 @@ export default class Entity extends Phaser.GameObjects.Sprite{
         this.scene.physics.add.existing(this, isStatic);
         this.body.isCircle = true;
         this.body.setCircle(this.activeRadius);
-        this.name = new Name(this, this.ownerName);
-        this.interfacesAll.push(this.name);
-        this.name.setXY(this.x, this.y);
-        this.infographics.getModule('selectMarker').setSize(this.activeRadius);
+        this.infographics.getModule('selectMarker').setSize(this.activeRadius*0.8);
     }
 
     //  Выбор объекта
-    select() {
+    select(selector) {
         this.selected = true;
         this.inFocus();
         this.callbackUI();
+        this.selector = selector;
     }
 
     //  Снятие выбора

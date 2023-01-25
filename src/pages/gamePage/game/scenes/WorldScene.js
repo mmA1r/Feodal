@@ -52,31 +52,16 @@ export default class WorldScene extends Phaser.Scene {
         this.updater = new Updater();
         this.player = new Player(this);
         this.updateUnits = updateUnits(this);
-        this.getScene = getScene(this);
         this.StoreData = new StoreData(this);
         this.server = store.getState().server.value;
+        this.StoreData.loadDataUnitsTypes();
+        setTimeout(()=> {
+            this.getScene = getScene(this);
+        }, 500);
     }
 
 
     update() {
-        const time = new Date() - 0;
-        this.updates.getChildren().forEach(el => {
-            if (el.timeNextUpdate <= time) {
-                el.update();
-            }
-        })
         this.updater.update();
-        /*this.unitsGroup.getChildren().forEach((el) => {
-            if (el.status != "inCastle") el.update();
-        });
-        this.villagesGroup.getChildren().forEach((el) => {
-            el.update();
-        });
-        this.castlesGroup.getChildren().forEach((el) => {
-            el.update();
-        });
-        if (this.cameras.main.isMoved) {
-            this.cameras.main.move();
-        }*/
     }
 }

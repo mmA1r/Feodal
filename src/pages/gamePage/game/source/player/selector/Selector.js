@@ -6,12 +6,19 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
         this.active = true;
         this.isMine = false;
         this.endX = 0;
+        this.type = 'army';
         this.endY = 0;
         this.targets = this.scene.add.group();
         this.depth = 99999999999;
         this.addToDisplayList();
         this.active = false;
-        this.type = 'army';
+        this.pointer = {
+            x: 0,
+            y: 0,
+            type: 'pointer',
+            visible: false
+        }
+        this.selector = this.scene.player;
     }
 
     setEndPos(x, y) {
@@ -36,10 +43,10 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
     }
 
     onlyMyUnit() {
-        let enemyUnit = this.targets.getChildren().find(el => el.isMine === false);
+        let enemyUnit = this.targets.getChildren().find(el => el.isMine == false);
         while (enemyUnit) {
             this.targets.remove(enemyUnit);
-            enemyUnit = this.target.getChildren().find(el => el.isMine === false);
+            enemyUnit = this.targets.getChildren().find(el => el.isMine == false);
         }
     }
 
@@ -64,54 +71,118 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
             this.height = 0;
             this.width = 0;
             this.active = false;
+            if (this.isMine) this.onlyMyUnit();
             if (this.targets.getLength() == 1) {
                 this.scene.player.select(this.targets.getChildren()[0]);
+                this.targets.clear();
             } 
             else {
-                this.scene.player.select(this)
+                this.scene.player.select(this);
             };
             setTimeout(this.removedFromScene(), 100);
         }
     }
 
+    removeSelect(obj){
+        console.log(this.selector)
+        this.targets.remove(obj);
+        this.select(this.selector);
+        this.selector.removeSelect(obj);
+    }
+
     unselect() {
         let unit = this.targets.getChildren()[0];
         while (unit) {
-            unit.unselect();
             this.targets.remove(unit);
+            unit.unselect();
             unit = this.targets.getChildren()[0];
         }
+        this.selector.removeSelect(this);
     }
 
-    select(){
-        this.targets.getChildren().forEach(unit => unit.select());
+    select(selector){
+        this.selector = selector;
+        this.targets.getChildren().forEach(unit => unit.select(this));
     }
-
-    /*selectTarget(obj) {
-        this.unselectAllTargets();
-        this.select(obj);
-        switch (obj.type) {
-            case 'castle': 
-                this.typeUI = (obj.isMine) ? 'castle' : 'enemyCastle';
-                break;
-            case 'unit': 
-                this.typeUI = (obj.isMine) ? 'unit' : 'enemyUnit';
-                break;
-            case 'village': 
-                this.typeUI = 'village';
-                break;
-        }
-        this.updateUI();
-    }*/
 
     moveTo(obj) {
-        this.targets.getChildren().forEach( (unit) => {
-            unit.moveTo(obj);
-        })
+        console.log();
+        if (obj.type === 'pointer') {
+            let x = obj.x;
+            let y = obj.y;
+            let dx = 0;
+            let dy = 0;
+            let maxX = x;
+            let maxY = y;
+            let minX = x;
+            let minY = y;
+            const length = this.targets.getLength();
+            let n = 0;
+            if (length>1 && length<5) n = 1;
+            if (length>4 && length<10) n = 2;
+            if (length>9 && length<17) n = 3;
+            if (length>16 && length<26) n = 4;
+                x -= 30*n;
+                y -= 30*n;
+                minX = x;
+                minY = y;
+                dx = 60;
+                dy = 60;
+                maxX += 30*n;
+                maxY += 30*n;
+            this.targets.getChildren().forEach(unit => {
+                unit.moveTo({
+                    x: x,
+                    y: y,
+                    type: 'pointer'
+                })
+                if (x != maxX) {x += dx} else {
+                    x=minX;
+                    if (y != maxY) {y += dy} else {
+                        y=minY;
+                        minY += dy;
+                    }
+                }
+            }
+            )
+        }
+        else {
+            this.targets.getChildren().forEach( (unit) => {
+                unit.moveTo(obj);
+            })
+        }
     }
 
-
     updateUI() {
-        
+        const soldiers = {
+            fullHp: 0,
+            currentHp: 0,
+            num: 0
+        };
+        const assassins = {
+            fullHp: 0,
+            currentHp: 0,
+            num: 0
+        };
+        let target = soldiers;
+        this.targets.getChildren().forEach( unit => {
+            switch (unit.unitType) {
+                case 1: {
+                    target = soldiers;
+                    break;
+                }
+                case 2: {
+                    target = assassins;
+                    break;
+                }
+            }
+            target.currentHp += unit.hp;
+            target.fullHp += unit.hp;
+            target.num++;
+        })
+
+        this.scene.store.loadToStore({ soldiers: soldiers,
+                                        assassins: assassins }, 'currentArmy')
+        return (this.isMine) ? 'army' : 'enemyArmy';
     }
 }

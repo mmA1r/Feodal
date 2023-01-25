@@ -1,18 +1,19 @@
-import Phaser from "phaser";
 import DestroyVillage from "../destroyVillage/DestroyVillage";
+import Entity from "./Entity";
 
-export default class Village extends Phaser.GameObjects.Sprite {
+export default class Village extends Entity {
     constructor(scene, serverData) {
-        super(scene);
-        this.x = Math.round(serverData.posX * 64);
-        this.y = Math.round(serverData.posY * 64);
-        this.depth = 1;
-        this.activeRadius = 40000;
-        this.id = serverData.id;
+        super(scene, {
+            type: 'village',
+            activeRadius: 130,
+        });
+        const selectMarker = this.infographics.getModule('selectMarker');
+        this.setXY(Math.round(serverData.posX * 64), Math.round(serverData.posY * 64))
+        this.id = serverData.id - 0;
         this.level = serverData.level - 0;
         this.scene.villagesGroup.add(this);
         this.damageTexture = 0;
-        this.canBeRobbed = false;
+        this.canBeRobbed = this.canBeRobbed.bind(this);
         switch (this.level) {
             case 1:
                 this.setTexture('villageFirstLevel');
@@ -85,13 +86,6 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.selector.setVisible(false);
 
         this.rewriteData(serverData);
-        this.addedToScene();
-        this.addToDisplayList();
-        this.setInteractive();
-        this.selected = false;
-        this.type = 'village';
-        this.scene.physics.add.existing(this, true);
-        this.body.isCircle = true;
         this.name = this.scene.add.text(this.x, this.y + 130, serverData.name, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
         this.name.depth = 10000000;
         this.name.style.setFontSize(30);
@@ -108,16 +102,12 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.canAttack = true;
         this.status = "wait"
         this.damaged = false;
-    }
-
-    select() {
-        this.selector.setVisible(true);
-        this.selected = true;
+        this.create(true);
     }
 
     openUI() {
         this.scene.store.loadToStore('village', 'ui');
-        this._updateUI();
+        this.updateUI();
     }
 
     attackOnVillage() {
@@ -132,18 +122,12 @@ export default class Village extends Phaser.GameObjects.Sprite {
         }
     }
 
-
-
-    unselect() {
-        this.selected = false;
-        this.selector.setVisible(false);
-    }
-
     rewriteData(serverData) {
         if (!this.damaged) this.currentHp = 50;
         this.level = serverData.level - 0;
         this.population = serverData.population - 0;
         this.updateResistLevel();
+        this.isUpdated = true;
     }
 
     updateResistLevel() {
@@ -162,12 +146,12 @@ export default class Village extends Phaser.GameObjects.Sprite {
     }
 
     killed() {
+        console.log(1234);
         this.resistBar.destroy();
         this.acceptBar.destroy();
         this.selector.destroy();
         this.attackArea.destroy();
         this.name.destroy();
-        this.unSelect();
         this.scene.villagesGroup.remove(this);
         this.destroy();
     }
@@ -180,7 +164,7 @@ export default class Village extends Phaser.GameObjects.Sprite {
                 this.population--;
                 this.scene.updateVillagesGroup.add(this);
             }
-            if (this.selected) this._updateUI();
+            if (this.selected) this.updateUI();
         }
         this.status = "attack";
         if (this.damaged === false) {
@@ -209,8 +193,16 @@ export default class Village extends Phaser.GameObjects.Sprite {
         }
     }
 
-    _updateUI() {
-        if (this.selected) {
+    canBeRobbed(){
+        let i = 0;
+        this.scene.physics.collide(this.attackArea, this.scene.player.units, (area, unit) => {
+            i++;
+        })
+        return (i > 0 ) ? true : false;
+    }
+
+    updateUI() {
+        if (this.selected){
             let village = {
                 currentHp: this.currentHp,
                 fullHp: 50,
@@ -220,6 +212,7 @@ export default class Village extends Phaser.GameObjects.Sprite {
                 canBeRobbed: this.canBeRobbed
             }
             this.scene.store.loadToStore(village, 'village');
+            return 'village'
         }
     }
 

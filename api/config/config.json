@@ -8,7 +8,7 @@
 	},
 "Game": {
 		"intervalUpdateVillage": 15,
-		"intervalRentMinutes": 1,
-		"intervalFirstRentMinutes": 1 
+		"intervalRentMinutes": 12,
+		"intervalFirstRentMinutes": 30 
 	}
 }

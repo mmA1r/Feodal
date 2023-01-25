@@ -26,7 +26,7 @@
                 case 5: $name="Полёнки"; break;
                 case 6: $name="Бубрёнки"; break;
             }
-            $this->db->createVillage($subname.' '.$name, $coor->posX, $coor->posY);
+            $this->db->createVillage($subname.' '.$name, $coor->posX, $coor->posY, microtime(true));
         }
 
         public function getVillage($villageId) {
@@ -39,10 +39,10 @@
                 $this->db->robVillage($village->id, $lootedMoney);
                 $this->db->updateMoney($gamer->id, $lootedMoney);
                 $this->db->setMapHash(md5(rand()));
-                return array (
-                    'money'=>$this->db->getMoney($gamer->id)
-                );
             }
+            return array (
+                'money'=>$this->db->getMoney($gamer->id)
+            );
         }
 
         public function destroyVillage($gamer, $village) {
@@ -94,7 +94,7 @@
             $statuses = $this->db->getStatuses();
             $time = microtime(true);
             if ($statuses->mapTimeStamp <= $time) {
-                //$this->db->deadUnits();
+                $this->db->deadUnits();
                 $this->db->setMapTimeStamp($time + 0.15);
                 $this->updateMap($time);
             }
@@ -154,22 +154,22 @@
             $villages = $this->db->getVillages();
             foreach ($villages as $village) {
                 if ((float)$time>=(float)$village->nextUpdateTime) {
-                    $id= $village->id;
                     // посчитать новую популяцию
                     $population = $village->population;
-                    if ($village->money - 50*$village->population >= 50) {
+                    $minGold = $village->population * 50;
+                    if ($village->money - $minGold >= 50) {
                         $population += 1;
                     }
                     // посчитать новые деньги
-                    $money = $village->money + rand(1*$village->population,2*$village->level*$village->population);
+                    $money = $village->money + rand(2*$village->population,4*$village->level*$village->population);
                     // увеличить уровень если чо
                     $cost = 500*$village->level + $village->level*$village->level*400;
-                    if ($village->money >= $cost && $village->level < 5 ){
+                    if ($village->money >= $cost && $village->level < 2 ){
                         $level = $village->level + 1;
                         $money = $village->money - $cost;
                     } else{$level= $village->level;};
             // записать в БД
-                $this->db->updateVillage($id,$money,$level,$population,$time+rand(300,350));//60*$this->config->intervalUpdateVillage,60*$this->config->intervalUpdateVillage+100-10*$village->level));
+                $this->db->updateVillage($village->id,$money,$level,$population,(float)$village->nextUpdateTime + $this->config["intervalUpdateVillage"]*60);
                 $isUpdate = true;
                 }
             }

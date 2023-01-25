@@ -5,8 +5,8 @@ export default async function getCastle(player) {
     const server = store.getState().server.value;
     const data = await server.getCastle();
     if (data) {
-        player.id = data.id;
-        player.money = data.money;
+        player.id = data.id - 0;
+        player.money = data.money - 0;
         const time = Math.round(data.nextRentTime*1000);
         player.scene.store.loadToStore({ money: data.money - 0 }, 'gamer');
         player.scene.store.loadToStore({ level: data.level - 0 }, 'gamer');

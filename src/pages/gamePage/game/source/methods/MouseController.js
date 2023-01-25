@@ -14,7 +14,8 @@ export default function MouseController(scene) {
             if (scene.player.selectedObject.isMine) scene.player.command({
                 x: pointer.worldX,
                 y: pointer.worldY,
-                type: 'pointer'
+                type: 'pointer',
+                visible: true
             })
         }
     });
