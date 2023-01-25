@@ -48,7 +48,7 @@
 
         public function destroyVillage($gamer, $village) {
             $this->db->destroyVillage($village->id);
-            $this->db->updateMoney($gamer->id, $village->money);
+            $this->db->updateMoney($gamer->id, $gamer->money + $village->money);
             $this->db->setMapHash(md5(rand()));
             return array (
                 'money'=>$this->db->getMoney($gamer->id)
@@ -79,7 +79,7 @@
                 $unitsInCastle = $this->getUnitsinCastle($victim->id);
                 if ($victim && !$unitsInCastle) {
                     $this->db->destroyCastle($victim->id);
-                    $this->db->updateMoney($killer->id, $victim->money);
+                    $this->db->updateMoney($killer->id, $killer->money + $victim->money);
                     $this->db->setMapHash(md5(rand()));
                     return array(
                         'money'=>$this->db->getMoney($killer->id)
@@ -187,12 +187,13 @@
                         foreach($gamerUnits as $unit) {
                             $rent +=$unitsTypes[$unit->type - 1]->cost * 0.05;
                         }
-                        if ($castle->money < $rent) {
+                        $money = $castle->money - $rent;
+                        if ($money < 0) {
                             $this->db->destroyCastle($gamerId);
                             $isUpdate = true;
                         }
                         else {
-                            $this->db->updateMoney($gamerId,-$rent);
+                            $this->db->updateMoney($gamerId,$money);
                             $this->db->updateNextRentTime($gamerId,$timeUpdate + $this->config["intervalRentMinutes"]*60);
                         }
                     }        

@@ -15,12 +15,11 @@
 
         public function upgradeCastle($gamer) {
             if ($gamer->level < 5) {
-                $cost = $this->getCastleLevelCost($gamer->level);
-                if ($gamer->money >= $cost) {
+                $money = $gamer->money - $this->getCastleLevelCost($gamer->level)
+                if ($money >= 0) {
                     $this->db->castleLevelUp($gamer->id);
-                    $this->db->updateMoney($gamer->id, -$cost);
-                    $hash = md5(rand());
-                    $this->db->setMapHash($hash);
+                    $this->db->updateMoney($gamer->id, $money);
+                    $this->db->setMapHash(md5(rand()));
                     return array (
                         'money'=>$this->db->getMoney($gamer->id),
                         'castleUpgradeCost'=> $this->getCastleLevelCost($gamer->level+1)
@@ -31,11 +30,11 @@
 
         public function buyUnit($gamer, $unitType) {
             $unitTypeData = $this->db->getUnitTypeData($unitType);
-            if ($gamer->money >= $unitTypeData->cost) {
+            $money = $gamer->money - $unitTypeData->cost;
+            if ($money >= 0) {
                 $this->db->addUnit($gamer->id, $unitType, $unitTypeData->hp, $gamer->posX, $gamer->posY);
-                $this->db->updateMoney($gamer->id, -$unitTypeData->cost);
-                $hash = md5(rand());
-                $this->db->setUnitsHash($hash);
+                $this->db->updateMoney($gamer->id, $money);
+                $this->db->setUnitsHash(md5(rand()));
                 return array (
                     'money'=>$this->db->getMoney($gamer->id)
                 );
