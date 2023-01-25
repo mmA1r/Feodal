@@ -199,6 +199,10 @@ class DB {
         return $this->delete('gamers','id',$id);
     }
 
+    public function updateNextRentTime($gamerId, $time) {
+        return $this->simpleUpdateById('gamers','nextRentTime',$time,$gamerId);
+    }
+    
     ////////////////////////////////////////
     //////////////forVillages///////////////
     ////////////////////////////////////////
