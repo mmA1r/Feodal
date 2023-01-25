@@ -35,10 +35,15 @@ class DB {
         }
     }
 
+////////////////////////////////////////
+//////////////private///////////////////
+////////////////////////////////////////
+
     // only for string
     private function simpleUpdate($table, $field, $value) {
-        $query = 'UPDATE '.$table.' SET '.$field.'="'.$value.'"';
-        $this->db->query($query);
+        $query = 'UPDATE '.$table.' SET '.$field.'=?';
+        $sth = $this->db->prepare($query);
+        $sth->execute([$value]);
         return true;
     }
 
@@ -70,9 +75,9 @@ class DB {
         return $sth;
     }
 
-    ////////////////////////////////////////
-    //////////////forUser///////////////////
-    ////////////////////////////////////////
+////////////////////////////////////////
+//////////////forUser///////////////////
+////////////////////////////////////////
 
     public function getUser($login) {
         $query = 'SELECT * FROM users WHERE login=?';
@@ -101,9 +106,9 @@ class DB {
         return $this->simpleUpdateById('users', 'token', $token, $id);
     }
 
-    ////////////////////////////////////////
-    //////////////forMessages///////////////
-    ////////////////////////////////////////
+////////////////////////////////////////
+//////////////forMessages///////////////
+////////////////////////////////////////
 
     public function addMessage($user, $message, $messageTo) {
         $query = '
@@ -123,26 +128,23 @@ class DB {
         return $this->getArray($query);
     }
 
+////////////////////////////////////////
+//////////////forMap////////////////////
+////////////////////////////////////////
 
-    ////////////////////////////////////////
-    //////////////forMap////////////////////
-    ////////////////////////////////////////
     public function getMap($id) {
-        return $this->selectWithCondition('Maps', 'ground, plants, trees', 'id', $id)->fetchObject();
+        $query = 'SELECT ground,plants,trees FROM Maps WHERE id=?'
+        return $this->protectQuery($query,[$id])->fetchObject();
     }
 
     public function getUnitsTypes() {
-        $query = '
-                SELECT * 
-                FROM unitsTypes
-            ';
+        $query = 'SELECT * FROM unitsTypes';
         return $this->getArray($query);
     }
 
-
-    ////////////////////////////////////////
-    //////////////forCastles////////////////
-    ////////////////////////////////////////
+////////////////////////////////////////
+//////////////forCastles////////////////
+////////////////////////////////////////
 
     public function addCastle($userId, $castleX, $castleY, $nextRentTime) {
         $query = '
@@ -214,8 +216,8 @@ class DB {
     }
 
     public function getVillage($id) {
-        $query = 'SELECT id, money, population FROM villages WHERE id='.$id;
-        return $this->db->query($query)->fetchObject();
+        $query = 'SELECT id, money, population FROM villages WHERE id=?';
+        return $this->protectQuery($query,[$id])->fetchObject();
     }
 
     public function getVillages() {
@@ -252,11 +254,8 @@ class DB {
     }
 
     public function getUnitTypeData($unitType) {
-        $query = '
-            SELECT cost, hp
-            FROM unitsTypes 
-            WHERE id=' . $unitType;
-        return $this->db->query($query)->fetchObject();
+        $query = 'SELECT cost, hp FROM unitsTypes  WHERE id=?';
+        return $this->protectQuery($query,[$unitType])->fetchObject();
     }
 
     public function getUnitsInCastle($castleId){
@@ -315,11 +314,10 @@ class DB {
     //////////////forGamers/////////////////
     ////////////////////////////////////////
     public function getGamer($userId) {
-        $query = '
-            SELECT id, castleLevel as level, castleX as posX, castleY as posY, money, nextRentTime  
-            FROM gamers 
-            WHERE userId=' . $userId;
-        return $this->db->query($query)->fetchObject();
+        $query = 'SELECT id, castleLevel as level, castleX as posX, castleY as posY, money, nextRentTime  
+                  FROM gamers 
+                  WHERE userId=?';
+        return $this->protectQuery($query,[$userId])->fetchObject();
     }
 
     /* About statuses */
