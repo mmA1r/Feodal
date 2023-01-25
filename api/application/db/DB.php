@@ -133,7 +133,7 @@ class DB {
 ////////////////////////////////////////
 
     public function getMap($id) {
-        $query = 'SELECT ground,plants,trees FROM Maps WHERE id=?'
+        $query = 'SELECT ground,plants,trees FROM Maps WHERE id=?';
         return $this->protectQuery($query,[$id])->fetchObject();
     }
 
@@ -236,6 +236,10 @@ class DB {
 
     public function robVillage($id, $money) {
         return $this->simpleUpdateById('villages', 'money', $money, $id);
+    }
+
+    public function updateVillagePopulations($villageId,$population) {
+        return $this->simpleUpdateById('villages', 'population', $population, $villageId);
     }
 
     public function destroyVillage($id) {

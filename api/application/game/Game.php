@@ -157,6 +157,8 @@
                     $minGold = $village->population * 50;
                     if ($village->money - $minGold >= 50) {
                         $population += 1;
+                    } else {
+                        $population -= 1;
                     }
                     // посчитать новые деньги
                     $money = $village->money + rand(2*$village->population,4*$village->level*$village->population);

@@ -41,7 +41,7 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         }
         this.x = x;
         this.y = y;
-        //this._relocate();
+        this.unit.target = this;
     }
 
     setVisible(visible){

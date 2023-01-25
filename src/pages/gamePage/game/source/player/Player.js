@@ -77,9 +77,8 @@ export default class Player {
     }
 
     removeSelect(obj){
-        if (this.selectedObject = obj) {
-            this.selectedObject = undefined;
-        }
+        this.unselect()
+        obj.selector = undefined;
         this.updateUI();
     }
 

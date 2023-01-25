@@ -84,7 +84,6 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
     }
 
     removeSelect(obj){
-        console.log(this.selector)
         this.targets.remove(obj);
         this.select(this.selector);
         this.selector.removeSelect(obj);
@@ -106,7 +105,6 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
     }
 
     moveTo(obj) {
-        console.log();
         if (obj.type === 'pointer') {
             let x = obj.x;
             let y = obj.y;
@@ -122,6 +120,9 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
             if (length>4 && length<10) n = 2;
             if (length>9 && length<17) n = 3;
             if (length>16 && length<26) n = 4;
+            if (length>25 && length<37) n = 5;
+            if (length>36 && length<50) n = 6;
+            if (length>49 && length<65) n = 7;
                 x -= 30*n;
                 y -= 30*n;
                 minX = x;

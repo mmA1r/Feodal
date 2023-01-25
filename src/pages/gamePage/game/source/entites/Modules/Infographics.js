@@ -1,6 +1,7 @@
 import SelectMarker from "./SelectMarker";
 import Name from "./Name";
 import StatusBar from "./StatusBar";
+import Area from "./Area";
 
 
 export default class Infographics {
@@ -13,7 +14,8 @@ export default class Infographics {
         const newModule = 
         (type === 'name') ? new Name(this) :
         (type === 'selectMarker') ? new SelectMarker(this) :
-        (type === 'statusBar') ? new StatusBar(this) : false;
+        (type === 'statusBar') ? new StatusBar(this) : 
+        (type === 'area') ? new Area(this) : false;
         if (newModule) {
             this.modules.push({
                 name: name,

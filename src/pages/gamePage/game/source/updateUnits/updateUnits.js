@@ -11,8 +11,10 @@ export default function updateUnits(scene) {
             if (scene.updateMyUnitsGroup.getChildren()[0] || scene.updateOtherUnitsGroup.getChildren()[0] || scene.updateVillagesGroup.getChildren()[0]) {
                 let updateMyUnitsGroup = scene.updateMyUnitsGroup.getChildren();
                 let updateOtherUnitsGroup = scene.updateOtherUnitsGroup.getChildren();
+                let updateVillagesGroup = scene.updateVillagesGroup.getChildren();
                 let myUnits = [];
                 let otherUnits = [];
+                let villages = [];
                 
                 let myUnit = updateMyUnitsGroup[0];
                 while (myUnit) {
@@ -38,12 +40,16 @@ export default function updateUnits(scene) {
                     enemyUnit = updateOtherUnitsGroup[0];
                 }
 
-                let villages=scene.updateVillagesGroup.getChildren().map((village) => {
-                    return {
+
+                let village = updateVillagesGroup[0]
+                while(village){
+                    villages.push({
                         id: village.id,
-                        population: village.population
-                    }
-                });
+                        dmg: village.dmg
+                    });
+                    village.postUpdater();
+                    village = updateVillagesGroup[0]
+                }
                 await server.updateUnits({myUnits,otherUnits,villages});
                 /*let deadUnit = scene.deadUnitsGroup.getChildren()[0];
                 while (deadUnit) {

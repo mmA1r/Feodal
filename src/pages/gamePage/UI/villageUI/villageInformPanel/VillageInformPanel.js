@@ -14,6 +14,7 @@ export default function VillageInformPanel() {
     const villageId = useSelector((state) => state.village.id);
     const might = useSelector((state) => state.gamer.might);
     const canBeRobbed = useSelector((state) => state.village.canBeRobbed);
+    const attacked = useSelector((state) => state.village.attacked);
     const store = new StoreLoader()
 
     const server = useSelector((state) => state.server.value);
@@ -26,7 +27,8 @@ export default function VillageInformPanel() {
     }
 
     function attackVillage() {
-        return store.loadToStore({ attacked: true }, 'village');
+        attacked();
+        //return store.loadToStore({ attacked: true }, 'village');
     }
     
     return (

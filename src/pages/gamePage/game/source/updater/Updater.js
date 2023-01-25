@@ -1,5 +1,3 @@
-import { Data } from "phaser";
-
 export default class Updater{
     constructor() {
         this.updateList = [];
@@ -22,7 +20,7 @@ export default class Updater{
     }
 
     remove(obj) {
-        this.updateList = this.updateList.filter(el =>el != obj)
+        this.updateList = this.updateList.filter(el =>el !== obj)
     }
 
     getFPS() {
@@ -38,7 +36,7 @@ export default class Updater{
         const time = new Date() - 0;
         const updateList = this.updateList;
         updateList.forEach(el => {
-            if (el.nextTimeUpdate <= time) {
+            if (el.nextTimeUpdate <= time && el.obj) {
                 el.obj[el.func]();
                 (el.onlyOne) ? this.remove(el) : el.nextTimeUpdate += el.timer;
             }

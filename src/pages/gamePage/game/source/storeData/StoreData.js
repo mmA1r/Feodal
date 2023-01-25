@@ -21,7 +21,6 @@ export default class StoreData {
     loadDataUnitsTypes(){
         const state = store.getState();
         this.scene.dataUnitsTypes = [{hp: 1}, state.soldier, state.assassin];
-        console.log(state);
     }
 
     changeDataStore() {

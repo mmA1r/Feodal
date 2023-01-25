@@ -88,8 +88,8 @@
             $isUpdate = false;
             foreach($villages as $village){
                     $dbVillage=$this->db->getVillage($village->id);
-                    if($dbVillage && $village->population<$dbVillage->population){
-                        $this->db->updateVillagePopulations($village->id, $village->population);
+                    if($dbVillage){
+                        $this->db->updateVillagePopulations($village->id, $dbVillage->population - $village->dmg);
                         $isUpdate = true;
                     }
             }

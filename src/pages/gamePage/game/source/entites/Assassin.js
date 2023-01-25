@@ -1,8 +1,8 @@
 import Unit from "./Unit"
 
 export default class Assassin extends Unit {
-    constructor(scene, unitData) {
-        super(scene, unitData)
+    constructor(scene, player, unitData) {
+        super(scene, player, unitData)
         this.mainTexture = 'assassin';
         this.anims.create({
             key: "move",

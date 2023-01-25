@@ -39,6 +39,7 @@ export default class Entity extends Phaser.GameObjects.Sprite{
         this.scene.physics.add.existing(this, isStatic);
         this.body.isCircle = true;
         this.body.setCircle(this.activeRadius);
+        this.body.onCollide = true;
         this.infographics.getModule('selectMarker').setSize(this.activeRadius*0.8);
     }
 
