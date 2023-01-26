@@ -1,6 +1,7 @@
 import UnitPointer from "./UnitPointer";
 import DestroyCastle from "../destroyCastle/DestroyCastle";
 import Entity from "./Entity";
+import { unit } from "../../../../../store/features/currentUnit/currentUnit";
 
 export default class Castle extends Entity {
     constructor(scene, data) {
@@ -17,12 +18,20 @@ export default class Castle extends Entity {
 
         this.hpBar = this.infographics.getModule('hpBar');
         this.hpBar.setAddXY(0, 60);
-        this.hpBar.setSize(this.activeRadius*0.8+10);
+        this.hpBar.setSize(this.activeRadius * 0.8 + 10);
         this.hpBar.setType('l');
 
         const selectMarker = this.infographics.getModule('selectMarker');
         selectMarker.setAddXY(0, 60);
+        this.infographics.addModule('area', 'area', false);
+        const area = this.infographics.getModule('area');
+        area.stepCallback = this.attack.bind(this);
+        area.speed = 5;
+        area.setSize(450);
+        area.setAddXY(0, 100)
+        area.setColor(0xff0000);
         this.setXY(data.posX * 64, data.posY * 64)
+        area.switchOn();
         this.pointer = new UnitPointer(this);
         this.canAttack = true;
 
@@ -35,18 +44,18 @@ export default class Castle extends Entity {
 
         this.rewriteData(data);
         this.setTexture('castleFirstLevel');
-
+        this.open = true;
         this.ownerName = data.ownerName;
         name.setName(this.ownerName);
 
         this.scene.castlesGroup.add(this);
-        
+
         this.pointer.x = this.x - 400;
         this.pointer.y = this.y + 300;
         this.fullHP = 0;
         this.currentHP = 0;
         this.create(true);
-        this.body.setOffset(0,0);
+        this.body.setOffset(0, 0);
         /*this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
         this.scene.physics.add.existing(this.attackArea, true);
         this.attackArea.body.onCollide = true;
@@ -81,23 +90,27 @@ export default class Castle extends Entity {
     damage(dmg) {
         if (this.units.getChildren()[0]) {
             this.units.getChildren()[0].damage(dmg);
-            if (this.selected) this.updateUI();
+            if (this.selected) this.callbackUI();
         }
         else {
             DestroyCastle(this);
         }
-        this.damaged = true;
-        this.status = "attack";
+        if (!this.damaged) {
+            this.infographics.getModule('area').stepOn();
+            this.infographics.getModule('area').setVisible(true);
+            this.damaged = true;
+            this.status = "attack";
+        }
     }
 
     updateHP() {
         if (!this.damaged) this.fullHP = 0;
         this.currentHP = 0;
         this.units.getChildren().forEach((unit) => {
-            if (!this.damaged) this.fullHP += this.scene.dataUnitsTypes[unit.unitType].hp-0;
+            if (!this.damaged) this.fullHP += this.scene.dataUnitsTypes[unit.unitType].hp - 0;
             this.currentHP += unit.hp;
         });
-        this.hpBar.updateValue(this.currentHP/this.fullHP);
+        this.hpBar.updateValue(this.currentHP / this.fullHP);
     }
 
     updateUI() {
@@ -123,33 +136,11 @@ export default class Castle extends Entity {
     }
 
     attack() {
-        if (this.canAttack) {
-            setTimeout(() => { this.canAttack = true }, 4000);
-            setTimeout(() => {
-                this.attackArea.setVisible(true);
-            }, 2100);
-            setTimeout(() => {
-                this.attackArea.fillColor = 0xff0000;
-                this.attackArea.strokeColor = 0xff0000;
-            }, 3700);
-            setTimeout(() => {
-                this.attackArea.fillColor = 0xffff00;
-                this.attackArea.strokeColor = 0xffff00;
-                this.attackArea.setVisible(false);
-            }, 4300);
-            let i = 0;
-            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
-                i++;
-            })
-            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
-                unit.damage(Math.round(this.units.getChildren().reduce((damage, unit) => damage += unit.atk, 0) / i));
-            })
-            if (i === 0) {
-                this.status = "wait"
-                this.attackArea.setVisible(false);
-            };
-            this.canAttack = false;
-        }
+        const area = this.infographics.getModule('area');
+        const atk = this.units.getChildren().reduce((s, unit) => s + unit.atk, 0);
+        console.log(atk);
+        const i = area.targetsInArea(this.scene.unitsGroup);
+        (i > 0) ? area.AoE(this.scene.unitsGroup,'damage',Math.round(atk/i)) : this.peaceInVillage();
     }
 
     update() {

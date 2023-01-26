@@ -119,7 +119,6 @@ export default class Unit extends Entity {
             this.direction.distance -= this.speed;
             this.setXY(this.nextX, this.nextY);
             if (this.x != this.nextX || this.y != this.nextY) this._getDirection();
-            this.pointer.update();
             if (this.isMine) {
                 this.updateUnits.add(this);
             }
@@ -131,7 +130,7 @@ export default class Unit extends Entity {
         if (this.canAttack && this.target.scene) {
             this.canAttack = false;
             setTimeout(() => { this.canAttack = true }, 2000);
-            this.target.damage(this.atk,this);
+            this.target.damage(this.atk);
         }
         if (!this.target.scene) {
             this.scene.updater.remove(this.moveUpdater);
@@ -146,7 +145,7 @@ export default class Unit extends Entity {
         this.hpBar.updateValue(this.hp / this.scene.dataUnitsTypes[this.unitType].hp);
     }
 
-    damage(dmg,who) {
+    damage(dmg) {
         if (this.scene) {
             if (this.isMine) {
                 this.hp -= dmg;
@@ -157,7 +156,8 @@ export default class Unit extends Entity {
             if (this.hp > 0) this._takeDamage();
             this.updateUnits.add(this);
         }
-        /*if (!this.damaged) {
+        if (this.selected) this.this.callbackUI();
+            /*if (!this.damaged) {
             if (this.status === "inCastle") {
                 this.castle.setTint(0xFF5545);
                 this.castle.damaged = true;
@@ -189,7 +189,6 @@ export default class Unit extends Entity {
     }
 
     select(selector) {
-        console.log(this.id);
         super.select();
         if (this.isMine) this.pointer.setVisible(true);
         this.selector = selector;
@@ -218,6 +217,7 @@ export default class Unit extends Entity {
         if (this.status != "inCastle") {
             this._setUnitStatus('stand');
         }
+        this.target = null;
         if (this.isMine) this.pointer.setVisible(false);
         this.scene.updater.remove(this.moveUpdater);
     }
@@ -313,8 +313,17 @@ export default class Unit extends Entity {
     }
 
     enterCastle() {
-        this.unselect();
-        this._setUnitStatus("inCastle");
+        if (this.castle.open) {
+            this.stopped();
+            this.castle.open = false;
+            this.scene.updater.add(this,new Date()- 0 +500,'openDoor');
+            this.unselect();
+            this._setUnitStatus("inCastle");
+        }
+    }
+
+    openDoor(){
+        this.castle.open = true;
     }
 
     outCastle() {

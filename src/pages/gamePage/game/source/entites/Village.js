@@ -147,8 +147,7 @@ export default class Village extends Entity {
         this.destroy();
     }
 
-    damage(dmg,who) {
-        console.log(who);
+    damage(dmg) {
         if (this.population > 0) {
             this.currentHp -= dmg;
             if (this.currentHp <= 0) {
@@ -226,7 +225,6 @@ export default class Village extends Entity {
 
     attack() {
         const area = this.infographics.getModule('area');
-        area.setColor(0xff0000);
         const i = area.targetsInArea(this.scene.unitsGroup);
         (i > 0) ? area.AoE(this.scene.unitsGroup,'damage',Math.round(this.population*this.level/i)) : this.peaceInVillage();
     }

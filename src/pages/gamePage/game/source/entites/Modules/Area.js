@@ -44,6 +44,11 @@ export default class Area {
         this.border.strokeColor = color;
     }
 
+    setAddXY(dx,dy){
+        this.addX = dx;
+        this.addY = dy;
+    }
+
     switchOn(){
         this.infographics.owner.scene.physics.add.existing(this.area, true);
         this.area.body.onCollide = true;
@@ -52,7 +57,7 @@ export default class Area {
     targetsInArea(targets){
         let i = 0;
         this.infographics.owner.scene.physics.collide(this.area, targets, (area, target) => {
-            i++;
+            if (target.shadow.is) i++;
         })
         return i;
     }
