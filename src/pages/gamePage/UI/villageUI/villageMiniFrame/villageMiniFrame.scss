@@ -2,6 +2,8 @@ $village_frame_1: url('../../../../../assets/UI/villageUI/villageFrameLevel1.png
 $village_frame_2: url('../../../../../assets/UI/villageUI/villageFrameLevel2.png');
 $village_frame_3: url('../../../../../assets/UI/villageUI/villageFrameLevel3.png');
 
+$village-pic: url('../../../../../assets/UI/villageUI/miniatyuroka_derevni.png');
+
 
 .village-mini {
     position: relative;
@@ -10,18 +12,50 @@ $village_frame_3: url('../../../../../assets/UI/villageUI/villageFrameLevel3.png
     height: 120px;
 
     & > .village-mini-frame-1 {
+        position: absolute;
+        top: 0;
+        z-index: 3;
         width: 100%;
         height: 100%;
         background-image: $village_frame_1 ;
     }
     & > .village-mini-frame-2 {
+        position: absolute;
+        top: 0;
+        z-index: 3;
         width: 100%;
         height: 100%;
         background-image: $village_frame_2 ;
     }
     & > .village-mini-frame-3 {
+        position: absolute;
+        top: 0;
+        z-index: 3;
         width: 100%;
         height: 100%;
         background-image: $village_frame_3 ;
+    }
+
+
+    & > .village-mini-picture-1 {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: $village-pic;
+    }
+    & > .village-mini-picture-2 {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: $village-pic;
+    }
+    & > .village-mini-picture-3 {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: $village-pic;
     }
 }

@@ -4,6 +4,8 @@ $enemy-castle-frame_3: url('../../../../../assets/UI/enemyCastleUI/enemyCastleLe
 $enemy-castle-frame_4: url('../../../../../assets/UI/enemyCastleUI/enemyCastleLevel4.png');
 $enemy-castle-frame_5: url('../../../../../assets/UI/enemyCastleUI/enemyCastleLevel5.png');
 
+$castle-mini-pic: url('../../../../../assets/UI/enemyCastleUI/miniCastle.png');
+
 .enemy-castle-mini {
     position: relative;
     box-sizing: border-box;
@@ -34,5 +36,39 @@ $enemy-castle-frame_5: url('../../../../../assets/UI/enemyCastleUI/enemyCastleLe
         width: 100%;
         height: 100%;
         background-image: $enemy-castle-frame_5;
+    }
+
+    & > .enemy-castle-mini-picture-1 {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: $castle-mini-pic;
+    }
+    & > .enemy-castle-mini-picture-2 {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: $castle-mini-pic;
+    }
+    & > .enemy-castle-mini-picture-3 {
+        width: 100%;
+        height: 100%;
+        background-image: $castle-mini-pic;
+    }
+    & > .enemy-castle-mini-picture-4 {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: $castle-mini-pic;
+    }
+    & > .enemy-castle-mini-picture-5 {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: $castle-mini-pic;
     }
 }
