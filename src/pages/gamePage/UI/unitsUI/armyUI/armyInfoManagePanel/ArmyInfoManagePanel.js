@@ -19,9 +19,6 @@ export default function ArmyInfoManagePanel() {
     const currentHpSoldiers = useSelector((state) => state.currentArmy.soldiers.currentHp);
     const currentHpAssassins = useSelector((state) => state.currentArmy.assassins.currentHp);
 
-    console.log(currentHpAssassins, '||', currentHpSoldiers);
-
-
     const totalArmyHp = fullHpSoldiers + fullHpAssassins;
     const currentArmyHp = currentHpSoldiers + currentHpAssassins;
 

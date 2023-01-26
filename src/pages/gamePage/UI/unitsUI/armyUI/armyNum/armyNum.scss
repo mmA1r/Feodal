@@ -35,7 +35,8 @@ $army-total-num: url('../../../../../../assets/UI/army/totalArmyNum.png');
         color: white;
         font-size: 13px;
         & > .army-number {
-            padding-left: 60px;
+            position: absolute;
+            right: 10px;
         }
     }
     & > .assassins-num {
@@ -44,7 +45,8 @@ $army-total-num: url('../../../../../../assets/UI/army/totalArmyNum.png');
         color: white;
         font-size: 13px;
         & > .army-number {
-            padding-left: 60px;
+            position: absolute;
+            right: 10px;
         }
     }
 }
