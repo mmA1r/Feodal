@@ -7,6 +7,7 @@ import WithdrawAllButton from './withdrawAllButton/withdrawAllButton';
 import CloseWindow from './closeWindow/CloseWindow';
 
 import './chooseUnitWindow.scss';
+import store from '../../../../../store/store';
 
 export default function ChooseUnitWindow() {
 
@@ -58,11 +59,13 @@ export default function ChooseUnitWindow() {
             }, 'changeUnitsStatus');
         }
         closeUnitsInterface();
+        store.getState().changeStoreFlag.function();
     }
 
     function withdrawAllUnits() {
         storeLoader.loadToStore('outOfCastle', 'outOfCastle');
         closeUnitsInterface();
+        store.getState().changeStoreFlag.function();
     }
 
     return (

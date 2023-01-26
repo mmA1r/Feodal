@@ -89,7 +89,9 @@ export default function GamePage() {
             <div className="mini-map-window">
                 <button
                     className="castle-manage-button"
-                    onClick={() => openInterface()}
+                    onClick={() => {
+                        openInterface();
+                        store.getState().changeStoreFlag.function()}}
                     onMouseEnter={(e) => showHint(e)}
                     onMouseLeave={() => hideHint()}
                 >

@@ -14,17 +14,21 @@ export default function VillageInformPanel() {
     const villageId = useSelector((state) => state.village.id);
     const might = useSelector((state) => state.gamer.might);
     const canBeRobbed = useSelector((state) => state.village.canBeRobbed);
+    const attacked = useSelector((state) => state.village.attacked);
     const store = new StoreLoader()
 
     const server = useSelector((state) => state.server.value);
 
     async function robVillage() {
-        const money = (await server.robVillage(villageId)).money-0;
-        store.loadToStore({ money: money }, 'gamer');
+        if (canBeRobbed()){
+            const money = (await server.robVillage(villageId)).money-0;
+            store.loadToStore({ money: money }, 'gamer');
+        }
     }
 
     function attackVillage() {
-        return store.loadToStore({ attacked: true }, 'village');
+        attacked();
+        //return store.loadToStore({ attacked: true }, 'village');
     }
     
     return (

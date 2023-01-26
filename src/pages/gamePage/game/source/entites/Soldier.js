@@ -1,8 +1,9 @@
 import Unit from "./Unit"
 
 export default class Soldier extends Unit {
-    constructor(scene, unitData) {
-        super(scene, unitData)
+    constructor(scene, data) {
+        super(scene, data);
+        this.mainTexture = 'soldier';
         this.anims.create({
             key: "move",
             frames: [{
@@ -23,6 +24,9 @@ export default class Soldier extends Unit {
             duration: 240,
             repeat: -1
         });
+        this.mainTexture = 'soldier';
+        this.create(data);
+        this.setDisplaySize(40, 70);
     }
 
     damageFrameOn() {
@@ -46,5 +50,9 @@ export default class Soldier extends Unit {
         if (this && this.status !== "move") {
             this.setFrame("soldierStand");
         }
+    }
+
+    killed() {
+        super.killed();
     }
 }

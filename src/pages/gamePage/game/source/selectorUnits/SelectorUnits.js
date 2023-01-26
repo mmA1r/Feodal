@@ -59,12 +59,6 @@ export default function SelectorUnits(scene) {
                 if (scene.selectedUnits.getLength() > 1) {
 
                     (scene.selectorUnits.isMine) ? scene.store.loadToStore('army', 'ui') : scene.store.loadToStore('enemyArmy', 'ui');
-                    /*let soldiers = {
-                        fullHp: scene.selectedUnits.getLength()*100,
-                        currentHp: scene.selectedUnits.getChildren().reduce((sumHp,unit)=> sumHp+unit.hp, 0),
-                        num: scene.selectedUnits.getLength()
-                    }
-                    scene.store.loadToStore({soldiers: soldiers}, 'currentArmy')*/
                 }
                 if (scene.selectedUnits.getLength() === 1) scene.selectedUnits.getChildren()[0].select();
             }, 100);

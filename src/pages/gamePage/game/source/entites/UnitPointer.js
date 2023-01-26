@@ -2,18 +2,24 @@ import Phaser from "phaser";
 
 export default class UnitPointer extends Phaser.GameObjects.Arc {
     constructor(unit) {
-        super(unit.scene, unit.x, unit.y, 10, 0, 360, false, 2132, 0.5);
+        super(unit.scene, unit.x, unit.y, 7);
+        
+        this.isStroked = true;
+        this.strokeColor = 0x101010;
+        this.lineWidth = 2;
+        this.setVisible(false);
+        this.scaleX = 1.5;
         this.setVisible(false);
         this.id = unit.id;
         this.unit = unit;
         this.type = "pointer";
-        this.activeRadius = 10;
+        this.activeRadius = 1;
         this.addedToScene();
         this.addToDisplayList();
         this.isFilled = false;
         this.isStroked = true;
         this.lineWidth = 2;
-    }
+        }
 
     _relocate() {
         let i = 0;
@@ -35,6 +41,12 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
         }
         this.x = x;
         this.y = y;
-        this._relocate();
+        this.unit.target = this;
     }
+
+    setVisible(visible){
+            super.setVisible(visible);
+            this.scene.player.pointer.setVisible(visible);
+    }
+
 }

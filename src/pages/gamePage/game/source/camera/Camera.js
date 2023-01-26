@@ -39,12 +39,14 @@ export default function Camera(scene) {
     //Начальная настройка камеры
     camera.viewScreenUpdate();
     camera.setBounds(0, 0, Scene.map.widthInPixels, Scene.map.heightInPixels);
+    let update = {};
 
     camera.move = function () {
             let x = camera.dX*camera.scrollSpeed+camera.midPoint.x;
             let y = camera.dY*camera.scrollSpeed+camera.midPoint.y
             camera.centerOn(x,y);
             camera.viewScreenUpdate();
+            if (camera.isMoved) scene.updater.remove(update);
     };
 
     //Зум камеры
@@ -57,8 +59,8 @@ export default function Camera(scene) {
     });
 
     window.addEventListener('mousemove',(pointer) =>{
-        camera.isMoved = false;
         if(pointer.clientX<15 || pointer.clientX>camera.width-15 ||pointer.clientY<15||pointer.clientY>camera.height-15){
+            if (!camera.isMoved) camera.moveUpdater = scene.updater.add(camera, new Date() - 0,'move',false)
             let coef = camera.width/camera.height;
             const dist = Phaser.Math.Distance.Between(pointer.clientX/coef,pointer.clientY,camera.centerX/coef,camera.centerY);
             let dx = (pointer.clientX/coef - camera.centerX/coef)/dist;
@@ -67,16 +69,21 @@ export default function Camera(scene) {
             camera.dY = dy;
             camera.isMoved = true;
         }
+        else {
+            camera.isMoved = false;
+            scene.updater.remove(camera.moveUpdater);
+        }
     })
 
     Scene.input.on('gameout',()=>{
         camera.isMoved = false;
+        scene.updater.remove(camera.moveUpdater);
     });
 
     //Движение камеры по карте с помощью CTRL
 
     Scene.input.on('pointermove', (pointer) => {
-        if (pointer.isDown && pointer.button === 0 && Scene.CTRL) {
+        if (pointer.isDown && pointer.button === 1) {
             camera.centerOn(camera.midPoint.x - pointer.event.movementX / camera.zoom, camera.midPoint.y - pointer.event.movementY / camera.zoom);
             camera.viewScreenUpdate();
         }

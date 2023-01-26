@@ -1,18 +1,40 @@
-import Phaser from "phaser";
 import DestroyVillage from "../destroyVillage/DestroyVillage";
+import Entity from "./Entity";
 
-export default class Village extends Phaser.GameObjects.Sprite {
-    constructor(scene, serverData) {
-        super(scene);
-        this.x = Math.round(serverData.posX * 64);
-        this.y = Math.round(serverData.posY * 64);
-        this.depth = 1;
-        this.activeRadius = 40000;
-        this.id = serverData.id;
-        this.level = serverData.level - 0;
+export default class Village extends Entity {
+    constructor(scene, data) {
+        super(scene, {
+            type: 'village',
+            activeRadius: 130,
+        });
+        this.isNeutral = true;
+
+        this.id = data.id - 0;
+        this.level = data.level - 0;
+        this.name = data.name;
+        const selectMarker = this.infographics.getModule('selectMarker');
+        selectMarker.setColor(0x0000ff);
+        this.infographics.addModule('name', 'name', false);
+        const name = this.infographics.getModule('name');
+        name.setAddXY(60, 70);
+        name.setName(this.name);
+        this.infographics.addModule('statusBar', 'resistLevel');
+        const resistLevel = this.infographics.getModule('resistLevel');
+        //resistLevel.setAddXY(0, 0);
+        resistLevel.setSize(this.activeRadius * 0.8 + 12);
+        resistLevel.setType('m');
+        resistLevel.setColor(0xff0000);
+        this.infographics.addModule('area', 'area', false);
+        const area = this.infographics.getModule('area');
+        area.stepCallback = this.attack.bind(this);
+        area.setSize(300);
+        area.setColor(0xffba00);
+        this.setXY(Math.round(data.posX * 64), Math.round(data.posY * 64));
+        area.switchOn();
         this.scene.villagesGroup.add(this);
         this.damageTexture = 0;
-        this.canBeRobbed = false;
+        this.canBeRobbed = this.canBeRobbed.bind(this);
+        this.attacked = this.attacked.bind(this);
         switch (this.level) {
             case 1:
                 this.setTexture('villageFirstLevel');
@@ -71,77 +93,25 @@ export default class Village extends Phaser.GameObjects.Sprite {
                 });
                 this.anims.play("mill", true)
                 break;
-
         }
-        this.resistBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0xff0000);
-        this.resistBar.depth = 99999991;
-        this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
-        this.acceptBar.depth = 99999992;
 
-        this.selector = this.scene.add.ellipse(this.x - 10, this.y + 45, 250, 170);
-        this.selector.isStroked = true;
-        this.selector.strokeColor = 0x00FF00;
-        this.selector.lineWidth = 2;
-        this.selector.setVisible(false);
-
-        this.rewriteData(serverData);
-        this.addedToScene();
-        this.addToDisplayList();
-        this.setInteractive();
-        this.selected = false;
-        this.type = 'village';
-        this.scene.physics.add.existing(this, true);
-        this.body.isCircle = true;
-        this.name = this.scene.add.text(this.x, this.y + 130, serverData.name, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
-        this.name.depth = 10000000;
-        this.name.style.setFontSize(30);
-        this.name.style.setAlign('center')
-        this.name.scrollFactorX = 1;
-        this.name.scrollFactorY = 1;
-        this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
-        this.scene.physics.add.existing(this.attackArea, true);
-        this.attackArea.body.onCollide = true;
-        this.attackArea.isStroked = true;
-        this.attackArea.strokeColor = 0xffff00;
-        this.attackArea.lineWidth = 2;
-        this.attackArea.setVisible(false);
-        this.canAttack = true;
-        this.status = "wait"
+        this.rewriteData(data);
         this.damaged = false;
-    }
-
-    select() {
-        this.selector.setVisible(true);
-        this.selected = true;
-        this.scene.selectedObject = this;
-        this.scene.store.loadToStore('village', 'ui');
-        this._updateUI();
+        this.create(true);
     }
 
     openUI() {
         this.scene.store.loadToStore('village', 'ui');
-        this._updateUI();
-    }
-
-    attackOnVillage() {
-        this.type = "enemyVillage";
-        this.selector.strokeColor = 0xFF0000;
+        this.callbackUI();
     }
 
     peaceInVillage() {
-        if (this.status === "wait") {
-            this.type = "village";
-            this.selector.strokeColor = 0x00FF00;
-        }
-    }
-
-
-
-    unSelect() {
-        this.selected = false;
-        this.selector.setVisible(false);
-        this.scene.selectedObject = null;
-        this.scene.store.loadToStore('hide', 'ui');
+        const area = this.infographics.getModule('area');
+        area.stepOff();
+        this.damaged = false;
+        area.setVisible(false);
+        this.isNeutral = true;
+        this.infographics.getModule('selectMarker').setColor(0xffff00);
     }
 
     rewriteData(serverData) {
@@ -149,31 +119,27 @@ export default class Village extends Phaser.GameObjects.Sprite {
         this.level = serverData.level - 0;
         this.population = serverData.population - 0;
         this.updateResistLevel();
+        this.isUpdated = true;
     }
 
     updateResistLevel() {
         const resistLevel = this.scene.player.might / this.population;
+        const bar = this.infographics.getModule('resistLevel');
         if (resistLevel >= 1) {
-            this.acceptBar.setVisible(false);
-            this.resistBar.setVisible(false);
-            this.peaceInVillage();
+            if (!this.damaged) this.peaceInVillage();
+            bar.updateValue(1-1/resistLevel);
+            bar.setColor(0xffff00);
         }
         else {
-            this.attackOnVillage();
-            this.acceptBar.setVisible(true);
-            this.resistBar.setVisible(true);
-            this.acceptBar.width = (200 * resistLevel);
+            if (!this.damaged) this.attacked();
+            bar.setColor(0xff0000);
+            bar.updateValue(1 - resistLevel);
         }
     }
 
     killed() {
-        this.resistBar.destroy();
-        this.acceptBar.destroy();
-        this.selector.destroy();
-        this.attackArea.destroy();
-        this.name.destroy();
-        this.unSelect();
         this.scene.villagesGroup.remove(this);
+        super.killed();
         this.destroy();
     }
 
@@ -182,12 +148,18 @@ export default class Village extends Phaser.GameObjects.Sprite {
             this.currentHp -= dmg;
             if (this.currentHp <= 0) {
                 this.currentHp = 50;
-                this.population--;
+                this.dmg++;
                 this.scene.updateVillagesGroup.add(this);
             }
-            if (this.selected) this._updateUI();
+            if (!this.damaged) {
+                this.infographics.getModule('area').stepOn();
+                this.infographics.getModule('area').setVisible(true);
+                this.damaged = true;
+            }
+            if (this.selected) this.callbackUI();
         }
-        this.status = "attack";
+
+        /*this.status = "attack";
         if (this.damaged === false) {
             this.damaged = true;
             if (this.level === 2) {
@@ -207,61 +179,48 @@ export default class Village extends Phaser.GameObjects.Sprite {
 
                 this.damaged = false;
             }, 40);
-        }
+        }*/
 
         if (this.population <= 0) {
             DestroyVillage(this);
         }
     }
 
-    _updateUI() {
-        if (this.selected) {
+    canBeRobbed(){
+        let i = this.infographics.getModule('area').targetsInArea(this.scene.player.units);
+        return (i > 0 ) ? true : false;
+    }
+
+    attacked(){
+        this.isNeutral = false;
+        this.updateUI();
+        this.infographics.getModule('selectMarker').setColor(0xff0000);
+    }
+
+    postUpdater() {
+            this.scene.updateVillagesGroup.remove(this);
+            this.dmg = 0;
+    }
+
+    updateUI() {
+        if (this.selected){
             let village = {
                 currentHp: this.currentHp,
                 fullHp: 50,
                 population: this.population,
                 villageLevel: this.level,
                 id: this.id,
-                canBeRobbed: this.canBeRobbed
+                canBeRobbed: this.canBeRobbed,
+                attacked: this.attacked
             }
             this.scene.store.loadToStore(village, 'village');
+            return 'village';
         }
     }
 
     attack() {
-        if (this.canAttack) {
-            setTimeout(() => { this.canAttack = true }, 4000);
-            setTimeout(() => {
-                this.attackArea.setVisible(true);
-            }, 2100);
-            setTimeout(() => {
-                this.attackArea.fillColor = 0xff0000;
-                this.attackArea.strokeColor = 0xff0000;
-            }, 3700);
-            setTimeout(() => {
-                this.attackArea.fillColor = 0xffff00;
-                this.attackArea.strokeColor = 0xffff00;
-                this.attackArea.setVisible(false);
-            }, 4300);
-            let i = 0;
-            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
-                i++;
-            })
-            this.scene.physics.collide(this.attackArea, this.scene.unitsGroup, (area, unit) => {
-                unit.damage(Math.round(this.population / i));
-            })
-            if (i === 0) {
-                this.status = "wait";
-                setTimeout(this.peaceInVillage,400);
-                this.attackArea.setVisible(false);
-            };
-            this.canAttack = false;
-        }
-    }
-
-    update() {
-        if (this.status === "attack") {
-            this.attack();
-        }
+        const area = this.infographics.getModule('area');
+        const i = area.targetsInArea(this.scene.unitsGroup);
+        (i > 0) ? area.AoE(this.scene.unitsGroup,'damage',Math.round(this.population*this.level/i)) : this.peaceInVillage();
     }
 }

@@ -1,0 +1,49 @@
+{
+    "frames": [
+        {
+            "filename": "assassinStand",
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 128,
+                "h": 128
+            }
+        },
+        {
+            "filename": "assassinMove1",
+            "frame": {
+                "x": 128,
+                "y": 0,
+                "w": 192,
+                "h": 128
+            }
+        },
+        {
+            "filename": "assassinMove2",
+            "frame": {
+                "x": 320,
+                "y": 0,
+                "w": 192,
+                "h": 128
+            }
+        },
+        {
+            "filename": "assassinMove3",
+            "frame": {
+                "x": 512,
+                "y": 0,
+                "w": 192,
+                "h": 128
+            }
+        },
+        {
+            "filename": "assassinMove4",
+            "frame": {
+                "x": 704,
+                "y": 0,
+                "w": 192,
+                "h": 128
+            }
+        }
+    ]
+}

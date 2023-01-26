@@ -1,16 +1,15 @@
 import Phaser from "phaser";
-import EventsOn from '../source/methods/EventsOn'
 import uploadSources from '../source/methods/uploadSource'
 import Camera from '../source/camera/Camera'
 import getScene from '../source/getScene/getScene'
-import AutoUpdater from "../source/autoUpdater/autoUpdater";
 import Physics from "../source/physics/Physics";
 import Trees from "../source/trees/Trees";
-import SelectorUnits from "../source/selectorUnits/SelectorUnits";
 import StoreLoader from "../../../../store/StoreLoader";
 import StoreData from "../source/storeData/StoreData";
 import Player from "../source/player/Player";
 import updateUnits from "../source/updateUnits/updateUnits";
+import Updater from "../source/updater/Updater";
+import store from '../../../../store/store';
 
 
 export default class WorldScene extends Phaser.Scene {
@@ -26,8 +25,8 @@ export default class WorldScene extends Phaser.Scene {
         this.villagesGroup = this.add.group();
         this.selectedUnits = this.add.group();
         this.treesGroup = this.add.group();
-        this.unitsInCastleGroup = this.add.group();
-        this.player = new Player(this);
+        this.updates = this.add.group();
+        this.dataUnitsTypes = [];
     }
 
     async create() {
@@ -47,28 +46,21 @@ export default class WorldScene extends Phaser.Scene {
             tile.setVisible(false);
         });
         Trees(this);
-        SelectorUnits(this);
-        EventsOn(this);
-        Camera(this);
         Physics(this);
+        Camera(this);
+        this.updater = new Updater();
+        this.player = new Player(this);
         this.updateUnits = updateUnits(this);
-        this.getScene = getScene(this);
-        this.StoreData = StoreData(this);
+        this.StoreData = new StoreData(this);
+        this.server = store.getState().server.value;
+        this.StoreData.loadDataUnitsTypes();
+        setTimeout(()=> {
+            this.getScene = getScene(this);
+        }, 500);
     }
 
 
-    async update() {
-        this.unitsGroup.getChildren().forEach((el) => {
-            if (el.status != "inCastle") el.update();
-        });
-        this.villagesGroup.getChildren().forEach((el) => {
-            el.update();
-        });
-        this.castlesGroup.getChildren().forEach((el) => {
-            el.update();
-        });
-        if (this.cameras.main.isMoved) {
-            this.cameras.main.move();
-        }
+    update() {
+        this.updater.update();
     }
 }

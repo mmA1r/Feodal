@@ -5,13 +5,13 @@ export default async function getCastle(player) {
     const server = store.getState().server.value;
     const data = await server.getCastle();
     if (data) {
-        console.log(data);
-        player.id = data.id;
-        player.money = data.money;
-        player.scene.store.loadToStore({ money: data.money-0 },'gamer');
-        player.scene.store.loadToStore({ level: data.level-0 },'gamer');
-        player.scene.store.loadToStore({castleUpdateCost:data.castleUpgradeCost-0},'gamer');
-        player.scene.store.loadToStore({nextRentTime:Math.round((data.nextRentTime-0) - Date.now()/1000)},'gamer');
-        player.scene.cameras.main.centerOn(data.posX * 64, data.posY * 64);
+        player.id = data.id - 0;
+        player.money = data.money - 0;
+        const time = Math.round(data.nextRentTime*1000);
+        player.scene.store.loadToStore({ money: data.money - 0 }, 'gamer');
+        player.scene.store.loadToStore({ level: data.level - 0 }, 'gamer');
+        player.scene.store.loadToStore({ castleUpdateCost: data.castleUpgradeCost - 0 }, 'gamer');
+        player.scene.store.loadToStore({ nextRentTime: Math.round(data.nextRentTime*1000)}, 'gamer');
+        player.getCastle = player.scene.updater.add(player, time+500, 'rent', true);
     }
 }

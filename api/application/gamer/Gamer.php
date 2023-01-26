@@ -15,12 +15,11 @@
 
         public function upgradeCastle($gamer) {
             if ($gamer->level < 5) {
-                $cost = $this->getCastleLevelCost($gamer->level);
-                if ($gamer->money >= $cost) {
+                $money = $gamer->money - $this->getCastleLevelCost($gamer->level);
+                if ($money >= 0) {
                     $this->db->castleLevelUp($gamer->id);
-                    $this->db->updateMoney($gamer->id, -$cost);
-                    $hash = md5(rand());
-                    $this->db->setMapHash($hash);
+                    $this->db->updateMoney($gamer->id, $money);
+                    $this->db->setMapHash(md5(rand()));
                     return array (
                         'money'=>$this->db->getMoney($gamer->id),
                         'castleUpgradeCost'=> $this->getCastleLevelCost($gamer->level+1)
@@ -31,11 +30,11 @@
 
         public function buyUnit($gamer, $unitType) {
             $unitTypeData = $this->db->getUnitTypeData($unitType);
-            if ($gamer->money >= $unitTypeData->cost) {
+            $money = $gamer->money - $unitTypeData->cost;
+            if ($money >= 0) {
                 $this->db->addUnit($gamer->id, $unitType, $unitTypeData->hp, $gamer->posX, $gamer->posY);
-                $this->db->updateMoney($gamer->id, -$unitTypeData->cost);
-                $hash = md5(rand());
-                $this->db->setUnitsHash($hash);
+                $this->db->updateMoney($gamer->id, $money);
+                $this->db->setUnitsHash(md5(rand()));
                 return array (
                     'money'=>$this->db->getMoney($gamer->id)
                 );
@@ -52,13 +51,6 @@
             if ($villages) {
                 $this->damageVillages($villages);
             }
-            $statuses = $this->db->getStatuses();
-            $time = microtime(true);
-            $this->db->deadUnits();
-            if ($time - $statuses->mapTimeStamp >= 0.15) {
-                $this->db->setMapTimeStamp($time);
-                return $time;
-            }
         }
 
         private function updateGamerUnits($gamer,$myUnits){
@@ -72,6 +64,7 @@
                 }
             }  
             if ($isUpdate) {
+                $this->db->deadUnits();
                 $this->db->setUnitsHash(md5(rand()));
             }
         }
@@ -80,12 +73,13 @@
             $isUpdate = false;
             foreach ($otherUnits as $otherUnit){
                     $dbUnit = $this->db->getUnit($otherUnit->id);
-                    if ($dbUnit && $otherUnit->hp<$dbUnit->hp){
-                        $this->db->updateUnitHP($otherUnit->id ,$otherUnit->hp);
+                    if ($dbUnit && $otherUnit->dmg > 0){
+                        $this->db->updateUnitHP($otherUnit->id ,$dbUnit->hp - $otherUnit->dmg);
                         $isUpdate = true;
                     }
             }
             if ($isUpdate) {
+                $this->db->deadUnits();
                 $this->db->setUnitsHash(md5(rand()));
             }
         }
@@ -94,8 +88,8 @@
             $isUpdate = false;
             foreach($villages as $village){
                     $dbVillage=$this->db->getVillage($village->id);
-                    if($dbVillage && $village->population<$dbVillage->population){
-                        $this->db->updateVillagePopulations($village->id, $village->population);
+                    if($dbVillage){
+                        $this->db->updateVillagePopulations($village->id, $dbVillage->population - $village->dmg);
                         $isUpdate = true;
                     }
             }

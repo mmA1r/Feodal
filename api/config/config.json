@@ -6,8 +6,9 @@
 	"user": "root",
 	"password":""
 	},
-	"Game": {
+"Game": {
 		"intervalUpdateVillage": 15,
-		"intervalRentMinutes": 60
+		"intervalRentMinutes": 12,
+		"intervalFirstRentMinutes": 30 
 	}
 }
