@@ -46,7 +46,7 @@ export default class UnitPointer extends Phaser.GameObjects.Arc {
 
     setVisible(visible){
             super.setVisible(visible);
-            //this.scene.player.pointer.setVisible(visible);
+            this.scene.player.pointer.setVisible(visible);
     }
 
 }

@@ -208,7 +208,6 @@ export default class Village extends Entity {
 
     updateUI() {
         if (this.selected){
-            console.log(123);
             let village = {
                 currentHp: this.currentHp,
                 fullHp: 50,

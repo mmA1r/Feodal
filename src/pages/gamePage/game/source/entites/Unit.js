@@ -269,9 +269,7 @@ export default class Unit extends Entity {
 
     _intoCastle() {
         if (this.selected) this.unselect()
-        this.castle.units.add(this);
-        this.castle.updateUI();
-        if (this.scene.player.selectedObject.is) this.scene.player.updateUI();
+        this.castle.enterInside(this);
         this._removeScene();
     }
 
@@ -286,6 +284,7 @@ export default class Unit extends Entity {
             if (status === "inCastle") {
                 this.status = status;
                 this._intoCastle();
+                this.stopped();
                 this.anims.stop();
             }
             else {
@@ -314,17 +313,11 @@ export default class Unit extends Entity {
 
     enterCastle() {
         if (this.castle.open) {
-            this.stopped();
-            this.castle.open = false;
-            this.scene.updater.add(this,new Date()- 0 +500,'openDoor');
-            this.unselect();
             this._setUnitStatus("inCastle");
         }
     }
 
-    openDoor(){
-        this.castle.open = true;
-    }
+
 
     outCastle() {
         this._setUnitStatus('stand');

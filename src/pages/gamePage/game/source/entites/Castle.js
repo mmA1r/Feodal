@@ -87,6 +87,18 @@ export default class Castle extends Entity {
         this.isUpdated = true;
     }
 
+    openDoor(){
+        this.open = true;
+    }
+
+    enterInside(unit){
+        this.open = false;
+        this.updateHP();
+        if (this.selected) this.callbackUI();
+        this.units.add(unit)
+        this.scene.updater.add(this,new Date()- 0 +500,'openDoor');
+    }
+
     damage(dmg) {
         if (this.units.getChildren()[0]) {
             this.units.getChildren()[0].damage(dmg);
@@ -138,7 +150,6 @@ export default class Castle extends Entity {
     attack() {
         const area = this.infographics.getModule('area');
         const atk = this.units.getChildren().reduce((s, unit) => s + unit.atk, 0);
-        console.log(atk);
         const i = area.targetsInArea(this.scene.unitsGroup);
         (i > 0) ? area.AoE(this.scene.unitsGroup,'damage',Math.round(atk/i)) : this.peaceInVillage();
     }

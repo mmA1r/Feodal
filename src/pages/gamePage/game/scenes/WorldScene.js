@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import EventsOn from '../source/methods/EventsOn'
 import uploadSources from '../source/methods/uploadSource'
 import Camera from '../source/camera/Camera'
 import getScene from '../source/getScene/getScene'
@@ -47,7 +46,6 @@ export default class WorldScene extends Phaser.Scene {
             tile.setVisible(false);
         });
         Trees(this);
-        EventsOn(this);
         Physics(this);
         Camera(this);
         this.updater = new Updater();
