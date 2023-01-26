@@ -259,6 +259,7 @@ export default class Unit extends Entity {
     killed() {
         this.stopped();
         this.unselect();
+        this.callbackUI();
         if (this.scene.player.selectedObject) this.scene.player.updateUI();
         this.body.enable = false;
         this.pointer.destroy();
