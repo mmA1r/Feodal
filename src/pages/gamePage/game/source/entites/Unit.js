@@ -74,6 +74,7 @@ export default class Unit extends Entity {
     }
 
     _removeScene() {
+        this.unselect();
         this.setVisible(false);
         this.body.enable = false;
         this.removedFromScene();
@@ -149,6 +150,7 @@ export default class Unit extends Entity {
         if (this.scene) {
             if (this.isMine) {
                 this.hp -= dmg;
+                if (this.hp<0) this._removeScene();
             }
             else {
                 this.sumDmg += dmg;
@@ -156,7 +158,7 @@ export default class Unit extends Entity {
             if (this.hp > 0) this._takeDamage();
             this.updateUnits.add(this);
         }
-        if (this.selected) this.this.callbackUI();
+        if (this.selected) this.callbackUI();
             /*if (!this.damaged) {
             if (this.status === "inCastle") {
                 this.castle.setTint(0xFF5545);
@@ -257,6 +259,7 @@ export default class Unit extends Entity {
     killed() {
         this.stopped();
         if (this.scene.player.selectedObject) this.scene.player.updateUI();
+        this.body.enable = false;
         this.pointer.destroy();
         this.scene.unitsGroup.remove(this);
         if (this.isMine) {

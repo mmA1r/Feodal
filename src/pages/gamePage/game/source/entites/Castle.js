@@ -13,7 +13,6 @@ export default class Castle extends Entity {
         this.infographics.addModule('statusBar', 'hpBar');
         const name = this.infographics.getModule('name');
         name.setAddXY(120, 130);
-
         this.units = this.scene.add.group();
 
         this.hpBar = this.infographics.getModule('hpBar');
@@ -56,6 +55,7 @@ export default class Castle extends Entity {
         this.currentHP = 0;
         this.create(true);
         this.body.setOffset(0, 0);
+        this.updateHP();
         /*this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
         this.scene.physics.add.existing(this.attackArea, true);
         this.attackArea.body.onCollide = true;

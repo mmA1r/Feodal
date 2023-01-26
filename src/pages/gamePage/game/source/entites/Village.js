@@ -18,6 +18,12 @@ export default class Village extends Entity {
         const name = this.infographics.getModule('name');
         name.setAddXY(60, 70);
         name.setName(this.name);
+        this.infographics.addModule('statusBar', 'resistLevel');
+        const resistLevel = this.infographics.getModule('resistLevel');
+        //resistLevel.setAddXY(0, 0);
+        resistLevel.setSize(this.activeRadius * 0.8 + 12);
+        resistLevel.setType('m');
+        resistLevel.setColor(0xff0000);
         this.infographics.addModule('area', 'area', false);
         const area = this.infographics.getModule('area');
         area.stepCallback = this.attack.bind(this);
@@ -87,12 +93,7 @@ export default class Village extends Entity {
                 });
                 this.anims.play("mill", true)
                 break;
-
         }
-        this.resistBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0xff0000);
-        this.resistBar.depth = 99999991;
-        this.acceptBar = this.scene.add.rectangle(this.x, this.y - 120, 200, 20, 0x00ff00);
-        this.acceptBar.depth = 99999992;
 
         this.rewriteData(data);
         this.damaged = false;
@@ -101,11 +102,7 @@ export default class Village extends Entity {
 
     openUI() {
         this.scene.store.loadToStore('village', 'ui');
-        this.updateUI();
-    }
-
-    attackOnVillage() {
-        //this.isNeutral = false;
+        this.callbackUI();
     }
 
     peaceInVillage() {
@@ -127,21 +124,20 @@ export default class Village extends Entity {
 
     updateResistLevel() {
         const resistLevel = this.scene.player.might / this.population;
+        const bar = this.infographics.getModule('resistLevel');
         if (resistLevel >= 1) {
-            this.acceptBar.setVisible(false);
-            this.resistBar.setVisible(false);
+            if (!this.damaged) this.peaceInVillage();
+            bar.updateValue(1-1/resistLevel);
+            bar.setColor(0x0000ff);
         }
         else {
-            this.attackOnVillage();
-            this.acceptBar.setVisible(true);
-            this.resistBar.setVisible(true);
-            this.acceptBar.width = (200 * resistLevel);
+            if (!this.damaged) this.attacked();
+            bar.setColor(0xff0000);
+            bar.updateValue(1 - resistLevel);
         }
     }
 
     killed() {
-        this.resistBar.destroy();
-        this.acceptBar.destroy();
         this.scene.villagesGroup.remove(this);
         super.killed();
         this.destroy();
@@ -155,12 +151,12 @@ export default class Village extends Entity {
                 this.dmg++;
                 this.scene.updateVillagesGroup.add(this);
             }
-            if (this.selected) this.updateUI();
             if (!this.damaged) {
                 this.infographics.getModule('area').stepOn();
                 this.infographics.getModule('area').setVisible(true);
                 this.damaged = true;
             }
+            if (this.selected) this.callbackUI();
         }
 
         /*this.status = "attack";
