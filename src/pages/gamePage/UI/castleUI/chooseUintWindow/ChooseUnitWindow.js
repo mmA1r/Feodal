@@ -30,6 +30,9 @@ export default function ChooseUnitWindow() {
         const soldiersDamaged = document.getElementsByClassName('soldier-damaged')[0]?.value;
         const fullAssassins = document.getElementsByClassName('assassin-full')[0]?.value;
         const AssassinsDamaged = document.getElementsByClassName('assassin-damaged')[0]?.value;
+
+        console.log(AssassinsDamaged, soldiersDamaged);
+
         if(fullSoldiers-0 >= 0) {
             fullHpSoldiers = fullSoldiers-0;
         } 
@@ -40,7 +43,7 @@ export default function ChooseUnitWindow() {
             fullHpAssassins = fullAssassins-0;
         } 
         if(AssassinsDamaged-0 >= 0) {
-            damagedAssassins = soldiersDamaged-0;
+            damagedAssassins = AssassinsDamaged-0;
         }
         if(fullHpSoldiers || damagedSoldiers) {
             storeLoader.loadToStore({
