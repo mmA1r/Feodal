@@ -29,8 +29,8 @@ export default class StatusBar {
 
     setSide(side){
         this.type = side;
-        this.startAngle = (this.type === 'left') ? -45 : 95;
-        this.endAngle = (this.type === 'left') ? 85 : -135;
+        this.startAngle = (this.type === 'r') ? -45 : 95;
+        this.endAngle = (this.type === 'r') ? 85 : -135;
         this.updateValue(this.value)
     }
 

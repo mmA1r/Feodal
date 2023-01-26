@@ -111,7 +111,7 @@ export default class Village extends Entity {
         this.damaged = false;
         area.setVisible(false);
         this.isNeutral = true;
-        this.infographics.getModule('selectMarker').setColor(0x0000ff);
+        this.infographics.getModule('selectMarker').setColor(0xffff00);
     }
 
     rewriteData(serverData) {
@@ -128,7 +128,7 @@ export default class Village extends Entity {
         if (resistLevel >= 1) {
             if (!this.damaged) this.peaceInVillage();
             bar.updateValue(1-1/resistLevel);
-            bar.setColor(0x0000ff);
+            bar.setColor(0xffff00);
         }
         else {
             if (!this.damaged) this.attacked();
