@@ -19,6 +19,9 @@ export default function ArmyInfoManagePanel() {
     const currentHpSoldiers = useSelector((state) => state.currentArmy.soldiers.currentHp);
     const currentHpAssassins = useSelector((state) => state.currentArmy.assassins.currentHp);
 
+    console.log(currentHpAssassins, '||', currentHpSoldiers);
+
+
     const totalArmyHp = fullHpSoldiers + fullHpAssassins;
     const currentArmyHp = currentHpSoldiers + currentHpAssassins;
 
@@ -28,12 +31,16 @@ export default function ArmyInfoManagePanel() {
                 <ManageUnitButtons/>
             </div>
             <div className='army-units-icon-panel'>
-                <div className='army-soldiers-army'>
-                    <progress className='army-icons-hp' max={fullHpSoldiers} value={currentHpSoldiers}></progress>
-                </div>
-                <div className='army-assassins-army'>
-                    <progress className='army-icons-hp' max={fullHpAssassins} value={currentHpAssassins}></progress>
-                </div>
+                { currentHpSoldiers > 0 ? 
+                    <div className='army-soldiers-army'>
+                        <progress className='army-icons-hp' max={fullHpSoldiers} value={currentHpSoldiers}></progress>
+                    </div>
+                : '' }
+                { currentHpAssassins > 0 ? 
+                    <div className='army-assassins-army'>
+                        <progress className='army-icons-hp' max={fullHpAssassins} value={currentHpAssassins}></progress>
+                    </div> 
+                : '' }
             </div>
             <div className='total-hp-panel'>
                 <div className='hp-num-value-army'> {currentArmyHp} / {totalArmyHp}</div>

@@ -185,3 +185,14 @@ $helmet-logo-effects: url(../../assets/logo/logo-helmet2.2.png);
         color: rgb(255, 255, 255);
     }
 }
+
+.succ-show {
+    opacity: 1;
+    transition: 0.1s;
+    color: rgb(2, 206, 2);
+}
+
+.succ-hide {
+    opacity: 0;
+    transition: 0.1s;
+}

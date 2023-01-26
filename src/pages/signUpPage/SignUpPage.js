@@ -15,6 +15,7 @@ export default function SignUpPage() {
         const [dataStatus, setDataStatus] = useState();
         const [loginStatus, setLoginStatus] = useState();
         const [emptyString, setemptyString] = useState();
+        const [succsessfulAuth, setSuccsessfulAuth] = useState(false);
 
         const navigate = useNavigate();
         const routes = useSelector((state) => state.routes.value);
@@ -40,8 +41,10 @@ export default function SignUpPage() {
             if(nameValue.indexOf(' ') === -1 && loginValue.indexOf(' ') === -1 && passwordValue.indexOf(' ') === -1) {
                 const data = await server.registration(nameValue, loginValue, passwordValue);
                 if(data) {
+                    setSuccsessfulAuth(true);
                     setVisible('effect-shows');
                     setTimeout(() => {
+                        setSuccsessfulAuth(false);
                         return routeToSignIn();
                     }, 1500);
                 } else {
@@ -105,9 +108,10 @@ export default function SignUpPage() {
                         />
                     );
                 })}
-                <div className={`invalid-message ${loginStatus ? 'invalid-show' : 'invalid-hide'}`}>*this login is already used</div>
-                <div className={`invalid-message ${dataStatus ? 'invalid-show' : 'invalid-hide'}`}>*invalid username login or password</div>
-                <div className={`invalid-message ${emptyString ? 'invalid-show' : 'invalid-hide'}`}>*please fill all the fields</div>
+                <div className={`invalid-message ${succsessfulAuth  ? 'succ-show' : 'succ-hide'}`}>Регистрация успешна!</div>
+                <div className={`invalid-message ${loginStatus ? 'invalid-show' : 'invalid-hide'}`}>Такой логин уже используется</div>
+                <div className={`invalid-message ${dataStatus ? 'invalid-show' : 'invalid-hide'}`}>Неправльное имя пользователя или логин</div>
+                <div className={`invalid-message ${emptyString ? 'invalid-show' : 'invalid-hide'}`}>Пожалуйста заполните все поля</div>
                 <div className="button-box">
                     <LoginButton
                         onClick={() => signUp()}
