@@ -101,17 +101,19 @@ export default class Castle extends Entity {
 
     damage(dmg) {
         if (this.units.getChildren()[0]) {
-            this.units.getChildren()[0].damage(dmg);
+            let total = dmg - this.level*2;
+            if (total<0) total = 0;
+            this.units.getChildren()[0].damage(total);
             if (this.selected) this.callbackUI();
+            if (!this.damaged) {
+                this.infographics.getModule('area').stepOn();
+                this.infographics.getModule('area').setVisible(true);
+                this.damaged = true;
+                this.status = "attack";
+            }
         }
         else {
             DestroyCastle(this);
-        }
-        if (!this.damaged) {
-            this.infographics.getModule('area').stepOn();
-            this.infographics.getModule('area').setVisible(true);
-            this.damaged = true;
-            this.status = "attack";
         }
     }
 
