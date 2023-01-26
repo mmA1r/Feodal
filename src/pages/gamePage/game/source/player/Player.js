@@ -40,12 +40,11 @@ export default class Player {
         this.castle = {};
         this.might = 0;
         this.selectedObject = undefined;
-        this.units = scene.add.group();
+        this.units = this.scene.add.group();
         this.nextUpdateTime = 0;
         getCastle(this);
         MouseController(this.scene);
         this.updateUI = this.updateUI.bind(this);
-        this.isAlive = true;
     }
 
     addCastle(castle) {

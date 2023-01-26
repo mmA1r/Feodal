@@ -1,7 +1,4 @@
 import Phaser from "phaser";
-import SelectMarker from "./Modules/SelectMarker";
-import Name from "./Modules/Name";
-import Interface from "./Modules/Infographics";
 import Infographics from "./Modules/Infographics";
 
 export default class Entity extends Phaser.GameObjects.Sprite{
@@ -25,10 +22,12 @@ export default class Entity extends Phaser.GameObjects.Sprite{
         // Все
         this.infographics = new Infographics(this);
         this.infographics.addModule('selectMarker', 'selectMarker', true);
-        this.interfacesAll = [];
-        this.interfacesAll.push(this.selectMarker);
-        this.interfacesForSelected.push(this.selectMarker);
         this.isUpdated = true;
+        this.shadow = this.shadow.bind(this);
+    }
+
+    shadow(key){
+        return (this.isAlive) ? this[key] : null;
     }
 
     //вывод на карту
@@ -59,13 +58,11 @@ export default class Entity extends Phaser.GameObjects.Sprite{
     }
 
     inFocus(){
-        //this.interfacesForSelected.forEach(el => el.setVisible(true));
         this.infographics.setVisible(true);
     }
 
     outFocus(){
         this.infographics.setVisible(false);
-        //this.interfacesForSelected.forEach(el => el.setVisible(false));
     }
 
     //  Смена координат объекта вместе с интерфейсом
@@ -78,7 +75,7 @@ export default class Entity extends Phaser.GameObjects.Sprite{
 
     //  Уничтожение объекта вместе с интерфейсом
     killed(){
-        this.infographics.destroy();
-        super.destroy();
+        if (this.infographics) this.infographics.destroy();
+        this.destroy();
     }
 }

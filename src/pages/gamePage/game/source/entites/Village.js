@@ -109,11 +109,11 @@ export default class Village extends Entity {
     }
 
     peaceInVillage() {
-        this.damaged = false;
-        this.isNeutral = true;
-        const area = this.infographics.getModule('area')
+        const area = this.infographics.getModule('area');
         area.stepOff();
+        this.damaged = false;
         area.setVisible(false);
+        this.isNeutral = true;
         this.infographics.getModule('selectMarker').setColor(0x0000ff);
     }
 
@@ -143,10 +143,12 @@ export default class Village extends Entity {
         this.resistBar.destroy();
         this.acceptBar.destroy();
         this.scene.villagesGroup.remove(this);
+        super.killed();
         this.destroy();
     }
 
-    damage(dmg) {
+    damage(dmg,who) {
+        console.log(who);
         if (this.population > 0) {
             this.currentHp -= dmg;
             if (this.currentHp <= 0) {
@@ -207,6 +209,7 @@ export default class Village extends Entity {
 
     updateUI() {
         if (this.selected){
+            console.log(123);
             let village = {
                 currentHp: this.currentHp,
                 fullHp: 50,
@@ -226,6 +229,5 @@ export default class Village extends Entity {
         area.setColor(0xff0000);
         const i = area.targetsInArea(this.scene.unitsGroup);
         (i > 0) ? area.AoE(this.scene.unitsGroup,'damage',Math.round(this.population*this.level/i)) : this.peaceInVillage();
-        setTimeout(area.setColor(0xffba00), 200);
     }
 }

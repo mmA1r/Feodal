@@ -27,6 +27,7 @@ export default class WorldScene extends Phaser.Scene {
         this.selectedUnits = this.add.group();
         this.treesGroup = this.add.group();
         this.updates = this.add.group();
+        this.dataUnitsTypes = [];
     }
 
     async create() {

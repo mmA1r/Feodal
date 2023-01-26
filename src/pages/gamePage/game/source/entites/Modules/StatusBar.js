@@ -14,7 +14,6 @@ export default class StatusBar {
         this.addX = 0;
         this.addY = 0;
         this.value = 1;
-        //this.updateValue(100);
     }
 
     _createArc(lineWidth,startAngle, endAngle) {

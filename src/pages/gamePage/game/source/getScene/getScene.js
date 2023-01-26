@@ -57,10 +57,10 @@ export default function getScene(scene) {
                     else {
                         switch (unitData.type) {
                             case "1":
-                                new Soldier(scene, scene.player, unitData);
+                                new Soldier(scene, unitData);
                                 break;
                             case "2":
-                                new Assasin(scene, scene.player, unitData);
+                                new Assasin(scene, unitData);
                                 break;
                         }
                     }
@@ -76,7 +76,7 @@ export default function getScene(scene) {
                 })
             }
         }
-        , 90
+        , 50
     )
 
     return getScene;

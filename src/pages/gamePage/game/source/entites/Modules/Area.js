@@ -49,10 +49,6 @@ export default class Area {
         this.area.body.onCollide = true;
     }
 
-    switchTarget(target){
-        this.target = target;
-    }
-
     targetsInArea(targets){
         let i = 0;
         this.infographics.owner.scene.physics.collide(this.area, targets, (area, target) => {
@@ -87,8 +83,8 @@ export default class Area {
 
     destroy(){
         this.infographics.owner.scene.updater.remove(this.stepper);
-        if (this.area) this.area.destroy()
-        if (this.border) this.border.destroy()
+        if (this.area) this.area.destroy();
+        if (this.border) this.border.destroy();
     }
 
 }
