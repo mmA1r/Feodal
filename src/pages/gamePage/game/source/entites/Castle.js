@@ -48,7 +48,13 @@ export default class Castle extends Entity {
         name.setName(this.ownerName);
 
         this.scene.castlesGroup.add(this);
-
+        if (this.isMine) {
+            const line = scene.add.line(0,0,500,500);
+            line.target = this;
+            line.isStroked = true;
+            line.strokeColor = 0x101010;
+            scene.navigatorLines.add(line);
+        }
         this.pointer.x = this.x - 400;
         this.pointer.y = this.y + 300;
         this.fullHP = 0;
@@ -56,13 +62,6 @@ export default class Castle extends Entity {
         this.create(true);
         this.body.setOffset(0, 0);
         this.updateHP();
-        /*this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
-        this.scene.physics.add.existing(this.attackArea, true);
-        this.attackArea.body.onCollide = true;
-        this.attackArea.isStroked = true;
-        this.attackArea.strokeColor = 0xffff00;
-        this.attackArea.lineWidth = 2;
-        this.attackArea.setVisible(false);*/
     }
 
     select() {

@@ -50,6 +50,11 @@ export default class Unit extends Entity {
 
         this.updateUnits = this.scene.updateOtherUnitsGroup;
         if (this.isMine) {
+            const line = scene.add.line(0,0,500,500);
+            line.target = this;
+            line.isStroked = true;
+            line.strokeColor = 0x101010;
+            scene.navigatorLines.add(line);
             this.pointer = new UnitPointer(this);
             this.scene.player.addUnit(this);
             this.updateUnits = this.scene.updateMyUnitsGroup;

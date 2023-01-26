@@ -164,7 +164,7 @@
                     $money = $village->money + rand(2*$village->population,4*$village->level*$village->population);
                     // увеличить уровень если чо
                     $cost = 500*$village->level + $village->level*$village->level*400;
-                    if ($village->money >= $cost && $village->level < 2 ){
+                    if ($village->money >= $cost && $village->level < 3 ){
                         $level = $village->level + 1;
                         $money = $village->money - $cost;
                     } else{$level= $village->level;};

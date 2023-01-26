@@ -1,8 +1,9 @@
 import tileMap from "../../tileMap/extra/spriteTileSet.json";
 import tileMapSheet from '../../../../../assets/gameSprites/spriteMap.png';
 import castleSprite from '../../../../../assets/gameSprites/castle.png';
-import villageFirstLevelSprite from '../../../../../assets/gameSprites/villageFirstLevel.png';
-import villageSecondLevelSprite from '../../../../../assets/gameSprites/villageSecondLevel.png';
+import village1LevelSprite from '../../../../../assets/gameSprites/village1Level.png';
+import village2LevelSprite from '../../../../../assets/gameSprites/village2Level.png';
+import village3LevelSprite from '../../../../../assets/gameSprites/village3Level.png';
 import soldierSprite from '../../../../../assets/gameSprites/soldier.png';
 import assassinSprite from '../../../../../assets/gameSprites/assassin.png';
 import soldierAtlas from '../../../../../assets/gameSprites/soldier_atlas.json';
@@ -21,8 +22,9 @@ export default function uploadSourses(scene) {
     try {
         Scene.load.image('spriteMap', tileMapSheet);
         Scene.load.image('castleFirstLevel', castleSprite);
-        Scene.load.spritesheet('villageFirstLevel',villageFirstLevelSprite,{frameWidth:320,frameHeight:320});
-        Scene.load.spritesheet('villageSecondLevel',villageSecondLevelSprite,{frameWidth:320,frameHeight:320});
+        Scene.load.spritesheet('village1Level',village1LevelSprite,{frameWidth:320,frameHeight:320});
+        Scene.load.spritesheet('village2Level',village2LevelSprite,{frameWidth:320,frameHeight:320});
+        Scene.load.spritesheet('village3Level',village3LevelSprite,{frameWidth:320,frameHeight:320});
         //Scene.load.spritesheet('soldier', soldierSprite,{frameWidth:100,frameHeight:175,startFrame:0, endFrame: 0});
         Scene.load.atlas("soldier",soldierSprite,soldierAtlas);
         Scene.load.atlas("assassin",assassinSprite,assassinAtlas);

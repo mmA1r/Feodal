@@ -4,7 +4,7 @@ export default function KeysController(scene){
         console.log('CTRL');
         scene.navigatorLines.getChildren().forEach( line => {
             //line.setTo(0,0,500,500)
-            line.setTo(scene.cameras.main.midPoint.x+100, scene.cameras.main.midPoint.y+300, line.target.x+100, line.target.y+300);
+            line.setTo(scene.cameras.main.midPoint.x+200, scene.cameras.main.midPoint.y+280, line.target.x+200, line.target.y+280);
             line.setVisible(true);
             console.log(line);
         })

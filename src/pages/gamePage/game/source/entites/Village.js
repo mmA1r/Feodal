@@ -37,29 +37,33 @@ export default class Village extends Entity {
         this.attacked = this.attacked.bind(this);
         switch (this.level) {
             case 1:
-                this.setTexture('villageFirstLevel');
+                this.setTexture('village1Level');
+                this.damageTexture = 0;
+                break;
+            case 2: 
+                this.setTexture('village2Level');
                 this.damageTexture = 1;
                 break;
-            case 2:
+            case 3:
                 this.anims.create({
                     key: "mill",
                     frames: [{
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 0,
                         duration: 80
                     },
                     {
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 1,
                         duration: 80
                     },
                     {
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 2,
                         duration: 80
                     },
                     {
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 3,
                         duration: 80
                     }],
@@ -69,22 +73,22 @@ export default class Village extends Entity {
                 this.anims.create({
                     key: "damaged",
                     frames: [{
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 4,
                         duration: 80
                     },
                     {
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 5,
                         duration: 80
                     },
                     {
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 6,
                         duration: 80
                     },
                     {
-                        key: 'villageSecondLevel',
+                        key: 'village3Level',
                         frame: 7,
                         duration: 80
                     }],

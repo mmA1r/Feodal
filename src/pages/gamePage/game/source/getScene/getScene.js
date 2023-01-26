@@ -19,11 +19,6 @@ export default function getScene(scene) {
                     }
                     else {
                         const newCastle = new Castle(scene, castleData);
-                        const line = scene.add.line(0,0,500,500);
-                        line.target = newCastle;
-                        line.isStroked = true;
-                        line.strokeColor = 0x101010;
-                        scene.navigatorLines.add(line);
                     }
                 });
                 castles.forEach((castle) => {
