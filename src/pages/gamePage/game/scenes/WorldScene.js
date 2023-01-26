@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import uploadSources from '../source/methods/uploadSource'
+import KeysController from '../source/methods/KeysController'
 import Camera from '../source/camera/Camera'
 import getScene from '../source/getScene/getScene'
 import Physics from "../source/physics/Physics";
@@ -45,6 +46,7 @@ export default class WorldScene extends Phaser.Scene {
         this.trees.forEachTile((tile)=>{
             tile.setVisible(false);
         });
+        KeysController(this);
         Trees(this);
         Physics(this);
         Camera(this);
@@ -57,6 +59,8 @@ export default class WorldScene extends Phaser.Scene {
         setTimeout(()=> {
             this.getScene = getScene(this);
         }, 500);
+
+
     }
 
 

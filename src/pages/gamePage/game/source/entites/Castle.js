@@ -93,9 +93,9 @@ export default class Castle extends Entity {
 
     enterInside(unit){
         this.open = false;
+        this.units.add(unit)
         this.updateHP();
         if (this.selected) this.callbackUI();
-        this.units.add(unit)
         this.scene.updater.add(this,new Date()- 0 +500,'openDoor');
     }
 

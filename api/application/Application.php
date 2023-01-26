@@ -25,34 +25,43 @@ class Application {
     //функция проверки полученных значений в запросе
     private function checkParams($params){
         foreach($params as $param=>$value){
-            if($param == 'token' && (!is_string($value) || strlen($value) != 32)){
+            if($param === 'token' && (!is_string($value) || strlen($value) != 32)){
                 return false;
             }
-            if($param == 'login' && (!is_string($value) || strlen($value) > 16 )){
+            if($param === 'login' && (!is_string($value) || strlen($value) > 16 )){
                 return false;
             }
-            if($param == 'password' && (!is_string($value) && strlen($value) > 16)){
+            if($param === 'password' && (!is_string($value) && strlen($value) > 16)){
                 return false;
             }
-            if($param == 'name' && (!is_string($value) || strlen($value) > 16)){
+            if($param === 'name' && (!is_string($value) || strlen($value) > 16)){
                 return false;
             }
-            if($param == 'message' && (!is_string($value) || strlen($value) > 256)){
+            if($param === 'message' && (!is_string($value) || strlen($value) > 256)){
                 return false;
             }
-            if($param == 'messageTo' && !is_numeric($value)){
+            if($param === 'messageTo' && !is_numeric($value)){
                 return false;
             }
-            if($param == 'hash' && (!is_string($value) || !strlen($value) == 32)){
+            if($param === 'hash' && (!is_string($value) || !strlen($value) == 32)){
                 return false;
             }
-            if($param == 'mapHash' && (!is_string($value) || !strlen($value) == 32) ){
+            if($param === 'mapHash' && (!is_string($value) || !strlen($value) == 32) ){
                 return false;
             }
-            if($param == 'unitsHash' && (!is_string($value) || !strlen($value) == 32)){
+            if($param === 'unitsHash' && (!is_string($value) || !strlen($value) == 32)){
                 return false;
             }
-            if($param == 'unitType' && !is_numeric($value)){
+            if($param === 'unitType' && !is_numeric($value)){
+                return false;
+            }
+            if($param === 'village' && !is_numeric($value)){
+                return false;
+            }
+            if($param === 'victimId' && !is_numeric($value)){
+                return false;
+            }
+            if($param === 'killerId' && !is_numeric($value)){
                 return false;
             }
         }
@@ -104,7 +113,7 @@ class Application {
             'messageTo' => $messageTo
         ] = $params;
         if ($type === "all") {
-            $messageTo = "NULL";
+            $messageTo = null;
         }
         $user = $this->user->getUser($token);
         if ($user && $message) {
@@ -142,9 +151,11 @@ class Application {
     }
 
     public function getUnitsTypes($params){
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            return $this->game->getUnitsTypes();
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                return $this->game->getUnitsTypes();
+            }
         }
     }
 
@@ -162,70 +173,82 @@ class Application {
     ////////////////////////////////////////
     
     public function getCastle($params){
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            $gamer = $this->gamer->getGamer($user);
-            if (!$gamer) {
-                $this->game->addCastle($user);
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
                 $gamer = $this->gamer->getGamer($user);
+                if (!$gamer) {
+                    $this->game->addCastle($user);
+                    $gamer = $this->gamer->getGamer($user);
+                }
+                $gamer->castleUpgradeCost = $this->gamer->getCastleLevelCost($gamer->level);
+                return array(
+                    'castle' => $gamer
+                );
             }
-            $gamer->castleUpgradeCost = $this->gamer->getCastleLevelCost($gamer->level);
-            return array(
-                'castle' => $gamer
-            );
         }
     }
 
     public function upgradeCastle($params){
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            $gamer = $this->gamer->getGamer($user);
-            if ($gamer) {
-                return $this->gamer->upgradeCastle($gamer);
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                $gamer = $this->gamer->getGamer($user);
+                if ($gamer) {
+                    return $this->gamer->upgradeCastle($gamer);
+                }
             }
         }
     }
 
     public function buyUnit($params){
-        if ($params['unitType']){
-            $user = $this->user->getUser($params['token']);
-            if ($user) {
-                $gamer = $this->gamer->getGamer($user);
-                if ($gamer) {
-                    return $this->gamer->buyUnit($gamer, $params['unitType']);
+        if ($this->checkParams($params)) {
+            if ($params['unitType']){
+                $user = $this->user->getUser($params['token']);
+                if ($user) {
+                    $gamer = $this->gamer->getGamer($user);
+                    if ($gamer) {
+                        return $this->gamer->buyUnit($gamer, $params['unitType']);
+                    }
                 }
             }
         }
     }
 
     public function robVillage($params){
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            $gamer = $this->gamer->getGamer($user);
-            $village = $this->game->getVillage($params['village']);
-            if ($gamer && $village) {
-                return $this->game->robVillage($gamer, $village);
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                $gamer = $this->gamer->getGamer($user);
+                $village = $this->game->getVillage($params['village']);
+                if ($gamer && $village) {
+                    return $this->game->robVillage($gamer, $village);
+                }
             }
         }
     }
 
     public function destroyVillage($params){
-        $user = $this->user->getUser($params['token']);
-        if ($user) {
-            $gamer = $this->gamer->getGamer($user);
-            $village = $this->game->getVillage($params['village']);
-            if ($gamer && $village) {
-                return $this->game->destroyVillage($gamer, $village);
+        if ($this->checkParams($params)) {
+            $user = $this->user->getUser($params['token']);
+            if ($user) {
+                $gamer = $this->gamer->getGamer($user);
+                $village = $this->game->getVillage($params['village']);
+                if ($gamer && $village) {
+                    return $this->game->destroyVillage($gamer, $village);
+                }
             }
         }
     }
 
     public function destroyCastle($params){
-        $killerId = $this->user->getUser($params['token']);
-        if ($killerId && $params['victimId']) {
-            $killer = $this->gamer->getGamer($killerId);
-            if ($killer) {
-                return $this->game->destroyCastle($killer, $params['victimId']);
+        if ($this->checkParams($params)) {
+            $killerId = $this->user->getUser($params['token']);
+            if ($killerId && $params['victimId']) {
+                $killer = $this->gamer->getGamer($killerId);
+                if ($killer) {
+                    return $this->game->destroyCastle($killer, $params['victimId']);
+                }
             }
         }
     }

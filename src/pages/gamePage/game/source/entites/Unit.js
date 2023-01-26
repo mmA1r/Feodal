@@ -274,8 +274,8 @@ export default class Unit extends Entity {
 
     _intoCastle() {
         if (this.selected) this.unselect()
-        this.castle.enterInside(this);
         this._removeScene();
+        this.castle.enterInside(this);
     }
 
     _outCastle() {
@@ -287,7 +287,6 @@ export default class Unit extends Entity {
     _setUnitStatus(status) {
         if (status !== this.status) {
             if (status === "inCastle") {
-                this.status = status;
                 this._intoCastle();
                 this.stopped();
                 this.anims.stop();

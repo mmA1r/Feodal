@@ -18,7 +18,12 @@ export default function getScene(scene) {
                         castle.rewriteData(castleData);
                     }
                     else {
-                        new Castle(scene, castleData);
+                        const newCastle = new Castle(scene, castleData);
+                        const line = scene.add.line(0,0,500,500);
+                        line.target = newCastle;
+                        line.isStroked = true;
+                        line.strokeColor = 0x101010;
+                        scene.navigatorLines.add(line);
                     }
                 });
                 castles.forEach((castle) => {
@@ -42,7 +47,6 @@ export default function getScene(scene) {
                     }
                     else {
                         village.killed();
-                        console.log(village.isUpdated)
                     }
 
                 })
@@ -76,7 +80,7 @@ export default function getScene(scene) {
                 })
             }
         }
-        , 50
+        , 80
     )
 
     return getScene;
