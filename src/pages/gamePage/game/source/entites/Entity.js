@@ -23,11 +23,11 @@ export default class Entity extends Phaser.GameObjects.Sprite{
         this.infographics = new Infographics(this);
         this.infographics.addModule('selectMarker', 'selectMarker', true);
         this.isUpdated = true;
-        this.shadow = this.shadow.bind(this);
+        this.shadow = {is: this.shadow.bind(this)};
     }
 
     shadow(key){
-        return (this.isAlive) ? this[key] : null;
+        return (typeof this[key] === 'function') ? this[key].bind(this) : this[key];
     }
 
     //вывод на карту
@@ -46,8 +46,8 @@ export default class Entity extends Phaser.GameObjects.Sprite{
     select(selector) {
         this.selected = true;
         this.inFocus();
-        this.callbackUI();
         this.selector = selector;
+        this.callbackUI();
     }
 
     //  Снятие выбора
@@ -55,6 +55,7 @@ export default class Entity extends Phaser.GameObjects.Sprite{
         this.selected = false;
         this.outFocus();
         this.callbackUI();
+        if (this.selector) this.selector.removeSelect(this);
     }
 
     inFocus(){

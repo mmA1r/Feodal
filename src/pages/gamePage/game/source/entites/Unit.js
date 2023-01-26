@@ -178,14 +178,18 @@ export default class Unit extends Entity {
 
     updateUI() {
         this.hpBar.updateValue(this.hp / this.scene.dataUnitsTypes[this.unitType].hp);
-        this.scene.store.loadToStore({
+        if (this.selected){
+            this.scene.store.loadToStore({
             hp: this.hp - 0,
             type: this.unitType
         }, 'currentUnit')
         return (this.isMine) ? 'unit' : 'enemyUnit';
+        }
+        return 'hide';
     }
 
     select(selector) {
+        console.log(this.id);
         super.select();
         if (this.isMine) this.pointer.setVisible(true);
         this.selector = selector;
@@ -252,13 +256,14 @@ export default class Unit extends Entity {
 
     killed() {
         this.stopped();
-        if (this.scene.player.selectedObject) this.scene.player.selectedObject.updateUI();
+        if (this.scene.player.selectedObject) this.scene.player.updateUI();
         this.pointer.destroy();
         this.scene.unitsGroup.remove(this);
         if (this.isMine) {
             this.scene.player.units.remove(this);
             this.scene.player.updateMight();
         }
+        this.shadow.is = null;
         super.killed();
     }
 
@@ -266,7 +271,7 @@ export default class Unit extends Entity {
         if (this.selected) this.unselect()
         this.castle.units.add(this);
         this.castle.updateUI();
-        if (this.scene.player.selectedObject) this.scene.player.selectedObject.updateUI();
+        if (this.scene.player.selectedObject.is) this.scene.player.updateUI();
         this._removeScene();
     }
 

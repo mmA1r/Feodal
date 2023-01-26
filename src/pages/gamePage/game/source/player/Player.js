@@ -39,7 +39,7 @@ export default class Player {
         this.id = 0;
         this.castle = {};
         this.might = 0;
-        this.selectedObject = undefined;
+        this.selectedObject = {is: null};
         this.units = this.scene.add.group();
         this.nextUpdateTime = 0;
         getCastle(this);
@@ -75,24 +75,18 @@ export default class Player {
         this.scene.villagesGroup.getChildren().forEach((v) => v.updateResistLevel());
     }
 
-    removeSelect(obj){
-        this.unselect()
-        obj.selector = undefined;
-        this.updateUI();
-    }
-
     select(obj){
         this.unselect();
-        this.selectedObject = obj;
-        obj.select(this);
+        this.selectedObject = obj.shadow;
+        obj.select();
         if (obj.isMine) this.movePointer(obj.pointer);
     }
 
     unselect(){
-        if (this.selectedObject) {
-            let obj = this.selectedObject;
-            this.selectedObject = undefined;
-            obj.unselect();
+        if (this.selectedObject.is) {
+            const obj = this.selectedObject;
+            this.selectedObject = {is: null};
+            obj.is('unselect')();
             this.pointer.setVisible(false);
         }
     }
@@ -119,26 +113,26 @@ export default class Player {
 
     updateUI() {
         let typeUI = 'hide';
-        if (this.selectedObject) typeUI = this.selectedObject.updateUI();
+        if (this.selectedObject.is) typeUI = this.selectedObject.is('updateUI')();
         this.scene.store.loadToStore(typeUI, 'ui');
         this.scene.StoreData.lastUI = typeUI;
     }
 
     command(obj) {
-        if(this.selectedObject.isMine) {
-            switch (this.selectedObject.type) {
+        if(this.selectedObject.is('isMine')) {
+            switch (this.selectedObject.is('type')) {
                 case 'castle': {
-                    this.selectedObject.pointer.moveTo(obj.x, obj.y);
+                    this.selectedObject.is('pointer').moveTo(obj.x, obj.y);
                     this.movePointer(obj);
                     break;
                 }
                 case 'unit':{
-                        this.selectedObject.moveTo(obj);
+                        this.selectedObject.is('moveTo')(obj);
                         this.movePointer(obj);
                         break;
                 }
                 case 'army':{
-                        this.selectedObject.moveTo(obj);
+                        this.selectedObject.is('moveTo')(obj);
                         if (obj.type === 'pointer')this.movePointer(obj);
                         break;
                 }

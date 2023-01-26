@@ -19,6 +19,11 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
             visible: false
         }
         this.selector = this.scene.player;
+        this.shadow = {is: this.shadow.bind(this)};
+    }
+
+    shadow(key){
+        return (typeof this[key] === 'function') ? this[key].bind(this) : this[key];
     }
 
     setEndPos(x, y) {
@@ -83,12 +88,6 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
         }
     }
 
-    removeSelect(obj){
-        this.targets.remove(obj);
-        this.select(this.selector);
-        this.selector.removeSelect(obj);
-    }
-
     unselect() {
         let unit = this.targets.getChildren()[0];
         while (unit) {
@@ -96,11 +95,9 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
             unit.unselect();
             unit = this.targets.getChildren()[0];
         }
-        this.selector.removeSelect(this);
     }
 
-    select(selector){
-        this.selector = selector;
+    select(){
         this.targets.getChildren().forEach(unit => unit.select(this));
     }
 
@@ -154,6 +151,14 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
         }
     }
 
+    removeSelect(obj){
+        this.targets.remove(obj);
+        this.updateUI();
+        if (this.targets.getLength() === 1) {
+            this.scene.player.select(this.targets.getChildren()[0]);
+        }
+    }
+
     updateUI() {
         const soldiers = {
             fullHp: 0,
@@ -184,6 +189,7 @@ export default class Selector extends Phaser.GameObjects.Rectangle {
 
         this.scene.store.loadToStore({ soldiers: soldiers,
                                         assassins: assassins }, 'currentArmy')
+        
         return (this.isMine) ? 'army' : 'enemyArmy';
     }
 }
