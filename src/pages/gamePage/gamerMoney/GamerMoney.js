@@ -8,7 +8,6 @@ import './gamerMoney.scss'
 
 export default function GamerMoney() {
     const money = useSelector((state) => state.gamer.money);
-    const rentTime = useSelector((state) => state.gamer.nextRentTime);
 
     const store = new StoreLoader();
 
@@ -40,7 +39,7 @@ export default function GamerMoney() {
                 <Money/>
                 <span className="gamer-money-num">{money}</span>
             </div>
-            <MoneyRent key={rentTime} time={rentTime}/>
+            <MoneyRent/>
             <GamerMight/>
         </div>
     );

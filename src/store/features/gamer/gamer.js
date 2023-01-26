@@ -4,7 +4,7 @@ export const gamerStore = createSlice({
     name: 'gamer',
     initialState: {
         level: 1,
-        nextRentTime: 0,
+        nextRentTime: 1674725601050,
         upadateLevelCost: 0,
         money: 0,
         units: [],
@@ -30,9 +30,9 @@ export const gamerStore = createSlice({
             if(action.payload.might) {
                 state.might = action.payload.might;
             }
-            if(action.payload.nextRentTime) {
-                state.nextRentTime = action.payload.nextRentTime;
-            }
+            // if(action.payload.nextRentTime) {
+            //     state.nextRentTime = action.payload.nextRentTime;
+            // }
         },
         changeStatus: (state, action) => {
             const soldiers = [];
