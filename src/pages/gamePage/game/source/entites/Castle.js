@@ -2,6 +2,7 @@ import UnitPointer from "./UnitPointer";
 import DestroyCastle from "../destroyCastle/DestroyCastle";
 import Entity from "./Entity";
 import { unit } from "../../../../../store/features/currentUnit/currentUnit";
+import NavigateLine from "./Modules/NavigateLine";
 
 export default class Castle extends Entity {
     constructor(scene, data) {
@@ -49,11 +50,7 @@ export default class Castle extends Entity {
 
         this.scene.castlesGroup.add(this);
         if (this.isMine) {
-            const line = scene.add.line(0,0,500,500);
-            line.target = this;
-            line.isStroked = true;
-            line.strokeColor = 0x101010;
-            scene.navigatorLines.add(line);
+            new NavigateLine(this);
         }
         this.pointer.x = this.x - 400;
         this.pointer.y = this.y + 300;

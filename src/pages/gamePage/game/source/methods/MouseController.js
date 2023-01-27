@@ -21,7 +21,8 @@ export default function MouseController(scene) {
     });
 
     scene.input.on('gameobjectdown', (pointer, gameObject) => {
-        if (pointer.button === 0) scene.player.select(gameObject);
+        if (pointer.button === 0)
+            (gameObject.type != "navigate") ? scene.player.select(gameObject) : gameObject.toTarget();
         if (pointer.button === 2 && scene.player.selectedObject) {
             if (scene.player.selectedObject.is) scene.player.command(gameObject)
         }

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Entity from "./Entity";
 import UnitPointer from "./UnitPointer";
+import NavigateLine from "./Modules/NavigateLine";
 
 export default class Unit extends Entity {
     constructor(scene, data) {
@@ -50,11 +51,7 @@ export default class Unit extends Entity {
 
         this.updateUnits = this.scene.updateOtherUnitsGroup;
         if (this.isMine) {
-            const line = scene.add.line(0,0,500,500);
-            line.target = this;
-            line.isStroked = true;
-            line.strokeColor = 0x101010;
-            scene.navigatorLines.add(line);
+            new NavigateLine(this);
             this.pointer = new UnitPointer(this);
             this.scene.player.addUnit(this);
             this.updateUnits = this.scene.updateMyUnitsGroup;
