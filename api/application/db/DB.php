@@ -99,7 +99,7 @@ class DB {
 
     public function addUser($login, $password, $name) {
         $query = 'INSERT INTO users (login, password, name) VALUES (?,?,?)';
-        return $this->protectQuery($query,[$login, $password,$name])->fetchObject();
+        return $this->protectQuery($query,[$login, $password, $name])->fetchObject();
     }
 
     public function updateToken($id, $token) {
@@ -110,12 +110,9 @@ class DB {
 //////////////forMessages///////////////
 ////////////////////////////////////////
 
-    public function addMessage($user, $message, $messageTo) {
-        $query = '
-                INSERT INTO messages (userId, message, messageTo) 
-                VALUES (' . $user . ',"' . $message . '", ' .  $messageTo . ')
-            ';
-        $this->db->query($query);
+    public function addMessage($userId, $message, $messageTo) {
+        $query = 'INSERT INTO messages (userId, message, messageTo) VALUES (? ,?, ?)';
+        $this->protectQuery($query,[$userId, $message, $messageTo]);
         return true;
     }
 
@@ -147,11 +144,8 @@ class DB {
 ////////////////////////////////////////
 
     public function addCastle($userId, $castleX, $castleY, $nextRentTime) {
-        $query = '
-                INSERT INTO gamers (userId, castleX, castleY, nextRentTime) 
-                VALUES (' . $userId . ',' . $castleX . ',' . $castleY . ',"' . $nextRentTime . '")
-            ';
-        $this->db->query($query);
+        $query = 'INSERT INTO gamers (userId, castleX, castleY, nextRentTime) VALUES (?,?,?,?)';
+        $this->protectQuery($query, [$userId, $castleX, $castleY, $nextRentTime]);
         return true;
     }
 
@@ -170,27 +164,24 @@ class DB {
     }
 
     public function getCastlesRents() {
-        $query = '
-                SELECT id, money, nextRentTime FROM gamers
-            ';
+        $query = 'SELECT id, money, nextRentTime 
+                  FROM gamers';
         return $this->getArray($query);
     }
 
     public function castleLevelUp($gamerId) {
-        $query = '
-                UPDATE gamers SET 
-                castleLevel=castleLevel + 1   
-                WHERE id=' . $gamerId;
-        $this->db->query($query);
+        $query = 'UPDATE gamers 
+                  SET castleLevel=castleLevel + 1 
+                  WHERE id=?';
+        $this->protectQuery($query,[$gamerId]);
         return true;
     }
 
     public function getMoney($gamerId) {
-            $query = '
-            SELECT money 
-            FROM gamers 
-            WHERE id=' . $gamerId;
-            return $this->db->query($query)->fetchObject()->money;
+            $query = 'SELECT money 
+                      FROM gamers 
+                      WHERE id=?';
+            return $this->protectQuery($query,[$gamerId])->fetchObject()->money;
         }
 
     public function updateMoney($gamerId, $money) {
@@ -210,7 +201,7 @@ class DB {
     ////////////////////////////////////////
     public function createVillage($name, $posX, $posY, $time) {
         $query = 'INSERT INTO villages (name, posX, posY, nextUpdateTime) 
-        VALUES ("' . $name . '", ' . $posX . ',' . $posY . ', ' . $time . ')';
+                  VALUES ("' . $name . '", ' . $posX . ',' . $posY . ', ' . $time . ')';
         $this->db->query($query);
         return true;
     }
@@ -226,11 +217,10 @@ class DB {
     }
 
     public function updateVillage($id, $money, $level, $population, $time){
-        $query = 'UPDATE villages SET money ='. $money .
-            ', level ='. $level .
-            ', population ='. $population .
-            ', nextUpdateTime ='. $time . ' WHERE id ='. $id;
-        $this -> db -> query($query);
+        $query = 'UPDATE villages 
+                  SET money = ?, level = ?, population = ?, nextUpdateTime = ? 
+                  WHERE id = ?';
+        $this->protectQuery($query,[$money, $level, $population, $time,$id]);
         return true;
     }
 
@@ -249,16 +239,17 @@ class DB {
     //////////////forUnits//////////////////
     ////////////////////////////////////////
 
-    public function addUnit($gamer, $unit, $hp, $posX, $posY) {
-        $query = '
-            INSERT INTO units (gamerId, type, hp, posX, posY) 
-            VALUES ('.$gamer.', '.$unit.', '.$hp.', '.$posX.', '.$posY.')';
-        $this->db->query($query);
+    public function addUnit($gamerId, $unit, $hp, $posX, $posY) {
+        $query = 'INSERT INTO units (gamerId, type, hp, posX, posY) 
+                  VALUES (?,?,?,?,?)';
+        $this->protectQuery($query,[$gamerId, $unit, $hp, $posX, $posY]);
         return true;
     }
 
     public function getUnitTypeData($unitType) {
-        $query = 'SELECT cost, hp FROM unitsTypes  WHERE id=?';
+        $query = 'SELECT cost, hp 
+                  FROM unitsTypes  
+                  WHERE id=?';
         return $this->protectQuery($query,[$unitType])->fetchObject();
     }
 
@@ -279,30 +270,26 @@ class DB {
     }
 
     public function getUnit($unitId) {
-        $query = '
-        SELECT hp
-        FROM units 
-        WHERE id=' . $unitId;
-    return $this->db->query($query)->fetchObject();
+        $query = 'SELECT hp
+                  FROM units 
+                  WHERE id=?';
+    return $this->protectQuery($query,[$unitId])->fetchObject();
     }
 
     public function getGamerUnits($gamerId) {
-        $query = '
-        SELECT id, type, status
-        FROM units 
-        WHERE gamerId=' . $gamerId;
+        $query = 'SELECT id, type, status
+                  FROM units 
+                  WHERE gamerId=' . $gamerId;
     return $this->getArray($query);
     }
 
     // По id отдельного юнита меняет у него 
     // hp, posX, posY, status, direction в БД
     public function updateUnit($gamerId, $unitId,$hp, $posX, $posY, $status, $direction){
-        $query = '
-            UPDATE units 
-            SET hp='. $hp. ',posX='. $posX. ',posY='. $posY. ',status="'. $status. '",direction='. $direction. ' 
-            WHERE id=' .$unitId. ' AND gamerId=' .$gamerId;
-        $this->db->query($query);
-        return $query;
+        $query = 'UPDATE units 
+                  SET hp=?,posX=?,posY=?,status=?,direction=? 
+                  WHERE id=? AND gamerId=?';
+        return $this->protectQuery($query,[$hp, $posX, $posY, $status, $direction, $unitId, $gamerId]);
     }
     public function updateUnitHP($unitId,$hp){
         return $this->simpleUpdateById('units','hp',$hp,$unitId);

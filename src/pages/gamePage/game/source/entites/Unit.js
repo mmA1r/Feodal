@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Entity from "./Entity";
 import UnitPointer from "./UnitPointer";
+import NavigateLine from "./Modules/NavigateLine";
 
 export default class Unit extends Entity {
     constructor(scene, data) {
@@ -50,6 +51,7 @@ export default class Unit extends Entity {
 
         this.updateUnits = this.scene.updateOtherUnitsGroup;
         if (this.isMine) {
+            new NavigateLine(this);
             this.pointer = new UnitPointer(this);
             this.scene.player.addUnit(this);
             this.updateUnits = this.scene.updateMyUnitsGroup;
@@ -274,8 +276,8 @@ export default class Unit extends Entity {
 
     _intoCastle() {
         if (this.selected) this.unselect()
-        this.castle.enterInside(this);
         this._removeScene();
+        this.castle.enterInside(this);
     }
 
     _outCastle() {
@@ -287,7 +289,6 @@ export default class Unit extends Entity {
     _setUnitStatus(status) {
         if (status !== this.status) {
             if (status === "inCastle") {
-                this.status = status;
                 this._intoCastle();
                 this.stopped();
                 this.anims.stop();

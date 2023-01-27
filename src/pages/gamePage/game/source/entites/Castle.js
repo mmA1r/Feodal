@@ -2,6 +2,7 @@ import UnitPointer from "./UnitPointer";
 import DestroyCastle from "../destroyCastle/DestroyCastle";
 import Entity from "./Entity";
 import { unit } from "../../../../../store/features/currentUnit/currentUnit";
+import NavigateLine from "./Modules/NavigateLine";
 
 export default class Castle extends Entity {
     constructor(scene, data) {
@@ -48,7 +49,9 @@ export default class Castle extends Entity {
         name.setName(this.ownerName);
 
         this.scene.castlesGroup.add(this);
-
+        if (this.isMine) {
+            new NavigateLine(this);
+        }
         this.pointer.x = this.x - 400;
         this.pointer.y = this.y + 300;
         this.fullHP = 0;
@@ -56,13 +59,6 @@ export default class Castle extends Entity {
         this.create(true);
         this.body.setOffset(0, 0);
         this.updateHP();
-        /*this.attackArea = this.scene.add.ellipse(this.x - 10, this.y + 45, 500, 500, 0xffff00, 0.1);
-        this.scene.physics.add.existing(this.attackArea, true);
-        this.attackArea.body.onCollide = true;
-        this.attackArea.isStroked = true;
-        this.attackArea.strokeColor = 0xffff00;
-        this.attackArea.lineWidth = 2;
-        this.attackArea.setVisible(false);*/
     }
 
     select() {
@@ -93,9 +89,9 @@ export default class Castle extends Entity {
 
     enterInside(unit){
         this.open = false;
+        this.units.add(unit)
         this.updateHP();
         if (this.selected) this.callbackUI();
-        this.units.add(unit)
         this.scene.updater.add(this,new Date()- 0 +500,'openDoor');
     }
 

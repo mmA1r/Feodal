@@ -18,7 +18,7 @@ export default function getScene(scene) {
                         castle.rewriteData(castleData);
                     }
                     else {
-                        new Castle(scene, castleData);
+                        const newCastle = new Castle(scene, castleData);
                     }
                 });
                 castles.forEach((castle) => {
@@ -42,7 +42,6 @@ export default function getScene(scene) {
                     }
                     else {
                         village.killed();
-                        console.log(village.isUpdated)
                     }
 
                 })
@@ -76,7 +75,7 @@ export default function getScene(scene) {
                 })
             }
         }
-        , 50
+        , 80
     )
 
     return getScene;
