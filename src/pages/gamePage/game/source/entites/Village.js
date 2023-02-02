@@ -10,7 +10,7 @@ export default class Village extends Entity {
         this.isNeutral = true;
 
         this.id = data.id - 0;
-        this.level = data.level - 0;
+        this.level = 0;
         this.name = data.name;
         const selectMarker = this.infographics.getModule('selectMarker');
         selectMarker.setColor(0x0000ff);
@@ -35,6 +35,30 @@ export default class Village extends Entity {
         this.damageTexture = 0;
         this.canBeRobbed = this.canBeRobbed.bind(this);
         this.attacked = this.attacked.bind(this);
+        
+
+        this.rewriteData(data);
+        this.damaged = false;
+        this.create(true);
+    }
+
+    openUI() {
+        this.scene.store.loadToStore('village', 'ui');
+        this.callbackUI();
+    }
+
+    peaceInVillage() {
+        const area = this.infographics.getModule('area');
+        area.stepOff();
+        this.damaged = false;
+        area.setVisible(false);
+        this.isNeutral = true;
+        this.infographics.getModule('selectMarker').setColor(0xffff00);
+    }
+
+    _levelUp(level){
+        this.level = level - 0;
+        console.log(this.level);
         switch (this.level) {
             case 1:
                 this.setTexture('village1Level');
@@ -98,29 +122,11 @@ export default class Village extends Entity {
                 this.anims.play("mill", true)
                 break;
         }
-
-        this.rewriteData(data);
-        this.damaged = false;
-        this.create(true);
-    }
-
-    openUI() {
-        this.scene.store.loadToStore('village', 'ui');
-        this.callbackUI();
-    }
-
-    peaceInVillage() {
-        const area = this.infographics.getModule('area');
-        area.stepOff();
-        this.damaged = false;
-        area.setVisible(false);
-        this.isNeutral = true;
-        this.infographics.getModule('selectMarker').setColor(0xffff00);
     }
 
     rewriteData(serverData) {
         if (!this.damaged) this.currentHp = 50;
-        this.level = serverData.level - 0;
+        if (this.level != serverData.level - 0) this._levelUp(serverData.level - 0);
         this.population = serverData.population - 0;
         this.updateResistLevel();
         this.isUpdated = true;

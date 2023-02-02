@@ -43,7 +43,7 @@ export default class Castle extends Entity {
         this.hpBar.setColor(color);
 
         this.rewriteData(data);
-        this.setTexture('castleFirstLevel');
+        this.setTexture('castle2Level');
         this.open = true;
         this.ownerName = data.ownerName;
         name.setName(this.ownerName);
@@ -81,6 +81,7 @@ export default class Castle extends Entity {
     rewriteData(castleData) {
         this.level = castleData.Level - 0;
         this.isUpdated = true;
+        (this.level == 1) ? this.setTexture('castle1Level') : this.setTexture('castle2Level');
     }
 
     openDoor(){

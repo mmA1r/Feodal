@@ -161,9 +161,11 @@ class Application {
 
     public function getScene($params){
         if ($this->checkParams($params)) {
-            $user = $this->user->getUser($params['token']);
-            if ($user) {
-                return $this->game->getScene($params['unitsHash'], $params['mapHash']);
+            if ($params['mapHash'] && $params['unitsHash']){
+                $user = $this->user->getUser($params['token']);
+                if ($user) {
+                    return $this->game->getScene($params['unitsHash'], $params['mapHash']);
+                }
             }
         }
     }

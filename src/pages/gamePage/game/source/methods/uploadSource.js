@@ -1,6 +1,7 @@
 import tileMap from "../../tileMap/extra/spriteTileSet.json";
 import tileMapSheet from '../../../../../assets/gameSprites/spriteMap.png';
-import castleSprite from '../../../../../assets/gameSprites/castle.png';
+import castle1LevelSprite from '../../../../../assets/gameSprites/castle1Level.png';
+import castle2LevelSprite from '../../../../../assets/gameSprites/castle2Level.png';
 import village1LevelSprite from '../../../../../assets/gameSprites/village1Level.png';
 import village2LevelSprite from '../../../../../assets/gameSprites/village2Level.png';
 import village3LevelSprite from '../../../../../assets/gameSprites/village3Level.png';
@@ -21,7 +22,8 @@ export default function uploadSourses(scene) {
     const Scene = scene;
     try {
         Scene.load.image('spriteMap', tileMapSheet);
-        Scene.load.image('castleFirstLevel', castleSprite);
+        Scene.load.image('castle1Level', castle1LevelSprite);
+        Scene.load.image('castle2Level', castle2LevelSprite);
         Scene.load.spritesheet('village1Level',village1LevelSprite,{frameWidth:320,frameHeight:320});
         Scene.load.spritesheet('village2Level',village2LevelSprite,{frameWidth:320,frameHeight:320});
         Scene.load.spritesheet('village3Level',village3LevelSprite,{frameWidth:320,frameHeight:320});
