@@ -135,7 +135,7 @@ class DB {
     }
 
     public function getUnitsTypes() {
-        $query = 'SELECT * FROM unitsTypes';
+        $query = 'SELECT * FROM unitstypes';
         return $this->getArray($query);
     }
 
@@ -248,7 +248,7 @@ class DB {
 
     public function getUnitTypeData($unitType) {
         $query = 'SELECT cost, hp 
-                  FROM unitsTypes  
+                  FROM unitstypes  
                   WHERE id=?';
         return $this->protectQuery($query,[$unitType])->fetchObject();
     }
