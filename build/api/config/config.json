@@ -1,0 +1,13 @@
+{
+    "DataBase": {
+        "host": "localhost",
+        "name": "cr62809_feodal",
+        "user": "cr62809_feodal",
+        "password":"F7NjY1Js"
+    },
+    "Game": {
+            "intervalUpdateVillage": 15,
+            "intervalRentMinutes": 12,
+            "intervalFirstRentMinutes": 30 
+        }
+}
